@@ -13,7 +13,7 @@ Color Picker Wheel for selecting hue, SaturationRhombus for selection saturation
 
 ### TODOs:
 - [ ] Add RGB color selection
-- [ ] Add RGB color selection
+- [ ] Fix Saturation Rhombus color display(Currently drawing lots of circles), add gradient instead
 - [ ] Add option to display colors in a dialog
 - [ ] Finish colorful Sliders to have more stylish sliders
 - [ ] Add and display colors selected previously
