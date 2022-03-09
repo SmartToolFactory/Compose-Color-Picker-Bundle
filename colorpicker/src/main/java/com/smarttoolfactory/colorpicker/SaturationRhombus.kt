@@ -2,9 +2,7 @@ package com.smarttoolfactory.colorpicker
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.runtime.*
@@ -49,11 +47,7 @@ fun SaturationRhombus(
     onChange: (Float, Float) -> Unit
 ) {
 
-    BoxWithConstraints(
-        modifier
-            .background(Color.LightGray)
-            .padding(8.dp)
-    ) {
+    BoxWithConstraints(modifier) {
 
         val density = LocalDensity.current.density
 
@@ -61,7 +55,7 @@ fun SaturationRhombus(
          * Width and height of the rhombus is geometrically equal so it's sufficient to
          * use either width or height to have a length parameter
          */
-        val length = maxWidth.value * density
+        val length = maxWidth.value* density
 
         /**
          * This is list of points with changing [saturation] up while going from left to right
@@ -157,10 +151,9 @@ fun SaturationRhombus(
                 drawCircle(
                     Color.hsl(hue, colorPoint.saturation, colorPoint.lightness),
                     center = colorPoint.point,
-                    radius = 5f
+                    radius = 10f
                 )
             }
-
 
             // Saturation and Value or Lightness selector
             drawCircle(
