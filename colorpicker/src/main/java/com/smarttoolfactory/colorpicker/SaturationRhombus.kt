@@ -1,6 +1,5 @@
 package com.smarttoolfactory.colorpicker
 
-import android.content.res.Configuration
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.size
@@ -12,9 +11,9 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.consumeDownChange
+import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -55,7 +54,7 @@ fun SaturationRhombus(
          * Width and height of the rhombus is geometrically equal so it's sufficient to
          * use either width or height to have a length parameter
          */
-        val length = maxWidth.value* density
+        val length = maxWidth.value * density
 
         /**
          * This is list of points with changing [saturation] up while going from left to right
@@ -101,8 +100,17 @@ fun SaturationRhombus(
 
                     // Horizontal range for keeping x position in rhombus bounds
                     val range = getBoundsInLength(length, posY)
+                    val start = range.start - selectorRadius
+                    val end = range.endInclusive + selectorRadius
 
-                    isTouched = range.contains(posX)
+                    isTouched = posX in start..end
+
+                    println(
+                        "🔥 onDown()\n" +
+                                " posX: $posX, posY: $posY\n" +
+                                "range: $range\n" +
+                                "start: $start, end: $end, isTouched: $isTouched"
+                    )
 
                     if (isTouched) {
 
@@ -114,6 +122,7 @@ fun SaturationRhombus(
                         onChange(posXInPercent, 1 - posYInPercent)
                         currentPosition = Offset(posX, posY)
                     }
+                    it.consumeDownChange()
                 },
                 onMove = {
                     if (isTouched) {
@@ -135,9 +144,11 @@ fun SaturationRhombus(
 
                         currentPosition = Offset(posX.coerceIn(range), posY)
                     }
+                    it.consumePositionChange()
                 },
                 onUp = {
                     isTouched = false
+                    it.consumeDownChange()
                 }
             )
 
@@ -151,7 +162,7 @@ fun SaturationRhombus(
                 drawCircle(
                     Color.hsl(hue, colorPoint.saturation, colorPoint.lightness),
                     center = colorPoint.point,
-                    radius = 10f
+                    radius = 5f
                 )
             }
 
@@ -245,7 +256,7 @@ fun getIntRangeInLength(
  */
 fun getPointsInRhombus(length: Float): MutableList<ColorPoint> {
 
-    val step = length.toInt() / 50
+    val step = length.toInt() / 100
     val colorPints = mutableListOf<ColorPoint>()
 
     for (yPos in 0..length.toInt() step step) {
