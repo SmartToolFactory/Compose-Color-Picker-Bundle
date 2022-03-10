@@ -1,7 +1,6 @@
 package com.smarttoolfactory.colorpicker
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.*
@@ -9,7 +8,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -26,11 +24,16 @@ import kotlin.math.roundToInt
 
 @Composable
 fun ColorfulSlider(
+    value: Float,
+    onValueChange: (Float) -> Unit,
     modifier: Modifier = Modifier,
-    color: Color = Color.Red,
     trackHeight: Dp = TrackHeight,
-    thumbRadius: Dp = ThumbRadius
+    thumbRadius: Dp = ThumbRadius,
+    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
 ) {
+
+    val onValueChangeState = rememberUpdatedState(onValueChange)
+
 
     BoxWithConstraints(
         modifier = modifier.requiredSizeIn(minWidth = TrackHeight, minHeight = ThumbRadius * 2),
@@ -45,8 +48,18 @@ fun ColorfulSlider(
         val thumbRadiusInPx: Float
         val thumbSize: Float
         val trackHeightInPx: Float
+
+        // Start of the track used for measuring progress,
+        // it's line + radius of cap which is half of height of track
+        // to draw this on canvas starting point of line
+        // should be at trackStart + trackHeightInPx / 2 while drawing
         val trackStart: Float
+        // End of the track that is used for measuring progress
         val trackEnd: Float
+        val trackLength: Float
+
+        // Current progress
+        var progress by remember { mutableStateOf(0f) }
 
         with(LocalDensity.current) {
             widthInPx = width.toPx()
@@ -54,34 +67,81 @@ fun ColorfulSlider(
             thumbSize = thumbRadiusInPx * 2
 
             trackHeightInPx = trackHeight.toPx()
-            trackStart = thumbSize
+            trackStart = thumbRadiusInPx + trackHeightInPx / 2
             trackEnd = widthInPx - trackStart
+            trackLength = trackEnd - trackStart
         }
 
-        val offsetX = remember { mutableStateOf(trackStart - thumbRadiusInPx) }
+        // Horizontal center position of thumb
+        var thumbCenterX by remember { mutableStateOf(trackStart) }
+
+        // Smallest position thumb center can move to
+        val thumbStart = trackStart - thumbRadiusInPx
+        // Highest position in x axis thumb center move to
+        val thumbEnd = trackEnd - thumbRadiusInPx
+
+        val offsetX = remember { mutableStateOf(thumbStart) }
+
+        val dragModifier = Modifier.pointerInput(Unit) {
+
+            detectHorizontalDragGestures(
+
+                onDragStart = {
+                    boxColor = Green400
+                },
+
+                onDragEnd = {
+                    boxColor = Blue400
+                },
+                onHorizontalDrag = { pointerInputChange, dragAmount ->
+                    val originalX = offsetX.value
+                    val newValue =
+                        (originalX + dragAmount).coerceIn(
+                            thumbStart, thumbEnd
+
+                        )
+                    thumbCenterX = newValue + thumbRadiusInPx
+                    offsetX.value = newValue
+
+                    progress = ((thumbCenterX - trackStart) / trackLength).coerceIn(0f, 1f)
+                    onValueChange(progress)
+
+                    println(
+                        "🚀 Drag\n" +
+                                "trackStart: $trackStart, trackEnd: $trackEnd, trackLength: $trackLength\n" +
+                                "newValue: $newValue, thumbCenterX: $thumbCenterX, " +
+                                "PROGRESS: $progress"
+                    )
+                }
+            )
+        }
 
         Canvas(
-            modifier = Modifier
-                .fillMaxSize()
-//            .onSizeChanged { width = it.width.toFloat() }
+            modifier = Modifier.fillMaxSize()
         ) {
 
-            val canvasWidth = size.width
-            val canvasHeight = size.height
+            drawLine(
+                Color.Yellow, start = Offset(trackStart, 0f),
+                end = Offset(trackEnd, 0f),
+                strokeWidth = trackHeightInPx
+            )
 
             drawLine(
-                Color.Yellow, start = Offset(trackHeightInPx, 0f),
-                end = Offset(canvasWidth - trackHeightInPx, 0f),
+                Color.Red, start = Offset(thumbStart, -30f),
+                end = Offset(thumbEnd, -30f),
                 strokeWidth = trackHeightInPx
             )
 
             drawLine(
                 Brush.linearGradient(gradientColorsReversed),
-                start = Offset(trackStart, center.y),
-                end = Offset(trackEnd, center.y),
+                start = Offset(trackStart + trackHeightInPx / 2, center.y),
+                end = Offset(trackEnd - trackHeightInPx / 2, center.y),
                 strokeWidth = trackHeightInPx,
                 cap = StrokeCap.Round
             )
+
+            drawCircle(Color.Black, center = Offset(thumbCenterX, center.y), radius = 10f)
+
         }
 
         Spacer(
@@ -90,32 +150,17 @@ fun ColorfulSlider(
                 .border(2.dp, Color.Red, CircleShape)
 //                .shadow(2.dp, shape = CircleShape)
                 .size(thumbRadius * 2)
+
 //                .background(boxColor)
-                .pointerInput(Unit) {
+                .then(dragModifier)
 
-                    detectHorizontalDragGestures(
-
-                        onDragStart = {
-                            boxColor = Green400
-                        },
-
-                        onDragEnd = {
-                            boxColor = Blue400
-                        },
-                        onHorizontalDrag = { _, dragAmount ->
-                            val originalX = offsetX.value
-                            val newValue =
-                                (originalX + dragAmount).coerceIn(
-                                    trackStart - thumbRadiusInPx,
-                                    trackEnd - thumbRadiusInPx
-                                )
-                            offsetX.value = newValue
-                        }
-                    )
-                }
         )
     }
 }
+
+// Calculate the 0..1 fraction that `pos` value represents between `a` and `b`
+private fun calcFraction(a: Float, b: Float, pos: Float) =
+    (if (b - a == 0f) 0f else (pos - a) / (b - a)).coerceIn(0f, 1f)
 
 // Internal to be referred to in tests
 internal val ThumbRadius = 10.dp

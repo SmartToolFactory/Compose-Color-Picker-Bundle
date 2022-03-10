@@ -1,8 +1,10 @@
 package com.smarttoolfactory.composecolorpicker
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,14 +14,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.ColorPickerWheel
+import com.smarttoolfactory.colorpicker.ColorfulSlider
 import com.smarttoolfactory.colorpicker.SaturationRhombus
 import com.smarttoolfactory.colorpicker.ui.Blue400
 
 @Composable
- fun ColorPickerImplementation() {
+fun ColorPickerImplementation() {
     Column(
         modifier = Modifier
-            .background(Color(0xff424242))
+//            .background(Color(0xff424242))
             .fillMaxSize()
             .padding(8.dp)
     ) {
@@ -32,6 +35,36 @@ import com.smarttoolfactory.colorpicker.ui.Blue400
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
+            var colorValue by remember { mutableStateOf(0f) }
+
+            Spacer(modifier = Modifier.height(50.dp))
+            ColorfulSlider(
+                value = colorValue,
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .fillMaxWidth()
+                    .height(40.dp)
+                    .border(2.dp, Color.Green),
+                thumbRadius = 20.dp,
+                trackHeight = 20.dp,
+                onValueChange = {
+                    colorValue = it
+                    println("😍PROGRESS $it")
+                }
+
+            )
+
+            var progress by remember {
+                mutableStateOf(0f)
+            }
+            Slider(modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .border(2.dp, Color.Green), value = progress,
+                onValueChange = {
+                    println("🎃 Slider progress $it")
+                    progress = it
+                }
+            )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = "Color",
