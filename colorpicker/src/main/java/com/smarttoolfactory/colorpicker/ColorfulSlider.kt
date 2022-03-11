@@ -32,8 +32,6 @@ fun ColorfulSlider(
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
 ) {
 
-    val onValueChangeState = rememberUpdatedState(onValueChange)
-
 
     BoxWithConstraints(
         modifier = modifier.requiredSizeIn(minWidth = TrackHeight, minHeight = ThumbRadius * 2),
@@ -157,10 +155,6 @@ fun ColorfulSlider(
         )
     }
 }
-
-// Calculate the 0..1 fraction that `pos` value represents between `a` and `b`
-private fun calcFraction(a: Float, b: Float, pos: Float) =
-    (if (b - a == 0f) 0f else (pos - a) / (b - a)).coerceIn(0f, 1f)
 
 // Internal to be referred to in tests
 internal val ThumbRadius = 10.dp

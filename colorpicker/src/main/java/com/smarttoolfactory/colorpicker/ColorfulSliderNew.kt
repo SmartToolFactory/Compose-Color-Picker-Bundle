@@ -1,26 +1,27 @@
 package com.smarttoolfactory.colorpicker
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.consumeDownChange
+import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.colorpicker.gesture.pointerMotionEvents
 import com.smarttoolfactory.colorpicker.ui.gradientColorsReversed
+import kotlin.math.abs
 
 @Composable
 fun ColorfulSliderNew(
@@ -30,6 +31,7 @@ fun ColorfulSliderNew(
     trackHeight: Dp = TrackHeight,
     thumbRadius: Dp = ThumbRadius,
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    thumbOverflowTrack: Boolean = false
 ) {
 
     val onValueChangeState = rememberUpdatedState(onValueChange)
@@ -56,7 +58,8 @@ fun ColorfulSliderNew(
         with(density) {
             thumbRadiusInPx = thumbRadius.toPx()
             trackHeightInPx = trackHeight.toPx()
-            trackStart = thumbRadiusInPx
+            trackStart =thumbRadiusInPx
+//                if (!thumbOverflowTrack) thumbRadiusInPx else 2 * thumbRadiusInPx + trackHeightInPx
             trackEnd = width - trackStart
         }
 
@@ -68,6 +71,9 @@ fun ColorfulSliderNew(
 
         val rawOffset = remember { mutableStateOf(scaleToOffset(value)) }
 
+//        CorrectValueSideEffect(::scaleToOffset, valueRange, trackStart..trackEnd, rawOffset, value)
+
+
         val coerced = value.coerceIn(valueRange.start, valueRange.endInclusive)
         val fraction = calculateFraction(valueRange.start, valueRange.endInclusive, coerced)
 
@@ -78,82 +84,159 @@ fun ColorfulSliderNew(
                     "value: $value, rawOffset: ${rawOffset.value}"
         )
 
-        val thumbModifier = Modifier.pointerInput(Unit) {
+        val thumbModifier = Modifier.pointerMotionEvents(
+            onDown = {
+                rawOffset.value = it.position.x
+                val offsetInTrack = rawOffset.value.coerceIn(trackStart, trackEnd)
+                onValueChangeState.value.invoke(scaleToUserValue(offsetInTrack))
+                it.consumeDownChange()
+                println(
+                    "🍒 ColorSliderNew() Down()\n" +
+                            "trackStart: $trackStart, trackEnd: $trackEnd\n" +
+                            "rawOffset: ${rawOffset.value}, offsetInTrack: $offsetInTrack"
+                )
+            },
+            onMove = {
+                rawOffset.value = it.position.x
+                val offsetInTrack = rawOffset.value.coerceIn(trackStart, trackEnd)
+                onValueChangeState.value.invoke(scaleToUserValue(offsetInTrack))
+                it.consumePositionChange()
+                println(
+                    "🎃 ColorSliderNew() Move()\n" +
+                            "trackStart: $trackStart, trackEnd: $trackEnd\n" +
+                            "rawOffset: ${rawOffset.value}, offsetInTrack: $offsetInTrack"
+                )
+            },
+            onUp = {
+                rawOffset.value = it.position.x
+                val offsetInTrack = rawOffset.value.coerceIn(trackStart, trackEnd)
+                onValueChangeState.value.invoke(scaleToUserValue(offsetInTrack))
+                it.consumeDownChange()
+            }
+        )
 
-            detectHorizontalDragGestures(
-
-                onHorizontalDrag = { _, dragAmount ->
-
-                    rawOffset.value = (rawOffset.value + dragAmount)
-                    val offsetInTrack = rawOffset.value.coerceIn(trackStart, trackEnd)
-
-                    onValueChangeState.value.invoke(scaleToUserValue(offsetInTrack))
-
+//            .pointerInput(Unit) {
+//
+//            detectHorizontalDragGestures(
+//
+//                onHorizontalDrag = { _, dragAmount ->
+//
+//                    rawOffset.value = (rawOffset.value + dragAmount)
+//                    val offsetInTrack = rawOffset.value.coerceIn(trackStart, trackEnd)
+//
+//                    onValueChangeState.value.invoke(scaleToUserValue(offsetInTrack))
+//
 //                    println(
 //                        "🍒 ColorSliderNew() Drag\n" +
 //                                "trackStart: $trackStart, trackEnd: $trackEnd\n" +
 //                                "rawOffset: ${rawOffset.value}, offsetInTrack: $offsetInTrack"
 //                    )
-                }
-            )
+//                }
+//            )
+//        }
+
+
+        SliderImpl(
+            modifier = thumbModifier,
+            fraction = fraction,
+            trackStart = trackStart,
+            trackEnd = trackEnd,
+            trackHeight = trackHeight,
+            thumbRadius = thumbRadius
+        )
+    }
+}
+
+@Composable
+private fun SliderImpl(
+    modifier: Modifier,
+    fraction: Float,
+    trackStart: Float,
+    trackEnd: Float,
+    trackHeight: Dp,
+    thumbRadius: Dp
+) {
+
+    Box(modifier) {
+
+
+        val trackStrokeWidth: Float
+        val thumbPx: Float
+        val widthDp: Dp
+
+        with(LocalDensity.current) {
+            trackStrokeWidth = trackHeight.toPx()
+            thumbPx = thumbRadius.toPx()
+            widthDp = (trackEnd - trackStart).toDp()
         }
 
-        val thumbCenterPos = trackStart  + (trackEnd - trackStart) * fraction
+        val thumbCenterPos = trackStart + (trackEnd - trackStart) * fraction
 
-        Canvas(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        val center = Modifier.align(Alignment.CenterStart)
 
-            // DEBUG Function to display trackable range
-            drawLine(
-                Color.Yellow, start = Offset(trackStart, 0f),
-                end = Offset(trackEnd, 0f),
-                strokeWidth = trackHeightInPx
-            )
-
-            drawLine(
-                Brush.linearGradient(gradientColorsReversed),
-                start = Offset(trackStart + trackHeightInPx / 2, center.y),
-                end = Offset(trackEnd - trackHeightInPx / 2, center.y),
-                strokeWidth = trackHeightInPx,
-                cap = StrokeCap.Round
-            )
-
-
-            drawLine(
-                Color.Magenta,
-                start = Offset(thumbCenterPos, center.y),
-                end = Offset(trackEnd - trackHeightInPx / 2, center.y),
-                strokeWidth = trackHeightInPx,
-                cap = StrokeCap.Round
-            )
-
-
-//            drawCircle(Color.Black, center = Offset(rawOffset.value, center.y), radius = 10f)
-            drawCircle(
-                Color.Black,
-                center = Offset(thumbCenterPos, center.y),
-                radius = 10f
-            )
-
-        }
+        Track(
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .fillMaxSize(),
+            fraction = fraction,
+            trackStart = trackStart,
+            trackEnd = trackEnd,
+            trackHeight = trackStrokeWidth
+        )
 
         Thumb(
-            modifier = thumbModifier,
-            offset = thumbCenterPos-thumbRadiusInPx,
+            modifier = center,
+            offset = thumbCenterPos - thumbPx,
             thumbSize = thumbRadius * 2
         )
     }
 }
 
 @Composable
-private fun SliderImpl(modifier:Modifier) {
+private fun Track(
+    modifier: Modifier,
+    fraction: Float,
+    trackStart: Float,
+    trackEnd: Float,
+    trackHeight: Float
+) {
+    Canvas(modifier = modifier) {
 
-}
+        val thumbCenterPos = trackStart + (trackEnd - trackStart) * fraction
 
-@Composable
-private fun Track(modifier: Modifier) {
+        // DEBUG Function to display trackable range
+        drawLine(
+            Color.Yellow, start = Offset(trackStart, 0f),
+            end = Offset(trackEnd, 0f),
+            strokeWidth = trackHeight
+        )
 
+        drawLine(
+            Brush.linearGradient(gradientColorsReversed),
+            start = Offset(trackStart + trackHeight / 2, center.y),
+            end = Offset(trackEnd - trackHeight / 2, center.y),
+            strokeWidth = trackHeight,
+            cap = StrokeCap.Round
+        )
+
+
+        drawLine(
+            Color.Magenta,
+            start = Offset(thumbCenterPos, center.y),
+            end = Offset(trackEnd - trackHeight / 2, center.y),
+            strokeWidth = trackHeight,
+            cap = StrokeCap.Round
+        )
+
+
+//            drawCircle(Color.Black, center = Offset(rawOffset.value, center.y), radius = 10f)
+        drawCircle(
+            Color.Black,
+            center = Offset(thumbCenterPos, center.y),
+            radius = 10f
+        )
+
+    }
 }
 
 
@@ -164,19 +247,34 @@ private fun Thumb(
     thumbSize: Dp
 ) {
     Spacer(
-        modifier = Modifier
+        modifier = modifier
             .offset { IntOffset(offset.toInt(), 0) }
             .border(2.dp, Color.Red, CircleShape)
-//                .shadow(2.dp, shape = CircleShape)
+//            .shadow(2.dp, shape = CircleShape)
+//            .background(Color.White, CircleShape)
             .size(thumbSize)
-
-//                .background(boxColor)
-            .then(modifier)
-
     )
 
 }
 
+@Composable
+private fun CorrectValueSideEffect(
+    scaleToOffset: (Float) -> Float,
+    valueRange: ClosedFloatingPointRange<Float>,
+    trackRange: ClosedFloatingPointRange<Float>,
+    valueState: MutableState<Float>,
+    value: Float
+) {
+    SideEffect {
+        val error = (valueRange.endInclusive - valueRange.start) / 1000
+        val newOffset = scaleToOffset(value)
+        if (abs(newOffset - valueState.value) > error) {
+            if (valueState.value in trackRange) {
+                valueState.value = newOffset
+            }
+        }
+    }
+}
 
 
 
