@@ -1,25 +1,36 @@
 package com.smarttoolfactory.colorpicker
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.LocalMinimumTouchTargetEnforcement
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
+import androidx.compose.ui.layout.LayoutModifier
+import androidx.compose.ui.layout.Measurable
+import androidx.compose.ui.layout.MeasureResult
+import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalViewConfiguration
+import androidx.compose.ui.platform.debugInspectorInfo
+import androidx.compose.ui.unit.*
 import com.smarttoolfactory.colorpicker.gesture.pointerMotionEvents
 import com.smarttoolfactory.colorpicker.ui.gradientColorsReversed
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 @Composable
 fun ColorfulSlider(
@@ -34,16 +45,16 @@ fun ColorfulSlider(
 
     val onValueChangeState = rememberUpdatedState(onValueChange)
 
+    // TODO Check these modifiers with different slider width, height and size params
     BoxWithConstraints(
-        modifier = modifier.requiredSizeIn(minWidth = TrackHeight, minHeight = ThumbRadius * 2),
+        modifier = modifier
+            .minimumTouchTargetSize()
+            .requiredSizeIn(minWidth = ThumbRadius * 2, minHeight = ThumbRadius * 2),
         contentAlignment = Alignment.CenterStart
     ) {
 
-        val density = LocalDensity.current
         val width = constraints.maxWidth.toFloat()
-
         val thumbRadiusInPx: Float
-        val trackHeightInPx: Float
 
         // Start of the track used for measuring progress,
         // it's line + radius of cap which is half of height of track
@@ -53,9 +64,8 @@ fun ColorfulSlider(
         // End of the track that is used for measuring progress
         val trackEnd: Float
 
-        with(density) {
+        with(LocalDensity.current) {
             thumbRadiusInPx = thumbRadius.toPx()
-            trackHeightInPx = trackHeight.toPx()
             trackStart = thumbRadiusInPx
             trackEnd = width - trackStart
         }
@@ -70,18 +80,10 @@ fun ColorfulSlider(
 
         CorrectValueSideEffect(::scaleToOffset, valueRange, trackStart..trackEnd, rawOffset, value)
 
-
         val coerced = value.coerceIn(valueRange.start, valueRange.endInclusive)
         val fraction = calculateFraction(valueRange.start, valueRange.endInclusive, coerced)
 
-        println(
-            "🌈ColorfulSlider()\n" +
-                    "trackStart: $trackStart, trackEnd: $trackEnd\n" +
-                    "coerced: $coerced, fraction: $fraction\n" +
-                    "value: $value, rawOffset: ${rawOffset.value}"
-        )
-
-        val thumbModifier = Modifier.pointerMotionEvents(
+        val dragModifier = Modifier.pointerMotionEvents(
             onDown = {
                 rawOffset.value = it.position.x
                 val offsetInTrack = rawOffset.value.coerceIn(trackStart, trackEnd)
@@ -103,7 +105,7 @@ fun ColorfulSlider(
         )
 
         SliderImpl(
-            modifier = thumbModifier,
+            modifier = dragModifier,
             fraction = fraction,
             trackStart = trackStart,
             trackEnd = trackEnd,
@@ -125,8 +127,9 @@ private fun SliderImpl(
     coerceThumbInTrack: Boolean
 ) {
 
-    Box(modifier) {
-
+    Box(
+        modifier.then(DefaultSliderConstraints)
+    ) {
 
         val trackStrokeWidth: Float
         val thumbPx: Float
@@ -138,13 +141,13 @@ private fun SliderImpl(
             widthDp = (trackEnd - trackStart).toDp()
         }
 
+        // TODO when coerce is true set don't let thumb move beyond track range
         val limit = if (coerceThumbInTrack) thumbPx else 0f
         val thumbCenterPos = (trackStart + +(trackEnd - trackStart) * fraction)
-            .coerceIn(
-                trackStart + limit,
-                trackEnd - limit
-            )
-
+//            .coerceIn(
+//                trackStart + limit,
+//                trackEnd - limit
+//            )
 
         Track(
             modifier = Modifier
@@ -198,8 +201,6 @@ private fun Track(
             cap = StrokeCap.Round
         )
 
-
-//            drawCircle(Color.Black, center = Offset(rawOffset.value, center.y), radius = 10f)
         drawCircle(
             Color.Black,
             center = Offset(thumbCenter, center.y),
@@ -208,7 +209,6 @@ private fun Track(
 
     }
 }
-
 
 @Composable
 private fun Thumb(
@@ -219,12 +219,10 @@ private fun Thumb(
     Spacer(
         modifier = modifier
             .offset { IntOffset(offset.toInt(), 0) }
-            .border(2.dp, Color.Red, CircleShape)
-//            .shadow(2.dp, shape = CircleShape)
-//            .background(Color.White, CircleShape)
+            .shadow(2.dp, shape = CircleShape)
+            .background(Color.White, CircleShape)
             .size(thumbSize)
     )
-
 }
 
 @Composable
@@ -246,11 +244,66 @@ private fun CorrectValueSideEffect(
     }
 }
 
+
+// Internal to be referred to in tests
+internal val TrackHeight = 4.dp
+private val SliderHeight = 48.dp
+private val SliderMinWidth = 144.dp
+
 // Internal to be referred to in tests
 internal val ThumbRadius = 10.dp
-internal val TrackHeight = 8.dp
-private val SliderHeight = 48.dp
+
+private val DefaultSliderConstraints =
+    Modifier
+        .widthIn(min = SliderMinWidth)
+        .heightIn(max = SliderHeight)
 
 
+@OptIn(ExperimentalMaterialApi::class)
+@Suppress("ModifierInspectorInfo")
+fun Modifier.minimumTouchTargetSize(): Modifier = composed(
+    inspectorInfo = debugInspectorInfo {
+        name = "minimumTouchTargetSize"
 
+        properties["README"] = "Adds outer padding to measure at least 48.dp (default) in " +
+                "size to disambiguate touch interactions if the element would measure smaller"
+    }
+) {
+    if (LocalMinimumTouchTargetEnforcement.current) {
+        MinimumTouchTargetModifier(DpSize(48.dp, 48.dp))
+    } else {
+        Modifier
+    }
+}
+
+private class MinimumTouchTargetModifier(val size: DpSize) : LayoutModifier {
+    override fun MeasureScope.measure(
+        measurable: Measurable,
+        constraints: Constraints
+    ): MeasureResult {
+
+        val placeable = measurable.measure(constraints)
+
+        // Be at least as big as the minimum dimension in both dimensions
+        val width = maxOf(placeable.width, size.width.roundToPx())
+        val height = maxOf(placeable.height, size.height.roundToPx())
+
+        println("MinimumTouchTargetModifier $width, height: $height")
+
+        return layout(width, height) {
+            val centerX = ((width - placeable.width) / 2f).roundToInt()
+            val centerY = ((height - placeable.height) / 2f).roundToInt()
+            placeable.place(centerX, centerY)
+        }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        val otherModifier = other as? MinimumTouchTargetModifier ?: return false
+        return size == otherModifier.size
+    }
+
+    override fun hashCode(): Int {
+        return size.hashCode()
+    }
+}
 
