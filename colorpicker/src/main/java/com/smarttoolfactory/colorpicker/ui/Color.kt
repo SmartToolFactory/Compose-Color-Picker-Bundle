@@ -14,6 +14,10 @@ val BlueGrey400 = Color(0xff78909C)
 
 val backgroundColor = Color(0xffECEFF1)
 
+val ThumbColor = Color(0xfff0f0f0)
+val ActiveTrackColor = Color(0xff489cef)
+val InactiveTrackColor = Color(0xffcccccc)
+
 val gradientColors = listOf(
     Color.Red,
     Color.Magenta,
