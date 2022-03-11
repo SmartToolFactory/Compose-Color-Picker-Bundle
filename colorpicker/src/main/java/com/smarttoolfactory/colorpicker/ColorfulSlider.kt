@@ -2,7 +2,6 @@ package com.smarttoolfactory.colorpicker
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.*
@@ -12,15 +11,15 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.consumeDownChange
+import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.colorpicker.ui.Blue400
-import com.smarttoolfactory.colorpicker.ui.Green400
+import com.smarttoolfactory.colorpicker.gesture.pointerMotionEvents
 import com.smarttoolfactory.colorpicker.ui.gradientColorsReversed
-import kotlin.math.roundToInt
+import kotlin.math.abs
 
 @Composable
 fun ColorfulSlider(
@@ -30,21 +29,20 @@ fun ColorfulSlider(
     trackHeight: Dp = TrackHeight,
     thumbRadius: Dp = ThumbRadius,
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    coerceThumbInTrack: Boolean = false
 ) {
 
+    val onValueChangeState = rememberUpdatedState(onValueChange)
 
     BoxWithConstraints(
         modifier = modifier.requiredSizeIn(minWidth = TrackHeight, minHeight = ThumbRadius * 2),
         contentAlignment = Alignment.CenterStart
     ) {
 
-        var boxColor by remember { mutableStateOf(Color.White) }
+        val density = LocalDensity.current
+        val width = constraints.maxWidth.toFloat()
 
-        val width = maxWidth
-
-        val widthInPx: Float
         val thumbRadiusInPx: Float
-        val thumbSize: Float
         val trackHeightInPx: Float
 
         // Start of the track used for measuring progress,
@@ -54,105 +52,197 @@ fun ColorfulSlider(
         val trackStart: Float
         // End of the track that is used for measuring progress
         val trackEnd: Float
-        val trackLength: Float
 
-        // Current progress
-        var progress by remember { mutableStateOf(0f) }
+        with(density) {
+            thumbRadiusInPx = thumbRadius.toPx()
+            trackHeightInPx = trackHeight.toPx()
+            trackStart = thumbRadiusInPx
+            trackEnd = width - trackStart
+        }
+
+        fun scaleToUserValue(offset: Float) =
+            scale(trackStart, trackEnd, offset, valueRange.start, valueRange.endInclusive)
+
+        fun scaleToOffset(userValue: Float) =
+            scale(valueRange.start, valueRange.endInclusive, userValue, trackStart, trackEnd)
+
+        val rawOffset = remember { mutableStateOf(scaleToOffset(value)) }
+
+        CorrectValueSideEffect(::scaleToOffset, valueRange, trackStart..trackEnd, rawOffset, value)
+
+
+        val coerced = value.coerceIn(valueRange.start, valueRange.endInclusive)
+        val fraction = calculateFraction(valueRange.start, valueRange.endInclusive, coerced)
+
+        println(
+            "🌈ColorfulSlider()\n" +
+                    "trackStart: $trackStart, trackEnd: $trackEnd\n" +
+                    "coerced: $coerced, fraction: $fraction\n" +
+                    "value: $value, rawOffset: ${rawOffset.value}"
+        )
+
+        val thumbModifier = Modifier.pointerMotionEvents(
+            onDown = {
+                rawOffset.value = it.position.x
+                val offsetInTrack = rawOffset.value.coerceIn(trackStart, trackEnd)
+                onValueChangeState.value.invoke(scaleToUserValue(offsetInTrack))
+                it.consumeDownChange()
+            },
+            onMove = {
+                rawOffset.value = it.position.x
+                val offsetInTrack = rawOffset.value.coerceIn(trackStart, trackEnd)
+                onValueChangeState.value.invoke(scaleToUserValue(offsetInTrack))
+                it.consumePositionChange()
+            },
+            onUp = {
+                rawOffset.value = it.position.x
+                val offsetInTrack = rawOffset.value.coerceIn(trackStart, trackEnd)
+                onValueChangeState.value.invoke(scaleToUserValue(offsetInTrack))
+                it.consumeDownChange()
+            }
+        )
+
+        SliderImpl(
+            modifier = thumbModifier,
+            fraction = fraction,
+            trackStart = trackStart,
+            trackEnd = trackEnd,
+            trackHeight = trackHeight,
+            thumbRadius = thumbRadius,
+            coerceThumbInTrack = coerceThumbInTrack
+        )
+    }
+}
+
+@Composable
+private fun SliderImpl(
+    modifier: Modifier,
+    fraction: Float,
+    trackStart: Float,
+    trackEnd: Float,
+    trackHeight: Dp,
+    thumbRadius: Dp,
+    coerceThumbInTrack: Boolean
+) {
+
+    Box(modifier) {
+
+
+        val trackStrokeWidth: Float
+        val thumbPx: Float
+        val widthDp: Dp
 
         with(LocalDensity.current) {
-            widthInPx = width.toPx()
-            thumbRadiusInPx = thumbRadius.toPx()
-            thumbSize = thumbRadiusInPx * 2
-
-            trackHeightInPx = trackHeight.toPx()
-            trackStart = thumbRadiusInPx + trackHeightInPx / 2
-            trackEnd = widthInPx - trackStart
-            trackLength = trackEnd - trackStart
+            trackStrokeWidth = trackHeight.toPx()
+            thumbPx = thumbRadius.toPx()
+            widthDp = (trackEnd - trackStart).toDp()
         }
 
-        // Horizontal center position of thumb
-        var thumbCenterX by remember { mutableStateOf(trackStart) }
-
-        // Smallest position thumb center can move to
-        val thumbStart = trackStart - thumbRadiusInPx
-        // Highest position in x axis thumb center move to
-        val thumbEnd = trackEnd - thumbRadiusInPx
-
-        val offsetX = remember { mutableStateOf(thumbStart) }
-
-        val dragModifier = Modifier.pointerInput(Unit) {
-
-            detectHorizontalDragGestures(
-
-                onDragStart = {
-                    boxColor = Green400
-                },
-
-                onDragEnd = {
-                    boxColor = Blue400
-                },
-                onHorizontalDrag = { pointerInputChange, dragAmount ->
-                    val originalX = offsetX.value
-                    val newValue =
-                        (originalX + dragAmount).coerceIn(
-                            thumbStart, thumbEnd
-
-                        )
-                    thumbCenterX = newValue + thumbRadiusInPx
-                    offsetX.value = newValue
-
-                    progress = ((thumbCenterX - trackStart) / trackLength).coerceIn(0f, 1f)
-                    onValueChange(progress)
-
-                    println(
-                        "🚀 Drag\n" +
-                                "trackStart: $trackStart, trackEnd: $trackEnd, trackLength: $trackLength\n" +
-                                "newValue: $newValue, thumbCenterX: $thumbCenterX, " +
-                                "PROGRESS: $progress"
-                    )
-                }
-            )
-        }
-
-        Canvas(
-            modifier = Modifier.fillMaxSize()
-        ) {
-
-            drawLine(
-                Color.Yellow, start = Offset(trackStart, 0f),
-                end = Offset(trackEnd, 0f),
-                strokeWidth = trackHeightInPx
+        val limit = if (coerceThumbInTrack) thumbPx else 0f
+        val thumbCenterPos = (trackStart + +(trackEnd - trackStart) * fraction)
+            .coerceIn(
+                trackStart + limit,
+                trackEnd - limit
             )
 
-            drawLine(
-                Color.Red, start = Offset(thumbStart, -30f),
-                end = Offset(thumbEnd, -30f),
-                strokeWidth = trackHeightInPx
-            )
 
-            drawLine(
-                Brush.linearGradient(gradientColorsReversed),
-                start = Offset(trackStart + trackHeightInPx / 2, center.y),
-                end = Offset(trackEnd - trackHeightInPx / 2, center.y),
-                strokeWidth = trackHeightInPx,
-                cap = StrokeCap.Round
-            )
-
-            drawCircle(Color.Black, center = Offset(thumbCenterX, center.y), radius = 10f)
-
-        }
-
-        Spacer(
+        Track(
             modifier = Modifier
-                .offset { IntOffset(offsetX.value.roundToInt(), 0) }
-                .border(2.dp, Color.Red, CircleShape)
-//                .shadow(2.dp, shape = CircleShape)
-                .size(thumbRadius * 2)
-
-//                .background(boxColor)
-                .then(dragModifier)
-
+                .align(Alignment.CenterStart)
+                .fillMaxSize(),
+            thumbCenter = thumbCenterPos,
+            trackStart = trackStart,
+            trackEnd = trackEnd,
+            trackHeight = trackStrokeWidth
         )
+
+        Thumb(
+            modifier = Modifier.align(Alignment.CenterStart),
+            offset = thumbCenterPos - thumbPx,
+            thumbSize = thumbRadius * 2
+        )
+    }
+}
+
+@Composable
+private fun Track(
+    modifier: Modifier,
+    thumbCenter: Float,
+    trackStart: Float,
+    trackEnd: Float,
+    trackHeight: Float
+) {
+    Canvas(modifier = modifier) {
+
+        // DEBUG Function to display trackable range
+        drawLine(
+            Color.Yellow, start = Offset(trackStart, 0f),
+            end = Offset(trackEnd, 0f),
+            strokeWidth = trackHeight
+        )
+
+        drawLine(
+            Brush.linearGradient(gradientColorsReversed),
+            start = Offset(trackStart + trackHeight / 2, center.y),
+            end = Offset(trackEnd - trackHeight / 2, center.y),
+            strokeWidth = trackHeight,
+            cap = StrokeCap.Round
+        )
+
+
+        drawLine(
+            Color.Magenta,
+            start = Offset(thumbCenter, center.y),
+            end = Offset(trackEnd - trackHeight / 2, center.y),
+            strokeWidth = trackHeight,
+            cap = StrokeCap.Round
+        )
+
+
+//            drawCircle(Color.Black, center = Offset(rawOffset.value, center.y), radius = 10f)
+        drawCircle(
+            Color.Black,
+            center = Offset(thumbCenter, center.y),
+            radius = 10f
+        )
+
+    }
+}
+
+
+@Composable
+private fun Thumb(
+    modifier: Modifier,
+    offset: Float,
+    thumbSize: Dp
+) {
+    Spacer(
+        modifier = modifier
+            .offset { IntOffset(offset.toInt(), 0) }
+            .border(2.dp, Color.Red, CircleShape)
+//            .shadow(2.dp, shape = CircleShape)
+//            .background(Color.White, CircleShape)
+            .size(thumbSize)
+    )
+
+}
+
+@Composable
+private fun CorrectValueSideEffect(
+    scaleToOffset: (Float) -> Float,
+    valueRange: ClosedFloatingPointRange<Float>,
+    trackRange: ClosedFloatingPointRange<Float>,
+    valueState: MutableState<Float>,
+    value: Float
+) {
+    SideEffect {
+        val error = (valueRange.endInclusive - valueRange.start) / 1000
+        val newOffset = scaleToOffset(value)
+        if (abs(newOffset - valueState.value) > error) {
+            if (valueState.value in trackRange) {
+                valueState.value = newOffset
+            }
+        }
     }
 }
 
@@ -160,3 +250,7 @@ fun ColorfulSlider(
 internal val ThumbRadius = 10.dp
 internal val TrackHeight = 8.dp
 private val SliderHeight = 48.dp
+
+
+
+
