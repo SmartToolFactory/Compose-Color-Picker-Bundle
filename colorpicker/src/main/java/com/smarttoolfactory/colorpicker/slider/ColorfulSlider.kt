@@ -17,6 +17,7 @@ import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.calculateFraction
 import com.smarttoolfactory.colorpicker.gesture.pointerMotionEvents
@@ -147,7 +148,7 @@ private fun SliderImpl(
 
         // TODO when coerce is true set don't let thumb move beyond track range
         val limit = if (coerceThumbInTrack) thumbPx else 0f
-        val thumbCenterPos = (trackStart + +(trackEnd - trackStart) * fraction)
+        val thumbCenterPos = (trackStart + (trackEnd - trackStart) * fraction)
 //            .coerceIn(
 //                trackStart + limit,
 //                trackEnd - limit
@@ -157,7 +158,7 @@ private fun SliderImpl(
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .fillMaxSize(),
-            thumbCenter = thumbCenterPos,
+            fraction = fraction,
             trackStart = trackStart,
             trackEnd = trackEnd,
             trackHeight = trackStrokeWidth,
@@ -178,7 +179,7 @@ private fun SliderImpl(
 @Composable
 private fun Track(
     modifier: Modifier,
-    thumbCenter: Float,
+    fraction: Float,
     trackStart: Float,
     trackEnd: Float,
     trackHeight: Float,
@@ -191,10 +192,30 @@ private fun Track(
     val inactiveTrackColor: ColorBrush? =
         colors.trackColor(enabled = enabled, active = false).value
 
+    val thumbCenter = (trackStart + (trackEnd - trackStart) * fraction)
+
 
     Canvas(modifier = modifier) {
 
-        val width = trackEnd - trackStart
+        val width = trackEnd -trackStart
+
+
+        val isRtl = layoutDirection == LayoutDirection.Rtl
+
+        val centerY = center.y
+
+        val sliderLeft = Offset(trackStart + trackHeight / 2, centerY)
+        val sliderRight = Offset(trackEnd - trackHeight / 2, centerY)
+
+        val sliderStart = if (isRtl) sliderRight else sliderLeft
+        val sliderEnd = if (isRtl) sliderLeft else sliderRight
+
+        // WORKING
+//        val sliderValueStart = Offset(trackStart, centerY)
+//        val sliderValueEnd = Offset( thumbCenter, centerY)
+
+        val sliderValueStart = Offset(if (isRtl) thumbCenter else trackStart, centerY)
+        val sliderValueEnd = Offset( if (isRtl) trackStart else thumbCenter, centerY)
 
         // DEBUG Function to display trackable range
         drawLine(
@@ -203,30 +224,28 @@ private fun Track(
             strokeWidth = trackHeight
         )
 
+        var isInactiveSliderDrawn = false
+
         inactiveTrackColor?.let { colorBrush: ColorBrush ->
-            var drawBrush = false
-
-            println("ACTIVE color ${colorBrush.color}")
-
-
+            isInactiveSliderDrawn = true
+            var drawWithBrush = false
             colorBrush.brush?.let { brush: Brush ->
                 drawLine(
                     brush,
-                    start = Offset(thumbCenter, center.y),
-                    end = Offset(trackEnd - trackHeight / 2, center.y),
+                    start = sliderStart,
+                    end = sliderEnd,
                     strokeWidth = trackHeight,
                     cap = StrokeCap.Round
                 )
-                drawBrush = true
+                drawWithBrush = true
             }
 
-            if (!drawBrush && colorBrush.color != null) {
+            if (!drawWithBrush && colorBrush.color != null) {
 
-                println("INACTIVE color ${colorBrush.color}")
                 drawLine(
                     colorBrush.color,
-                    start = Offset(thumbCenter, center.y),
-                    end = Offset(trackEnd - trackHeight / 2, center.y),
+                    start = sliderStart,
+                    end = sliderEnd,
                     strokeWidth = trackHeight,
                     cap = StrokeCap.Round
                 )
@@ -235,23 +254,23 @@ private fun Track(
 
         activeTrackColor?.let { colorBrush: ColorBrush ->
 
-            var drawBrush = false
+            var drawWithBrush = false
             colorBrush.brush?.let { brush: Brush ->
                 drawLine(
                     brush,
-                    start = Offset(trackStart + trackHeight / 2, center.y),
-                    end = Offset(thumbCenter - trackHeight / 2, center.y),
+                    start = sliderValueStart,
+                    end = sliderValueEnd,
                     strokeWidth = trackHeight,
                     cap = StrokeCap.Round
                 )
-                drawBrush = true
+                drawWithBrush = true
             }
 
-            if (!drawBrush && colorBrush.color != null) {
+            if (!drawWithBrush && colorBrush.color != null) {
                 drawLine(
                     colorBrush.color,
-                    start = Offset(trackStart + trackHeight / 2, center.y),
-                    end = Offset(trackEnd - trackHeight / 2, center.y),
+                    start = sliderValueStart,
+                    end = sliderValueEnd,
                     strokeWidth = trackHeight,
                     cap = StrokeCap.Round
                 )
