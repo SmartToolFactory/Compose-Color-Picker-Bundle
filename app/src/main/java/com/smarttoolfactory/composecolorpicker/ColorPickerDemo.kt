@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.ColorPickerWheel
-import com.smarttoolfactory.colorpicker.ColorfulSlider
+import com.smarttoolfactory.colorpicker.slider.ColorfulSlider
 import com.smarttoolfactory.colorpicker.SaturationRhombus
 import com.smarttoolfactory.colorpicker.ui.Blue400
 
@@ -43,10 +43,9 @@ fun ColorPickerImplementation() {
                 modifier = Modifier
                     .padding(horizontal = 20.dp)
                     .fillMaxWidth()
-                    .height(40.dp)
                     .border(2.dp, Color.Green),
-                thumbRadius = 20.dp,
-                trackHeight = 20.dp,
+                thumbRadius = 8.dp,
+                trackHeight = 6.dp,
                 onValueChange = {
                     colorValue = it
                     println("😍PROGRESS $it")

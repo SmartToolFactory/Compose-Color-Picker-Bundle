@@ -8,8 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
@@ -89,12 +88,13 @@ fun SaturationRhombus(
          */
         var isTouched by remember { mutableStateOf(false) }
 
+
         val canvasModifier = Modifier
+//            .clip(rhombusShape)
             .size(maxWidth)
             .pointerMotionEvents(
                 onDown = {
                     val position = it.position
-
                     val posX = position.x
                     val posY = position.y
 
@@ -123,6 +123,7 @@ fun SaturationRhombus(
                         currentPosition = Offset(posX, posY)
                     }
                     it.consumeDownChange()
+
                 },
                 onMove = {
                     if (isTouched) {
@@ -155,14 +156,72 @@ fun SaturationRhombus(
         val rhombusPath = remember { rhombusPath(Size(length, length)) }
         Canvas(modifier = canvasModifier) {
 
-//            drawPath(rhombusPath, Color.hsl(hue, saturation = 1f, lightness = 0.5f))
+            drawPath(rhombusPath, Color.hsl(120f, saturation = 1f, lightness = 0.5f))
+            // TODO Gradient
+
+//            with(drawContext.canvas.nativeCanvas) {
+//                val checkPoint = saveLayer(null, null)
+//
+//                // Destination lightness top to bottom
+//                drawPath(
+//                    rhombusPath, Brush.verticalGradient(
+//                        colors = listOf(
+//                            Color.hsl(
+//                                hue,
+//                                saturation = .5f,
+//                                lightness = 1f,
+//                                alpha = 1f
+//                            ),
+//                            Color.hsl(
+//                                hue,
+//                                saturation = .5f,
+//                                lightness = 0f,
+//                                alpha = 1f
+//                            )
+//                        )
+//                    )
+//                )
+//
+//                // Source saturation left to right
+//                drawPath(
+//                    rhombusPath,
+//                    Brush.horizontalGradient(
+//                        colors = listOf(
+//                            Color.hsl(
+//                                hue,
+//                                saturation = 0f,
+//                                lightness = .5f,
+//                                alpha = 1f
+//                            ),
+//                            Color.hsl(
+//                                hue,
+//                                saturation = 1f,
+//                                lightness = .5f,
+//                                alpha = 1f
+//                            )
+//                        )
+//                    ),
+//                    blendMode = BlendMode.SrcIn
+//                )
+//
+//                restoreToCount(checkPoint)
+//            }
+
+
 
             // TODO Draw gradient instead of points, or maybe smaller rhombuses with s and l
+//            colorPoints.forEach { colorPoint: ColorPoint ->
+//                drawCircle(
+//                    Color.hsl(hue, colorPoint.saturation, colorPoint.lightness),
+//                    center = colorPoint.point,
+//                    radius = 10f
+//                )
+//            }
+
             colorPoints.forEach { colorPoint: ColorPoint ->
-                drawCircle(
-                    Color.hsl(hue, colorPoint.saturation, colorPoint.lightness),
-                    center = colorPoint.point,
-                    radius = 5f
+                drawPath(
+                    colorPoint.path,
+                    Color.hsl(hue, colorPoint.saturation, colorPoint.lightness)
                 )
             }
 
@@ -199,7 +258,6 @@ private fun setSelectorPositionFromColorParams(
     val horizontalPositionOnRhombus = (saturation * length).coerceIn(range)
     return Offset(horizontalPositionOnRhombus, verticalPositionOnRhombus)
 }
-
 
 /**
  * Get range that this position can be. This is for limiting touch position inside rhombus.
@@ -256,17 +314,21 @@ fun getIntRangeInLength(
  */
 fun getPointsInRhombus(length: Float): MutableList<ColorPoint> {
 
-    val step = length.toInt() / 100
+    val step = length.toInt() / 50
     val colorPints = mutableListOf<ColorPoint>()
 
     for (yPos in 0..length.toInt() step step) {
         val range = getIntRangeInLength(length = length, yPos.toFloat())
         for (xPos in range step step) {
 
+            val path = rhombusPath(Size(2* step.toFloat(), 2*step.toFloat()))
+            path.translate(
+                Offset(xPos.toFloat()-step, yPos.toFloat()-step)
+            )
             val saturation = xPos / length
             val lightness = 1 - (yPos / length)
             val colorPoint =
-                ColorPoint(Offset(xPos.toFloat(), yPos.toFloat()), saturation, lightness)
+                ColorPoint(Offset(xPos.toFloat(), yPos.toFloat()), saturation, lightness, path)
             colorPints.add(colorPoint)
         }
     }
@@ -298,4 +360,9 @@ val rhombusShape = GenericShape { size: Size, _: LayoutDirection ->
     lineTo(0f, size.height / 2f)
 }
 
-data class ColorPoint(val point: Offset, val saturation: Float, val lightness: Float)
+data class ColorPoint(
+    val point: Offset,
+    val saturation: Float,
+    val lightness: Float,
+    val path: Path
+)

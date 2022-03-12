@@ -4,13 +4,24 @@ fun lerp(start: Float, end: Float, amount: Float): Float {
     return start + amount * (end - start)
 }
 
-// Scale x1 from a1..b1 range to a2..b2 range
-fun scale(a1: Float, b1: Float, x1: Float, a2: Float, b2: Float) =
-    lerp(a2, b2, calculateFraction(a1, b1, x1))
+/**
+ * Scale x1 from start1..end1 range to start2..end2 range
 
-// Scale x.start, x.endInclusive from a1..b1 range to a2..b2 range
-fun scale(a1: Float, b1: Float, x: ClosedFloatingPointRange<Float>, a2: Float, b2: Float) =
-    scale(a1, b1, x.start, a2, b2)..scale(a1, b1, x.endInclusive, a2, b2)
+ */
+fun scale(start1: Float, end1: Float, pos: Float, start2: Float, end2: Float) =
+    lerp(start2, end2, calculateFraction(start1, end1, pos))
+
+/**
+ * Scale x.start, x.endInclusive from a1..b1 range to a2..b2 range
+ */
+fun scale(
+    start1: Float,
+    end1: Float,
+    range: ClosedFloatingPointRange<Float>,
+    start2: Float,
+    end2: Float
+) =
+    scale(start1, end1, range.start, start2, end2)..scale(start1, end1, range.endInclusive, start2, end2)
 
 
 /**
