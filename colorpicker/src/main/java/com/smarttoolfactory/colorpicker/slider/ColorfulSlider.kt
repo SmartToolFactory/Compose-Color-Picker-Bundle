@@ -2,7 +2,6 @@ package com.smarttoolfactory.colorpicker.slider
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.*
@@ -35,7 +34,7 @@ fun ColorfulSlider(
     enabled: Boolean = true,
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     coerceThumbInTrack: Boolean = false,
-    colors: MaterialSliderDefaults.MaterialSliderColors = MaterialSliderDefaults.defaultColors()
+    colors: MaterialSliderDefaults.MaterialSliderColors = MaterialSliderDefaults.materialColors()
 ) {
 
     val onValueChangeState = rememberUpdatedState(onValueChange)
@@ -61,8 +60,8 @@ fun ColorfulSlider(
 
         with(LocalDensity.current) {
             thumbRadiusInPx = thumbRadius.toPx()
-                .coerceAtLeast(trackHeight.toPx() / 2)
-            trackStart = if (coerceThumbInTrack) thumbRadiusInPx + thumbRadiusInPx else thumbRadiusInPx
+            val strokeRadius = trackHeight.toPx() / 2
+            trackStart = thumbRadiusInPx.coerceAtLeast(strokeRadius)
             trackEnd = width - trackStart
         }
 
@@ -141,12 +140,10 @@ private fun SliderImpl(
 
         val trackStrokeWidth: Float
         val thumbSize: Dp
-        val widthDp: Dp
 
         with(LocalDensity.current) {
             trackStrokeWidth = trackHeight.toPx()
             thumbSize = (2 * thumbRadius).toDp()
-            widthDp = (trackEnd - trackStart).toDp()
         }
 
         val thumbCenterPos = (trackStart + (trackEnd - trackStart) * fraction)
@@ -197,46 +194,21 @@ private fun Track(
     val strokeRadius = trackHeight / 2
     val thumbCenter = (trackStart + (trackEnd - trackStart) * fraction)
 
+    val trackDrawLength =
+        if (coerceThumbInTrack) trackStart - thumbRadius + strokeRadius else trackStart
+
     Canvas(modifier = modifier) {
-
-//        val thumbPosInCanvas = scale(
-//            start1 = trackStart,
-//            end1 = trackEnd,
-//            pos = fraction,
-//            start2 = 0f,
-//            end2 = size.width
-//        )
-
         val width = size.width
         val isRtl = layoutDirection == LayoutDirection.Rtl
 
         val centerY = center.y
-        val padding = if (coerceThumbInTrack) thumbRadius + strokeRadius else trackStart
 
-        val sliderLeft = Offset(padding, centerY)
-        val sliderRight = Offset(width - padding, centerY)
-
-
+        val sliderLeft = Offset((width - trackDrawLength).coerceAtLeast(0f), centerY)
+        val sliderRight = Offset(width - sliderLeft.x, centerY)
         val sliderStart = if (isRtl) sliderRight else sliderLeft
         val sliderEnd = if (isRtl) sliderLeft else sliderRight
 
         val sliderValue = Offset(thumbCenter, centerY)
-
-        println(
-            "🔥Canvas\n" +
-                    "width: ${size.width}, trackWidth: $width, trackStart: $trackStart, trackEnd: $trackEnd\n" +
-                    "strokeRadius: $strokeRadius, thumbCenter: $thumbCenter, fraction: $fraction\n" +
-                    "isRtl: $isRtl, sliderStart: ${sliderStart.x}, sliderEnd: ${sliderEnd.x}, sliderValue: ${sliderValue.x}"
-        )
-
-        // DEBUG Function to display trackable range
-
-
-        drawLine(
-            Color.Magenta, start = Offset(0f, 0f),
-            end = Offset(size.width, 0f),
-            strokeWidth = 10f
-        )
 
         drawLine(
             Color.Yellow, start = Offset(trackStart, 20f),
@@ -260,7 +232,7 @@ private fun Track(
                 drawWithBrush = true
             }
 
-            if (!drawWithBrush && colorBrush.color != null) {
+            if (!drawWithBrush) {
 
                 drawLine(
                     colorBrush.color,
@@ -279,46 +251,21 @@ private fun Track(
                 drawLine(
                     brush,
                     start = sliderStart,
-                    end = sliderValue,
+                    end = if (isInactiveSliderDrawn) sliderEnd else sliderValue,
                     strokeWidth = trackHeight,
                     cap = StrokeCap.Round
                 )
                 drawWithBrush = true
             }
 
-            if (!drawWithBrush && colorBrush.color != null) {
-
-//                with(drawContext.canvas.nativeCanvas) {
-//                    val checkPoint = saveLayer(null, null)
-//
-//                    drawLine(
-//                        colorBrush.color.copy(.5f),
-//                        start = sliderStart,
-//                        end = sliderEnd,
-//                        strokeWidth = trackHeight,
-//                        cap = StrokeCap.Round
-//                    )
-//
-//
-//                    drawLine(
-//                        colorBrush.color,
-//                        start = sliderStart,
-//                        end = sliderValue,
-//                        strokeWidth = trackHeight,
-//                        cap = StrokeCap.Round,
-//                        blendMode = BlendMode.SrcIn
-//                    )
-//                    restoreToCount(checkPoint)
-//                }
-
+            if (!drawWithBrush) {
                 drawLine(
                     colorBrush.color,
-                    start = Offset(sliderStart.x, center.y),
-                    end = sliderValue,
+                    start = sliderStart,
+                    end = if (isInactiveSliderDrawn) sliderValue else sliderEnd,
                     strokeWidth = trackHeight,
                     cap = StrokeCap.Round
                 )
-
             }
         }
 
@@ -350,14 +297,14 @@ private fun Thumb(
     Spacer(
         modifier = modifier
             .offset { IntOffset(offset.toInt(), 0) }
-            .border(2.dp, Color.Red, shape = CircleShape)
-            .shadow(2.dp, shape = CircleShape)
+//            .border(2.dp, Color.Red, shape = CircleShape)
+            .shadow(1.dp, shape = CircleShape)
             .size(thumbSize)
-//            .then(
-//                colorBrush.brush?.let { brush: Brush ->
-//                    Modifier.background(brush)
-//                } ?: Modifier.background(colorBrush.color)
-//            )
+            .then(
+                colorBrush.brush?.let { brush: Brush ->
+                    Modifier.background(brush)
+                } ?: Modifier.background(colorBrush.color)
+            )
     )
 }
 
