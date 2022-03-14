@@ -42,9 +42,8 @@ fun ColorfulSliderDemo() {
             modifier = Modifier.width(240.dp),
             thumbRadius = 10.dp,
             trackHeight = 12.dp,
-            onValueChange = {
-                progress = it
-                println("RED ColorSliderNew() PROGRESS $it")
+            onValueChange = {value,_,_->
+                progress = value
             },
             enabled = false,
             colors = MaterialSliderDefaults.defaultColors()
@@ -60,9 +59,8 @@ fun ColorfulSliderDemo() {
             modifier = Modifier.width(240.dp),
             thumbRadius = 10.dp,
             trackHeight = 12.dp,
-            onValueChange = {
-                red = it
-                println("RED ColorSliderNew() PROGRESS $it")
+            onValueChange = {value,_,_->
+                progress = value
             },
             valueRange = 0f..255f,
             coerceThumbInTrack = true,
@@ -83,9 +81,8 @@ fun ColorfulSliderDemo() {
             modifier = Modifier.width(240.dp),
             thumbRadius = 10.dp,
             trackHeight = 12.dp,
-            onValueChange = {
-                green = it
-                println("GREN ColorSliderNew() PROGRESS $it")
+            onValueChange = {value,_,_->
+                progress = value
             },
             valueRange = 0f..255f,
             coerceThumbInTrack = true,
@@ -104,9 +101,8 @@ fun ColorfulSliderDemo() {
             modifier = Modifier.width(240.dp),
             thumbRadius = 10.dp,
             trackHeight = 12.dp,
-            onValueChange = {
-                blue = it
-                println("BLUE ColorSliderNew() PROGRESS $it")
+            onValueChange = {value,_,_->
+                progress = value
             },
             valueRange = 0f..255f,
             coerceThumbInTrack = true,

@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import com.smarttoolfactory.colorpicker.ui.ActiveTrackColor
+import com.smarttoolfactory.colorpicker.ui.InactiveTrackColor
 import com.smarttoolfactory.colorpicker.ui.ThumbColor
 
 /**
@@ -16,7 +17,6 @@ import com.smarttoolfactory.colorpicker.ui.ThumbColor
  * [ColorfulSlider]
  */
 data class ColorBrush(val brush: Brush? = null, val color: Color)
-
 
 /**
  * Creates a [MaterialSliderColors] that represents the different colors used in parts of the
@@ -36,6 +36,14 @@ data class ColorBrush(val brush: Brush? = null, val color: Color)
  * disabled
  * @param disabledInactiveTrackColor color of the track in the "inactive" part when the
  * Slider is disabled
+ * @param activeTickColor colors to be used to draw tick marks on the active track, if `steps`
+ * is specified
+ * @param inactiveTickColor colors to be used to draw tick marks on the inactive track, if
+ * `steps` are specified on the Slider is specified
+ * @param disabledActiveTickColor colors to be used to draw tick marks on the active track
+ * when Slider is disabled and when `steps` are specified on it
+ * @param disabledInactiveTickColor colors to be used to draw tick marks on the inactive part
+ * of the track when Slider is disabled and when `steps` are specified on it
  */
 object MaterialSliderDefaults {
 
@@ -95,12 +103,21 @@ object MaterialSliderDefaults {
     @Composable
     fun materialColors(
         thumbColor: ColorBrush = ColorBrush(color = ThumbColor),
-        disabledThumbColor: ColorBrush = ColorBrush(color = ThumbColor),
+        disabledThumbColor: ColorBrush = ColorBrush(
+            color = ThumbColor
+                .copy(alpha = ContentAlpha.disabled)
+                .compositeOver(MaterialTheme.colors.surface)
+        ),
         activeTrackColor: ColorBrush = ColorBrush(color = ActiveTrackColor),
-        disabledActiveTrackColor: ColorBrush =
-            ColorBrush(color = ActiveTrackColor.copy(alpha = DisabledActiveTrackAlpha)),
-        inactiveTrackColor: ColorBrush? = null,
-        disabledInactiveTrackColor: ColorBrush? = null,
+        disabledActiveTrackColor: ColorBrush = ColorBrush(
+            color = MaterialTheme.colors.onSurface.copy(alpha = DisabledActiveTrackAlpha)
+        ),
+        inactiveTrackColor: ColorBrush = ColorBrush(
+            color = activeTrackColor.color.copy(alpha = InactiveTrackAlpha)
+        ),
+        disabledInactiveTrackColor: ColorBrush = ColorBrush(
+            color = disabledActiveTrackColor.color.copy(alpha = DisabledInactiveTrackAlpha)
+        ),
         activeTickColor: ColorBrush = ColorBrush(
             color = contentColorFor(activeTrackColor.color).copy(alpha = SliderDefaults.TickAlpha)
         ),
@@ -111,8 +128,8 @@ object MaterialSliderDefaults {
             color = activeTickColor.color.copy(alpha = SliderDefaults.DisabledTickAlpha)
         ),
         disabledInactiveTickColor: ColorBrush = ColorBrush(
-            color = disabledInactiveTrackColor?.color
-                ?.copy(alpha = SliderDefaults.DisabledTickAlpha) ?: Color.Transparent
+            color = disabledInactiveTrackColor.color
+                .copy(alpha = SliderDefaults.DisabledTickAlpha)
         )
     ): MaterialSliderColors {
 
@@ -139,8 +156,8 @@ object MaterialSliderDefaults {
         disabledThumbColor: ColorBrush,
         activeTrackColor: ColorBrush,
         disabledActiveTrackColor: ColorBrush,
-        inactiveTrackColor: ColorBrush?,
-        disabledInactiveTrackColor: ColorBrush?,
+        inactiveTrackColor: ColorBrush,
+        disabledInactiveTrackColor: ColorBrush,
         activeTickColor: ColorBrush,
         inactiveTickColor: ColorBrush,
         disabledActiveTickColor: ColorBrush,
@@ -166,22 +183,66 @@ object MaterialSliderDefaults {
         Brushes
      */
     @Composable
-    fun greenBrush() {
+    fun greenBrush(
+        thumbColor: ColorBrush,
+        disabledThumbColor: ColorBrush,
+        activeTrackColor: ColorBrush,
+        disabledActiveTrackColor: ColorBrush,
+        inactiveTrackColor: ColorBrush,
+        disabledInactiveTrackColor: ColorBrush,
+        activeTickColor: ColorBrush,
+        inactiveTickColor: ColorBrush,
+        disabledActiveTickColor: ColorBrush,
+        disabledInactiveTickColor: ColorBrush
+    ) {
 
     }
 
     @Composable
-    fun redBrush() {
+    fun redBrush(
+        thumbColor: ColorBrush,
+        disabledThumbColor: ColorBrush,
+        activeTrackColor: ColorBrush,
+        disabledActiveTrackColor: ColorBrush,
+        inactiveTrackColor: ColorBrush,
+        disabledInactiveTrackColor: ColorBrush,
+        activeTickColor: ColorBrush,
+        inactiveTickColor: ColorBrush,
+        disabledActiveTickColor: ColorBrush,
+        disabledInactiveTickColor: ColorBrush
+    ) {
 
     }
 
     @Composable
-    fun blueBrush() {
+    fun blueBrush(
+        thumbColor: ColorBrush,
+        disabledThumbColor: ColorBrush,
+        activeTrackColor: ColorBrush,
+        disabledActiveTrackColor: ColorBrush,
+        inactiveTrackColor: ColorBrush,
+        disabledInactiveTrackColor: ColorBrush,
+        activeTickColor: ColorBrush,
+        inactiveTickColor: ColorBrush,
+        disabledActiveTickColor: ColorBrush,
+        disabledInactiveTickColor: ColorBrush
+    ) {
 
     }
 
     @Composable
-    fun rainbowBrush() {
+    fun rainbowBrush(
+        thumbColor: ColorBrush,
+        disabledThumbColor: ColorBrush,
+        activeTrackColor: ColorBrush,
+        disabledActiveTrackColor: ColorBrush,
+        inactiveTrackColor: ColorBrush,
+        disabledInactiveTrackColor: ColorBrush,
+        activeTickColor: ColorBrush,
+        inactiveTickColor: ColorBrush,
+        disabledActiveTickColor: ColorBrush,
+        disabledInactiveTickColor: ColorBrush
+    ) {
 
     }
 
@@ -190,12 +251,12 @@ object MaterialSliderDefaults {
         private val disabledThumbColor: ColorBrush,
         private val activeTrackColor: ColorBrush,
         private val disabledActiveTrackColor: ColorBrush,
-        private val inactiveTrackColor: ColorBrush?,
-        private val disabledInactiveTrackColor: ColorBrush?,
-        private val activeTickColor: ColorBrush?,
-        private val inactiveTickColor: ColorBrush?,
-        private val disabledActiveTickColor: ColorBrush?,
-        private val disabledInactiveTickColor: ColorBrush?
+        private val inactiveTrackColor: ColorBrush,
+        private val disabledInactiveTrackColor: ColorBrush,
+        private val activeTickColor: ColorBrush,
+        private val inactiveTickColor: ColorBrush,
+        private val disabledActiveTickColor: ColorBrush,
+        private val disabledInactiveTickColor: ColorBrush
     ) : MaterialSliderColors {
 
         @Composable
@@ -204,7 +265,7 @@ object MaterialSliderDefaults {
         }
 
         @Composable
-        override fun trackColor(enabled: Boolean, active: Boolean): State<ColorBrush?> {
+        override fun trackColor(enabled: Boolean, active: Boolean): State<ColorBrush> {
             return rememberUpdatedState(
                 if (enabled) {
                     if (active) activeTrackColor else inactiveTrackColor
@@ -215,7 +276,7 @@ object MaterialSliderDefaults {
         }
 
         @Composable
-        override fun tickColor(enabled: Boolean, active: Boolean): State<ColorBrush?> {
+        override fun tickColor(enabled: Boolean, active: Boolean): State<ColorBrush> {
             return rememberUpdatedState(
                 if (enabled) {
                     if (active) activeTickColor else inactiveTickColor
@@ -279,6 +340,11 @@ object MaterialSliderDefaults {
 
 }
 
+/**
+ * Interface for providing thumb, track, and tick colors using [ColorBrush]. When providing
+ * a [ColorBrush] initially a null check is done whether [ColorBrush.brush] is not null,
+ * if it's not null gradient is drawn but when tis non-nullable color is used.
+ */
 @Stable
 interface MaterialSliderColors {
 
@@ -300,7 +366,7 @@ interface MaterialSliderColors {
      * @param active whether the part of the track is active of not
      */
     @Composable
-    fun trackColor(enabled: Boolean, active: Boolean): State<ColorBrush?>
+    fun trackColor(enabled: Boolean, active: Boolean): State<ColorBrush>
 
     /**
      * Represents the [ColorBrush] used for the sliders's tick which is the dot separating steps,
@@ -314,6 +380,6 @@ interface MaterialSliderColors {
      * @param active whether the part of the track this tick is in is active of not
      */
     @Composable
-    fun tickColor(enabled: Boolean, active: Boolean): State<ColorBrush?>
+    fun tickColor(enabled: Boolean, active: Boolean): State<ColorBrush>
 
 }

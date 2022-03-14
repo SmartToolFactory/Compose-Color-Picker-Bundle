@@ -46,10 +46,9 @@ fun ColorPickerImplementation() {
                     .border(2.dp, Color.Green),
                 thumbRadius = 8.dp,
                 trackHeight = 6.dp,
-                onValueChange = {
-                    colorValue = it
-                    println("😍PROGRESS $it")
-                }
+                onValueChange = { value, _, _ ->
+                    colorValue = value
+                },
 
             )
 
