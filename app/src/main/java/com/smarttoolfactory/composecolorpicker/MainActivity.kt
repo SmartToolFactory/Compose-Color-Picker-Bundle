@@ -23,22 +23,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
 //                   ColorPickerImplementation()
-                    ColorfulSliderDemo()
+//                    ColorfulSliderDemo()
+                    ColorfulSliderDimensionDemo()
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    ComposeColorPickerTheme {
-        Greeting("Android")
     }
 }

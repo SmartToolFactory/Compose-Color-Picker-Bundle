@@ -1,16 +1,17 @@
 package com.smarttoolfactory.colorpicker.slider
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.lerp
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
@@ -23,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.calculateFraction
 import com.smarttoolfactory.colorpicker.gesture.pointerMotionEvents
 import com.smarttoolfactory.colorpicker.scale
+import com.smarttoolfactory.colorpicker.ui.ActiveTrackColor
+import com.smarttoolfactory.colorpicker.ui.InactiveTrackColor
 import kotlin.math.abs
 
 @Composable
@@ -34,12 +37,17 @@ fun ColorfulSlider(
     thumbRadius: Dp = ThumbRadius,
     enabled: Boolean = true,
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    steps: Int = 0,
     coerceThumbInTrack: Boolean = false,
-    drawTrack: Boolean = false,
-    colors: MaterialSliderColors = MaterialSliderDefaults.materialColors()
+    drawTrack: Boolean = true,
+    colors: MaterialSliderColors = MaterialSliderDefaults.defaultColors()
 ) {
 
+    require(steps >= 0) { "steps should be >= 0" }
     val onValueChangeState = rememberUpdatedState(onValueChange)
+    val tickFractions = remember(steps) {
+        stepsToTickFractions(steps)
+    }
 
     // TODO Check these modifiers with different slider width, height and size params
     BoxWithConstraints(
@@ -115,6 +123,7 @@ fun ColorfulSlider(
             fraction = fraction,
             trackStart = trackStart,
             trackEnd = trackEnd,
+            tickFractions = tickFractions,
             colors = colors,
             trackHeight = trackHeight,
             thumbRadius = thumbRadiusInPx,
@@ -131,6 +140,7 @@ private fun SliderImpl(
     fraction: Float,
     trackStart: Float,
     trackEnd: Float,
+    tickFractions: List<Float>,
     colors: MaterialSliderColors,
     trackHeight: Dp,
     thumbRadius: Float,
@@ -159,6 +169,7 @@ private fun SliderImpl(
                 .align(Alignment.CenterStart)
                 .fillMaxSize(),
             fraction = fraction,
+            tickFractions = tickFractions,
             thumbRadius = thumbRadius,
             trackStart = trackStart,
             trackEnd = trackEnd,
@@ -183,6 +194,7 @@ private fun SliderImpl(
 private fun Track(
     modifier: Modifier,
     fraction: Float,
+    tickFractions: List<Float>,
     thumbRadius: Float,
     trackStart: Float,
     trackEnd: Float,
@@ -198,11 +210,17 @@ private fun Track(
     val inactiveTrackColor: ColorBrush? =
         colors.trackColor(enabled = enabled, active = false).value
 
+    val inactiveTickColor = colors.tickColor(enabled, active = false).value
+    val activeTickColor = colors.tickColor(enabled, active = true).value
+
     // stroke radius is used for drawing length it adds this radius to both sides of the line
     val strokeRadius = trackHeight / 2
 
     // Start of drawing in Canvas
-    // when not coerced it's start of track when we limit smaller thumb in taller track
+    // when not coerced set start of drawing line at trackStart + strokeRadius
+    // to limit drawing start edge at track start end edge at track end
+
+    // When coerced move edges of drawing by thumb radius to cover thumb edges in drawing
     // it needs to move to right as stroke radius minus thumb radius to match track start
     val drawStart =
         if (coerceThumbInTrack) trackStart - thumbRadius + strokeRadius else trackStart
@@ -227,9 +245,9 @@ private fun Track(
         )
 
         println(
-            "🔥 CANVAS isRtL:$isRtl, drawStart:$drawStart, fraction:$fraction\n" +
-                    "SliderLeft:${sliderLeft.x}, sliderRight:${sliderRight.x}\n" +
-                    "sliderStart:${sliderStart.x}, sliderEnd:${sliderEnd.x}, val:${sliderValue.x}"
+            "🔥 CANVAS isRtL:$isRtl, trackStart:$trackStart, strokeRadius:$strokeRadius thumbRadius:$thumbRadius\n" +
+                    "drawStart:$drawStart, fraction:$fraction\n" +
+                    "SliderLeft:${sliderLeft.x}, sliderStart:${sliderStart.x}, sliderValue:${sliderValue.x}\n"
         )
 
         var isInactiveSliderDrawn = false
@@ -285,7 +303,6 @@ private fun Track(
             }
         }
 
-
         if (drawTrack) {
             drawLine(
                 color = activeTrackColor?.color?.copy(.7f) ?: Color.Yellow,
@@ -293,8 +310,26 @@ private fun Track(
                 end = sliderEnd,
                 strokeWidth = strokeRadius / 4
             )
-
         }
+
+        if (isInactiveSliderDrawn) {
+
+            tickFractions.groupBy { it > fraction }
+                .forEach { (outsideFraction, list) ->
+                    println("✏️ Outside: $outsideFraction, size: ${list.size}")
+                    drawPoints(
+                        points = list.map {
+                            Offset(lerp(sliderStart, sliderEnd, it).x, center.y)
+                        },
+                        pointMode = PointMode.Points,
+                        color = (if (outsideFraction) inactiveTickColor?.color ?: Color.Red
+                        else activeTickColor?.color ?: Color.Green),
+                        strokeRadius.coerceAtMost(thumbRadius / 2),
+                        cap = StrokeCap.Round
+                    )
+                }
+        }
+
 
 //        drawCircle(
 //            Color.Black,
@@ -324,13 +359,14 @@ private fun Thumb(
     Spacer(
         modifier = modifier
             .offset { IntOffset(offset.toInt(), 0) }
-            .shadow(1.dp, shape = CircleShape)
+//            .shadow(1.dp, shape = CircleShape)
+            .border(2.dp, Color.Red, CircleShape)
             .size(thumbSize)
-            .then(
-                colorBrush.brush?.let { brush: Brush ->
-                    Modifier.background(brush)
-                } ?: Modifier.background(colorBrush.color)
-            )
+//            .then(
+//                colorBrush.brush?.let { brush: Brush ->
+//                    Modifier.background(brush)
+//                } ?: Modifier.background(colorBrush.color)
+//            )
     )
 }
 
@@ -353,6 +389,9 @@ private fun CorrectValueSideEffect(
     }
 }
 
+private fun stepsToTickFractions(steps: Int): List<Float> {
+    return if (steps == 0) emptyList() else List(steps + 2) { it.toFloat() / (steps + 1) }
+}
 
 // Internal to be referred to in tests
 internal val TrackHeight = 4.dp

@@ -1,7 +1,6 @@
 package com.smarttoolfactory.colorpicker.slider
 
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
@@ -18,6 +17,26 @@ import com.smarttoolfactory.colorpicker.ui.ThumbColor
  */
 data class ColorBrush(val brush: Brush? = null, val color: Color)
 
+
+/**
+ * Creates a [MaterialSliderColors] that represents the different colors used in parts of the
+ * [Slider] in different states.
+ *
+ * For the name references below the words "active" and "inactive" are used. Active part of
+ * the slider is filled with progress, so if slider's progress is 30% out of 100%, left (or
+ * right in RTL) 30% of the track will be active, the rest is not active.
+ *
+ * @param thumbColor thumb color when enabled
+ * @param disabledThumbColor thumb colors when disabled
+ * @param activeTrackColor color of the track in the part that is "active", meaning that the
+ * thumb is ahead of it
+ * @param inactiveTrackColor color of the track in the part that is "inactive", meaning that the
+ * thumb is before it
+ * @param disabledActiveTrackColor color of the track in the "active" part when the Slider is
+ * disabled
+ * @param disabledInactiveTrackColor color of the track in the "inactive" part when the
+ * Slider is disabled
+ */
 object MaterialSliderDefaults {
 
     /**
@@ -41,15 +60,32 @@ object MaterialSliderDefaults {
         disabledInactiveTrackColor: ColorBrush = ColorBrush(
             color = disabledActiveTrackColor.color.copy(alpha = DisabledInactiveTrackAlpha)
         ),
+        activeTickColor: ColorBrush = ColorBrush(
+            color = contentColorFor(activeTrackColor.color).copy(alpha = SliderDefaults.TickAlpha)
+        ),
+        inactiveTickColor: ColorBrush = ColorBrush(
+            color = activeTrackColor.color.copy(alpha = SliderDefaults.TickAlpha)
+        ),
+        disabledActiveTickColor: ColorBrush = ColorBrush(
+            color = activeTickColor.color.copy(alpha = SliderDefaults.DisabledTickAlpha)
+        ),
+        disabledInactiveTickColor: ColorBrush = ColorBrush(
+            color = disabledInactiveTrackColor.color
+                .copy(alpha = SliderDefaults.DisabledTickAlpha)
+        )
     ): MaterialSliderColors {
 
         return DefaultMaterialSliderColors(
-            thumbColor,
-            disabledThumbColor,
-            activeTrackColor,
-            inactiveTrackColor,
-            disabledActiveTrackColor,
-            disabledInactiveTrackColor
+            thumbColor = thumbColor,
+            disabledThumbColor = disabledThumbColor,
+            activeTrackColor = activeTrackColor,
+            inactiveTrackColor = inactiveTrackColor,
+            disabledActiveTrackColor = disabledActiveTrackColor,
+            disabledInactiveTrackColor = disabledInactiveTrackColor,
+            activeTickColor = activeTickColor,
+            inactiveTickColor = inactiveTickColor,
+            disabledActiveTickColor = disabledActiveTickColor,
+            disabledInactiveTickColor = disabledInactiveTickColor
         )
     }
 
@@ -64,16 +100,33 @@ object MaterialSliderDefaults {
         disabledActiveTrackColor: ColorBrush =
             ColorBrush(color = ActiveTrackColor.copy(alpha = DisabledActiveTrackAlpha)),
         inactiveTrackColor: ColorBrush? = null,
-        disabledInactiveTrackColor: ColorBrush? = null
+        disabledInactiveTrackColor: ColorBrush? = null,
+        activeTickColor: ColorBrush = ColorBrush(
+            color = contentColorFor(activeTrackColor.color).copy(alpha = SliderDefaults.TickAlpha)
+        ),
+        inactiveTickColor: ColorBrush = ColorBrush(
+            color = activeTrackColor.color.copy(alpha = SliderDefaults.TickAlpha)
+        ),
+        disabledActiveTickColor: ColorBrush = ColorBrush(
+            color = activeTickColor.color.copy(alpha = SliderDefaults.DisabledTickAlpha)
+        ),
+        disabledInactiveTickColor: ColorBrush = ColorBrush(
+            color = disabledInactiveTrackColor?.color
+                ?.copy(alpha = SliderDefaults.DisabledTickAlpha) ?: Color.Transparent
+        )
     ): MaterialSliderColors {
 
         return DefaultMaterialSliderColors(
-            thumbColor,
-            disabledThumbColor,
-            activeTrackColor,
-            inactiveTrackColor,
-            disabledActiveTrackColor,
-            disabledInactiveTrackColor
+            thumbColor = thumbColor,
+            disabledThumbColor = disabledThumbColor,
+            activeTrackColor = activeTrackColor,
+            inactiveTrackColor = inactiveTrackColor,
+            disabledActiveTrackColor = disabledActiveTrackColor,
+            disabledInactiveTrackColor = disabledInactiveTrackColor,
+            activeTickColor = activeTickColor,
+            inactiveTickColor = inactiveTickColor,
+            disabledActiveTickColor = disabledActiveTickColor,
+            disabledInactiveTickColor = disabledInactiveTickColor
         )
     }
 
@@ -88,14 +141,24 @@ object MaterialSliderDefaults {
         disabledActiveTrackColor: ColorBrush,
         inactiveTrackColor: ColorBrush?,
         disabledInactiveTrackColor: ColorBrush?,
+        activeTickColor: ColorBrush,
+        inactiveTickColor: ColorBrush,
+        disabledActiveTickColor: ColorBrush,
+        disabledInactiveTickColor: ColorBrush
+
     ): MaterialSliderColors {
+
         return DefaultMaterialSliderColors(
-            thumbColor,
-            disabledThumbColor,
-            activeTrackColor,
-            inactiveTrackColor,
-            disabledActiveTrackColor,
-            disabledInactiveTrackColor
+            thumbColor = thumbColor,
+            disabledThumbColor = disabledThumbColor,
+            activeTrackColor = activeTrackColor,
+            inactiveTrackColor = inactiveTrackColor,
+            disabledActiveTrackColor = disabledActiveTrackColor,
+            disabledInactiveTrackColor = disabledInactiveTrackColor,
+            activeTickColor = activeTickColor,
+            inactiveTickColor = inactiveTickColor,
+            disabledActiveTickColor = disabledActiveTickColor,
+            disabledInactiveTickColor = disabledInactiveTickColor
         )
     }
 
@@ -122,25 +185,17 @@ object MaterialSliderDefaults {
 
     }
 
-
-    @Stable
-    interface MaterialSliderColors {
-
-        @Composable
-        fun thumbColor(enabled: Boolean): State<ColorBrush>
-
-        @Composable
-        fun trackColor(enabled: Boolean, active: Boolean): State<ColorBrush?>
-
-    }
-
     class DefaultMaterialSliderColors(
         private val thumbColor: ColorBrush,
         private val disabledThumbColor: ColorBrush,
         private val activeTrackColor: ColorBrush,
-        private val inactiveTrackColor: ColorBrush?,
         private val disabledActiveTrackColor: ColorBrush,
+        private val inactiveTrackColor: ColorBrush?,
         private val disabledInactiveTrackColor: ColorBrush?,
+        private val activeTickColor: ColorBrush?,
+        private val inactiveTickColor: ColorBrush?,
+        private val disabledActiveTickColor: ColorBrush?,
+        private val disabledInactiveTickColor: ColorBrush?
     ) : MaterialSliderColors {
 
         @Composable
@@ -155,6 +210,17 @@ object MaterialSliderDefaults {
                     if (active) activeTrackColor else inactiveTrackColor
                 } else {
                     if (active) disabledActiveTrackColor else disabledInactiveTrackColor
+                }
+            )
+        }
+
+        @Composable
+        override fun tickColor(enabled: Boolean, active: Boolean): State<ColorBrush?> {
+            return rememberUpdatedState(
+                if (enabled) {
+                    if (active) activeTickColor else inactiveTickColor
+                } else {
+                    if (active) disabledActiveTickColor else disabledInactiveTickColor
                 }
             )
         }
@@ -210,5 +276,44 @@ object MaterialSliderDefaults {
      * Default alpha for tick marks when they are disabled
      */
     private const val DisabledTickAlpha = 0.12f
+
+}
+
+@Stable
+interface MaterialSliderColors {
+
+    /**
+     * Represents the [ColorBrush] used for the sliders's thumb, depending on [enabled].
+     *
+     * @param enabled whether the [Slider] is enabled or not
+     */
+    @Composable
+    fun thumbColor(enabled: Boolean): State<ColorBrush>
+
+    /**
+     * Represents the [ColorBrush] used for the sliders's track, depending on [enabled] and [active].
+     *
+     * Active part is filled with progress, so if sliders progress is 30% out of 100%, left (or
+     * right in RTL) 30% of the track will be active, the rest is not active.
+     *
+     * @param enabled whether the [Slider] is enabled or not
+     * @param active whether the part of the track is active of not
+     */
+    @Composable
+    fun trackColor(enabled: Boolean, active: Boolean): State<ColorBrush?>
+
+    /**
+     * Represents the [ColorBrush] used for the sliders's tick which is the dot separating steps,
+     * if they are set on the slider, depending on [enabled] and [active].
+     *
+     * Active tick is the tick that is in the part of the track filled with progress, so if
+     * sliders progress is 30% out of 100%, left (or right in RTL) 30% of the track and the ticks
+     * in this 30% will be active, the rest is not active.
+     *
+     * @param enabled whether the [Slider] is enabled or not
+     * @param active whether the part of the track this tick is in is active of not
+     */
+    @Composable
+    fun tickColor(enabled: Boolean, active: Boolean): State<ColorBrush?>
 
 }
