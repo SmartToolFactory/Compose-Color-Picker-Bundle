@@ -12,9 +12,6 @@ val Purple400 = Color(0xffAB47BC)
 val Brown400 = Color(0xff8D6E63)
 val BlueGrey400 = Color(0xff78909C)
 
-val backgroundColor = Color(0xffECEFF1)
-
-
 val ThumbColor = Color(0xfff0f0f0)
 val DisabledThumbColor = Color(0xfff0f0f0)
 
@@ -24,22 +21,6 @@ val InactiveTrackColor = Color(0xffcccccc)
 val DisabledInactiveTrackColor = Color(0xffcccccc)
 val TickColor = Color(0xffcccccc)
 
-val gradientColors = listOf(
-    Color.Red,
-    Color.Magenta,
-    Color.Blue,
-    Color.Cyan,
-    Color.Green,
-    Color.Yellow,
-    Color.Red
-)
+val Gray = Color(0xff808080)
+val WhiteTransparent = Color(0x00ffffff)
 
-val gradientColorsReversed = listOf(
-    Color.Red,
-    Color.Yellow,
-    Color.Green,
-    Color.Cyan,
-    Color.Blue,
-    Color.Magenta,
-    Color.Red
-)
