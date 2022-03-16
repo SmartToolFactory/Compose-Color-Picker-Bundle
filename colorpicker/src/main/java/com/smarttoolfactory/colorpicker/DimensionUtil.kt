@@ -1,7 +1,14 @@
 package com.smarttoolfactory.colorpicker
 
+/**
+ * [Linear Interpolation](https://en.wikipedia.org/wiki/Linear_interpolation) function that moves
+ * amount from it's current position to start and amount
+ * @param start of interval
+ * @param end of interval
+ * @param amount e closed unit interval [0, 1]
+ */
 fun lerp(start: Float, end: Float, amount: Float): Float {
-    return start + amount * (end - start)
+    return (1 - amount) * start + amount * (end - start)
 }
 
 /**
@@ -21,7 +28,13 @@ fun scale(
     start2: Float,
     end2: Float
 ) =
-    scale(start1, end1, range.start, start2, end2)..scale(start1, end1, range.endInclusive, start2, end2)
+    scale(start1, end1, range.start, start2, end2)..scale(
+        start1,
+        end1,
+        range.endInclusive,
+        start2,
+        end2
+    )
 
 
 /**
