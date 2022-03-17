@@ -194,7 +194,7 @@ fun sliderSaturationHSLGradient(
     )
 }
 
-fun sliderLightnessGradient(
+fun sliderLightnessGradient2Stops(
     hue: Float,
     alpha: Float = 1f,
     start: Offset = Offset.Zero,
@@ -210,7 +210,7 @@ fun sliderLightnessGradient(
     )
 }
 
-fun sliderLightnessGradient2(
+fun sliderLightnessGradient3Stops(
     hue: Float, alpha: Float = 1f,
     start: Offset = Offset.Zero,
     end: Offset = Offset.Infinite
@@ -299,15 +299,31 @@ fun sliderBlueGradient(
  */
 fun GradientOffset(angle: GradientAngle): GradientOffset {
     return when (angle) {
-        GradientAngle.Degree45 -> GradientOffset(
+        GradientAngle.CCW45 -> GradientOffset(
             start = Offset(0f, Float.POSITIVE_INFINITY),
             end = Offset(Float.POSITIVE_INFINITY, 0f)
         )
-        GradientAngle.Degree90 -> GradientOffset(
+        GradientAngle.CCW90 -> GradientOffset(
             start = Offset(0f, Float.POSITIVE_INFINITY),
             end = Offset(0f, 0f)
         )
-        GradientAngle.Degree135 -> GradientOffset(
+        GradientAngle.CCW135 -> GradientOffset(
+            start = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY),
+            end = Offset(0f, 0f)
+        )
+        GradientAngle.CCW180 -> GradientOffset(
+            start = Offset(Float.POSITIVE_INFINITY, 0f),
+            end = Offset(0f, 0f),
+        )
+        GradientAngle.CCW225 -> GradientOffset(
+            start =  Offset(Float.POSITIVE_INFINITY, 0f),
+            end =  Offset(0f, Float.POSITIVE_INFINITY),
+        )
+        GradientAngle.CCW270 -> GradientOffset(
+            start = Offset(0f, 0f),
+            end = Offset(0f, Float.POSITIVE_INFINITY)
+        )
+        GradientAngle.CCW315 -> GradientOffset(
             start = Offset(0f, 0f),
             end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
         )
@@ -321,5 +337,5 @@ fun GradientOffset(angle: GradientAngle): GradientOffset {
 data class GradientOffset(val start: Offset, val end: Offset)
 
 enum class GradientAngle {
-    Degree0, Degree45, Degree90, Degree135
+    CCW0, CCW45, CCW90, CCW135, CCW180, CCW225, CCW270, CCW315
 }
