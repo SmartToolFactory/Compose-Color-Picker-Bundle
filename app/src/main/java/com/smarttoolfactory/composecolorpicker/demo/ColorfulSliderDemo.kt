@@ -1,26 +1,22 @@
-package com.smarttoolfactory.composecolorpicker
+package com.smarttoolfactory.composecolorpicker.demo
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Slider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.slider.ColorBrush
 import com.smarttoolfactory.colorpicker.slider.ColorfulSlider
 import com.smarttoolfactory.colorpicker.slider.MaterialSliderDefaults
-import com.smarttoolfactory.colorpicker.ui.gradientColors
-import com.smarttoolfactory.colorpicker.ui.gradientColorsReversed
+import com.smarttoolfactory.colorpicker.ui.gradientColorScaleRGB
+import com.smarttoolfactory.colorpicker.ui.gradientColorScaleRGBReversed
 
 @Composable
 fun ColorfulSliderDemo() {
@@ -50,9 +46,15 @@ fun ColorfulSliderDemo() {
         )
 
 
+        var hue by remember { mutableStateOf(0f) }
+        var saturation by remember { mutableStateOf(1f) }
+        var lighness by remember { mutableStateOf(.5f) }
+        var value by remember { mutableStateOf(1f) }
+
         var red by remember { mutableStateOf(0f) }
         var green by remember { mutableStateOf(0f) }
         var blue by remember { mutableStateOf(0f) }
+        var alpha by remember { mutableStateOf(1f) }
 
         ColorfulSlider(
             value = red,
@@ -66,11 +68,11 @@ fun ColorfulSliderDemo() {
             coerceThumbInTrack = true,
             colors = MaterialSliderDefaults.materialColors(
                 activeTrackColor = ColorBrush(
-                    brush = Brush.linearGradient(gradientColorsReversed),
+                    brush = Brush.linearGradient(gradientColorScaleRGBReversed),
                     color = Color.Transparent
                 ),
                 inactiveTrackColor = ColorBrush(
-                    brush = Brush.linearGradient(gradientColors),
+                    brush = Brush.linearGradient(gradientColorScaleRGB),
                     color = Color.Transparent
                 )
             )
@@ -88,7 +90,7 @@ fun ColorfulSliderDemo() {
             coerceThumbInTrack = true,
             colors = MaterialSliderDefaults.materialColors(
                 activeTrackColor = ColorBrush(
-                    brush = Brush.linearGradient(gradientColorsReversed),
+                    brush = Brush.linearGradient(gradientColorScaleRGBReversed),
                     color = Color.Transparent
                 ),
                 inactiveTrackColor = ColorBrush(color = Color.Transparent)

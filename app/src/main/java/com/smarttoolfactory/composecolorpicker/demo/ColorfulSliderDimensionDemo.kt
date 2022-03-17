@@ -1,4 +1,4 @@
-package com.smarttoolfactory.composecolorpicker
+package com.smarttoolfactory.composecolorpicker.demo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
