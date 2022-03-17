@@ -12,7 +12,7 @@ val Purple400 = Color(0xffAB47BC)
 val Brown400 = Color(0xff8D6E63)
 val BlueGrey400 = Color(0xff78909C)
 
-val ThumbColor = Color(0xfff0f0f0)
+val ThumbColor = Color(0xffffffff)
 val DisabledThumbColor = Color(0xfff0f0f0)
 
 val ActiveTrackColor = Color(0xff489cef)
