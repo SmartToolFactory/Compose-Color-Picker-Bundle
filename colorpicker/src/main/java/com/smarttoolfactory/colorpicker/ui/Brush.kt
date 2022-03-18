@@ -1,6 +1,7 @@
 package com.smarttoolfactory.colorpicker.ui
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
@@ -289,11 +290,15 @@ fun sliderBlueGradient(
  *
  * 90 degrees
  * start = Offset(0f, Float.POSITIVE_INFINITY),
- * end = Offset(0f,0f)
+ * end = Offset(0f, 0f)
  *
  * 135 degrees
- * start = Offset(0f,0f),
- * end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
+ * start = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY),
+ * end = Offset(0f, 0f)
+ *
+ * 180 degrees
+ * start = Offset(Float.POSITIVE_INFINITY, 0f),
+ * end = Offset(0f, 0f),
  *
  * ```
  */
@@ -316,8 +321,8 @@ fun GradientOffset(angle: GradientAngle): GradientOffset {
             end = Offset(0f, 0f),
         )
         GradientAngle.CCW225 -> GradientOffset(
-            start =  Offset(Float.POSITIVE_INFINITY, 0f),
-            end =  Offset(0f, Float.POSITIVE_INFINITY),
+            start = Offset(Float.POSITIVE_INFINITY, 0f),
+            end = Offset(0f, Float.POSITIVE_INFINITY),
         )
         GradientAngle.CCW270 -> GradientOffset(
             start = Offset(0f, 0f),
@@ -332,6 +337,15 @@ fun GradientOffset(angle: GradientAngle): GradientOffset {
             end = Offset(Float.POSITIVE_INFINITY, 0f)
         )
     }
+}
+
+fun RotateGradient(angle: Float, width: Float, height: Float) {
+
+
+}
+
+fun RotateGradient(angle: Float, size: Size) {
+  return  RotateGradient(angle, size.width, size.height)
 }
 
 data class GradientOffset(val start: Offset, val end: Offset)
