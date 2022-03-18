@@ -2,7 +2,9 @@ package com.smarttoolfactory.composecolorpicker.demo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,32 +14,33 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.colorpicker.HslPicker
-import com.smarttoolfactory.colorpicker.SaturationRhombus
+import com.smarttoolfactory.colorpicker.saturationpicker.SaturationPickerRectangle
+import com.smarttoolfactory.colorpicker.saturationpicker.SaturationRhombus
 import com.smarttoolfactory.colorpicker.slider.ColorBrush
 import com.smarttoolfactory.colorpicker.slider.ColorfulSlider
 import com.smarttoolfactory.colorpicker.slider.MaterialSliderDefaults
-import com.smarttoolfactory.colorpicker.ui.Blue400
-import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSL
-import com.smarttoolfactory.colorpicker.ui.sliderSaturationHSLGradient
+import com.smarttoolfactory.colorpicker.ui.*
 
 @Composable
 fun ColorPickerDemo() {
     Column(
         modifier = Modifier
-            .background(Color(0xff424242))
+//            .background(Color(0xff424242))
+            .background(Color.White)
             .fillMaxSize()
             .padding(8.dp)
+            .verticalScroll(rememberScrollState())
     ) {
 
         var hue by remember { mutableStateOf(0f) }
-        var saturation by remember { mutableStateOf(1f) }
-        var lightness by remember { mutableStateOf(0.5f) }
+        var saturation1 by remember { mutableStateOf(.5f) }
+        var saturation2 by remember { mutableStateOf(.5f) }
+        var lightness by remember { mutableStateOf(.5f) }
         var value by remember { mutableStateOf(1f) }
 
 //        val color = Color.hsl(hue = hue, saturation = saturation, lightness = lightness)
-        val colorHSL = Color.hsl(hue = hue, saturation = saturation, lightness = lightness)
-        val colorHSV = Color.hsv(hue = hue, saturation = saturation, value = value)
+        val colorHSL = Color.hsl(hue = hue, saturation = saturation1, lightness = lightness)
+        val colorHSV = Color.hsv(hue = hue, saturation = saturation2, value = value)
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
@@ -97,50 +100,40 @@ fun ColorPickerDemo() {
                     SaturationRhombus(
                         modifier = Modifier.size(200.dp),
                         hue = hue,
-                        saturation = saturation,
+                        saturation = saturation1,
                         lightness = lightness,
                         selectionRadius = 8.dp
                     ) { s, l ->
                         println("CHANGING sat: $s, lightness: $l")
-                        saturation = s
+                        saturation1 = s
                         lightness = l
                     }
 
-
-                    HslPicker(
+                    Spacer(modifier = Modifier.height(20.dp))
+                    SaturationPickerRectangle(
                         modifier = Modifier.size(200.dp),
                         hue = hue,
-                        saturation = saturation,
+                        saturation = saturation2,
                         value = value,
                         selectionRadius = 8.dp
                     ) { s, v ->
                         println("CHANGING sat: $s, lightness: $v")
-                        saturation = s
+                        saturation2 = s
                         value = v
                     }
                 }
             }
 
-            // Sliders
-//            ColorSlider(
-//                modifier = Modifier
-//                    .padding(start = 12.dp, end = 12.dp)
-//                    .fillMaxWidth(),
-//                title = "Hue",
-//                titleColor = Color.Red,
-//                rgb = hue,
-//                onColorChanged = {
-//                    hue = it
-//                },
-//                valueRange = 0f..360f
-//            )
 
             val hueGradientHSL: List<Color> = gradientColorScaleHSL(
-                saturation = saturation,
+                saturation = saturation1,
                 lightness = lightness,
             )
 
-            val saturationHSL = sliderSaturationHSLGradient(hue, lightness)
+            val sliderSaturationHSLGradient = sliderSaturationHSLGradient(hue, lightness)
+            val sliderSaturationHSVGradient = sliderSaturationHSVGradient(hue, value)
+            val sliderLightnessGradient2Stops = sliderLightnessGradient2Stops(0f)
+            val sliderValueGradient = sliderValueGradient(0f)
 
             ColorfulSlider(
                 value = hue,
@@ -160,48 +153,71 @@ fun ColorPickerDemo() {
 
             Spacer(modifier = Modifier.height(4.dp))
             ColorfulSlider(
-                value = saturation,
+                value = saturation1,
                 modifier = Modifier.width(300.dp),
                 thumbRadius = 14.dp,
                 trackHeight = 14.dp,
                 onValueChange = { value, _, _ ->
-                    saturation = value
+                    saturation1 = value
                 },
                 coerceThumbInTrack = true,
                 colors = MaterialSliderDefaults.materialColors(
-                    activeTrackColor = ColorBrush(brush = saturationHSL),
+                    activeTrackColor = ColorBrush(brush = sliderSaturationHSLGradient),
                 ),
                 drawInactiveTrack = false
             )
             Spacer(modifier = Modifier.height(4.dp))
 
-            ColorSlider(
-                modifier = Modifier
-                    .padding(start = 12.dp, end = 12.dp)
-                    .fillMaxWidth(),
-                title = "Lightness",
-                titleColor = Color.Blue,
-                rgb = lightness * 100f,
-                onColorChanged = {
-                    lightness = it / 100f
+            ColorfulSlider(
+                value = lightness,
+                modifier = Modifier.width(300.dp),
+                thumbRadius = 14.dp,
+                trackHeight = 14.dp,
+                onValueChange = { result, _, _ ->
+                    lightness = result
                 },
-                valueRange = 0f..100f
+                coerceThumbInTrack = true,
+                colors = MaterialSliderDefaults.materialColors(
+                    activeTrackColor = ColorBrush(brush = sliderLightnessGradient2Stops),
+                ),
+                drawInactiveTrack = false
             )
 
+            Text("HSV Sliders")
+
+            ColorfulSlider(
+                value = saturation2,
+                modifier = Modifier.width(300.dp),
+                thumbRadius = 14.dp,
+                trackHeight = 14.dp,
+                onValueChange = { value, _, _ ->
+                    saturation2 = value
+                },
+                coerceThumbInTrack = true,
+                colors = MaterialSliderDefaults.materialColors(
+                    activeTrackColor = ColorBrush(brush = sliderSaturationHSVGradient),
+                ),
+                drawInactiveTrack = false
+            )
+
+
+            ColorfulSlider(
+                value = value,
+                modifier = Modifier.width(300.dp),
+                thumbRadius = 14.dp,
+                trackHeight = 14.dp,
+                onValueChange = { result, _, _ ->
+                    value = result
+                },
+                coerceThumbInTrack = true,
+                colors = MaterialSliderDefaults.materialColors(
+                    activeTrackColor = ColorBrush(brush = sliderValueGradient),
+                ),
+                drawInactiveTrack = false
+            )
             Spacer(modifier = Modifier.height(4.dp))
 
-            ColorSlider(
-                modifier = Modifier
-                    .padding(start = 12.dp, end = 12.dp)
-                    .fillMaxWidth(),
-                title = "Value",
-                titleColor = Color.Blue,
-                rgb = value * 100f,
-                onColorChanged = {
-                    value = it / 100f
-                },
-                valueRange = 0f..100f
-            )
+
         }
     }
 }

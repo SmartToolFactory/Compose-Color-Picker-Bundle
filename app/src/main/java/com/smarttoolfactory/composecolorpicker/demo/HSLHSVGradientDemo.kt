@@ -18,13 +18,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.drawBlendingRectGradient
 import com.smarttoolfactory.colorpicker.drawIntoLayer
-import com.smarttoolfactory.colorpicker.rhombusPath
+import com.smarttoolfactory.colorpicker.saturationpicker.rhombusPath
 import com.smarttoolfactory.colorpicker.ui.*
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 import kotlin.math.roundToInt
@@ -247,116 +246,155 @@ private fun HuePickerRhombusGradientExample(modifier: Modifier) {
                 "Rotated Rectangle"
     ) {
 
-        val canvasWidth = size.width
-        /*
-            Calculate a square positions and length
-            inside square shaped Canvas with each
-            sides have length of rhombus
-         */
-
-        // calc square root of sum of two sides with
-        // half of width of canvas to find rhombus length
-        val canvasCenHalfWidth = canvasWidth / 2
-        val res = canvasCenHalfWidth * canvasCenHalfWidth
-
-        val rhombusLength = sqrt(res + res)
-        val start = (canvasWidth - rhombusLength) / 2
-        val end = canvasWidth - start
-
-        val whiteBlackGradient = Brush.linearGradient(
-            colors = listOf(Color.Black, Color.White),
-            start = Offset(start, end),
-            end = Offset(start, start)
-        )
-
-        val rhombusHsl = Brush.linearGradient(
-            colors = listOf(
+        drawRhombusFromRotateRect(
+            listOf(
                 Color.White,
-                Color.hsv(0f, 1f, 1f)
-            ),
-            start = Offset(start, start),
-            end = Offset(end, start)
+                Color.hsl(hue =0f, saturation = 1f, lightness = .5f)
+            )
         )
+    }
 
-        // 🔥 Rotate rectangle with rhombus length to have a rhombus
-        withTransform(
-            {
-                rotate(45f)
-            }
-        ) {
-
-            drawIntoLayer {
-                drawRect(
-                    brush = whiteBlackGradient,
-                    topLeft = Offset(start, start),
-                    size = Size(rhombusLength, rhombusLength)
-                )
-
-                drawRect(
-                    brush = rhombusHsl,
-                    topLeft = Offset(start, start),
-                    size = Size(rhombusLength, rhombusLength),
-                    blendMode = BlendMode.Multiply
-                )
-            }
-        }
+    CanvasWithTitle(
+        modifier = modifier.background(Color.LightGray),
+        text = "HSV Rhombus\n" +
+                "Rotated Rectangle"
+    ) {
+        drawRhombusFromRotateRect(
+            listOf(
+                Color.White,
+                Color.hsv(hue =0f, saturation = 1f, value = 1f)
+            )
+        )
     }
 
     CanvasWithTitle(
         modifier = modifier.background(Color.LightGray),
         text = "HSL Rhombus"
     ) {
-
-        val canvasWidth = size.width
-
-        // Positions for start and end for white to hue gradient
-        val startHueX = canvasWidth / 2
-        val startHueY = 0f
-        val endHueX = canvasWidth
-        val endHueY = canvasWidth / 2
-
-        // Positions for start and end for white to black gradient
-        val startBWX = canvasWidth / 4
-        val startBWY = canvasWidth * 3 / 4
-        val endBWX = canvasWidth * 3 / 4
-        val endBWY = canvasWidth / 4
-
-        val whiteBlackGradient = Brush.linearGradient(
-            colors = listOf(Color.Black, Color.White),
-            start = Offset(startBWX, startBWY),
-            end = Offset(endBWX, endBWY)
-        )
-
-        val rhombusHsl = Brush.linearGradient(
-            colors = listOf(
+        drawRhombus(
+            listOf(
                 Color.White,
-                Color.hsl(0f, 1f, .5f)
-            ),
-            start = Offset(startHueX, startHueY),
-            end = Offset(endHueX, endHueY)
+                Color.hsl(hue = 0f, saturation = 1f, lightness = .5f)
+            )
         )
+    }
 
-        val rhombusPath = rhombusPath(Size(canvasWidth, canvasWidth))
+    CanvasWithTitle(
+        modifier = modifier.background(Color.LightGray),
+        text = "HSV Rhombus"
+    ) {
+        drawRhombus(
+            listOf(
+                Color.White,
+                Color.hsv(hue = 0f, saturation = 1f, value = 1f)
+            )
+        )
+    }
+}
+
+private fun DrawScope.drawRhombusFromRotateRect(hueSaturationColors: List<Color>) {
+
+    val length = size.width
+    /*
+        Calculate a square positions and length
+        inside square shaped Canvas with each
+        sides have length of rhombus
+     */
+
+    // calc square root of sum of two sides with
+    // half of width of canvas to find rhombus length
+    val canvasCenHalfWidth = length / 2
+    val res = canvasCenHalfWidth * canvasCenHalfWidth
+
+    val rhombusLength = sqrt(res + res)
+    val start = (length - rhombusLength) / 2
+    val end = length - start
+
+    val whiteBlackGradient = Brush.linearGradient(
+        colors = listOf(Color.Black, Color.White),
+        start = Offset(start, end),
+        end = Offset(start, start)
+    )
+
+    val hueSaturationGradient = Brush.linearGradient(
+        colors = hueSaturationColors,
+        start = Offset(start, start),
+        end = Offset(end, start)
+    )
+
+    // 🔥 Rotate rectangle with rhombus length to have a rhombus
+    withTransform(
+        {
+            rotate(45f)
+        }
+    ) {
 
         drawIntoLayer {
-            drawPath(
-                path = rhombusPath(size = Size(canvasWidth, canvasWidth)),
-                whiteBlackGradient
+            drawRect(
+                brush = whiteBlackGradient,
+                topLeft = Offset(start, start),
+                size = Size(rhombusLength, rhombusLength)
             )
-            drawPath(
-                path = rhombusPath,
-                rhombusHsl,
+
+            drawRect(
+                brush = hueSaturationGradient,
+                topLeft = Offset(start, start),
+                size = Size(rhombusLength, rhombusLength),
                 blendMode = BlendMode.Multiply
             )
         }
-
-        // Debug Position
-        drawCircle(Color.Green, center = Offset(startBWX, startBWY), radius = 8f)
-        drawCircle(Color.Yellow, center = Offset(endBWX, endBWY), radius = 8f)
-
-        drawCircle(Color.Cyan, center = Offset(startHueX, startHueY), radius = 8f)
-        drawCircle(Color.Magenta, center = Offset(endHueX, endHueY), radius = 8f)
     }
+}
+
+private fun DrawScope.drawRhombus(hueSaturationColors: List<Color>) {
+    val length = size.width
+
+    // Positions for start and end for white to hue gradient
+    val startHueX = length / 2
+    val startHueY = 0f
+    val endHueX = length
+    val endHueY = length / 2
+
+    // Positions for start and end for white to black gradient
+    val startBWX = length / 4
+    val startBWY = length * 3 / 4
+    val endBWX = length * 3 / 4
+    val endBWY = length / 4
+
+    // Lightness gradient
+    val whiteBlackGradient = Brush.linearGradient(
+        colors = listOf(Color.Black, Color.White),
+        start = Offset(startBWX, startBWY),
+        end = Offset(endBWX, endBWY)
+    )
+
+    // Hue gradient
+    val hueSaturationGradient = Brush.linearGradient(
+        colors = hueSaturationColors,
+        start = Offset(startHueX, startHueY),
+        end = Offset(endHueX, endHueY)
+    )
+
+    val rhombusPath = rhombusPath(Size(length, length))
+
+    drawIntoLayer {
+        drawPath(
+            path = rhombusPath(size = Size(length, length)),
+            whiteBlackGradient
+        )
+        drawPath(
+            path = rhombusPath,
+            hueSaturationGradient,
+            blendMode = BlendMode.Multiply
+        )
+    }
+
+    // Debug Position
+    drawCircle(Color.Green, center = Offset(startBWX, startBWY), radius = 8f)
+    drawCircle(Color.Yellow, center = Offset(endBWX, endBWY), radius = 8f)
+
+    drawCircle(Color.Cyan, center = Offset(startHueX, startHueY), radius = 8f)
+    drawCircle(Color.Magenta, center = Offset(endHueX, endHueY), radius = 8f)
 }
 
 @Composable

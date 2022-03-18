@@ -1,4 +1,4 @@
-package com.smarttoolfactory.composecolorpicker
+package com.smarttoolfactory.composecolorpicker.demo
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

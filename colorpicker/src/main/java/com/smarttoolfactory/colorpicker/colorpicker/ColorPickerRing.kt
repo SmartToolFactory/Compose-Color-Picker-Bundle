@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker
+package com.smarttoolfactory.colorpicker.colorpicker
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.gesture.pointerMotionEvents
-import com.smarttoolfactory.colorpicker.ui.gradientColors
+import com.smarttoolfactory.colorpicker.ui.gradientColorScaleRGB
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.roundToInt
@@ -99,7 +99,7 @@ fun ColorPickerWheel(
             val strokeWidth = (radiusOuter - radiusInner)
 
             drawCircle(
-                brush = Brush.sweepGradient(colors = gradientColors, center = center),
+                brush = Brush.sweepGradient(colors = gradientColorScaleRGB, center = center),
                 radius = radiusInner + strokeWidth / 2,
 
                 style = Stroke(
