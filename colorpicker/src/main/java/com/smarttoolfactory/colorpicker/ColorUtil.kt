@@ -53,3 +53,4 @@ fun HSVtoHSL(floatArray: FloatArray): FloatArray {
     require(floatArray.size == 3)
     return HSVtoHSL(floatArray[0], floatArray[1], floatArray[2])
 }
+

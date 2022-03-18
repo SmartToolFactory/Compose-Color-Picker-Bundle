@@ -4,6 +4,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 /*
@@ -41,7 +43,6 @@ fun transparentToGrayVerticalGradient(
         endY = endY
     )
 }
-
 
 fun whiteToTransparentToBlackVerticalGradient(
     startY: Float = 0.0f,
@@ -177,7 +178,6 @@ fun sliderHueSelectionHSLGradient(
     )
 }
 
-
 fun sliderSaturationHSLGradient(
     hue: Float,
     lightness: Float = .5f,
@@ -227,7 +227,6 @@ fun sliderLightnessGradient3Stops(
     )
 }
 
-
 fun sliderRedGradient(
     alpha: Float = 1f,
     start: Offset = Offset.Zero,
@@ -235,7 +234,8 @@ fun sliderRedGradient(
 ): Brush {
     return Brush.linearGradient(
         colors = listOf(
-
+            Color.hsl(hue = 0f, saturation = 1f, lightness = 0f, alpha = alpha),
+            Color.hsl(hue = 0f, saturation = 1f, lightness = .5f, alpha = alpha)
         ),
         start = start,
         end = end
@@ -249,7 +249,8 @@ fun sliderGreenGradient(
 ): Brush {
     return Brush.linearGradient(
         colors = listOf(
-
+            Color.hsl(hue = 120f, saturation = 1f, lightness = 0f, alpha = alpha),
+            Color.hsl(hue = 120f, saturation = 1f, lightness = .5f, alpha = alpha)
         ),
         start = start,
         end = end
@@ -263,7 +264,8 @@ fun sliderBlueGradient(
 ): Brush {
     return Brush.linearGradient(
         colors = listOf(
-
+            Color.hsl(hue = 240f, saturation = 1f, lightness = 0f, alpha = alpha),
+            Color.hsl(hue = 240f, saturation = 1f, lightness = .5f, alpha = alpha)
         ),
         start = start,
         end = end
@@ -339,15 +341,9 @@ fun GradientOffset(angle: GradientAngle): GradientOffset {
     }
 }
 
-fun RotateGradient(angle: Float, width: Float, height: Float) {
-
-
-}
-
-fun RotateGradient(angle: Float, size: Size) {
-  return  RotateGradient(angle, size.width, size.height)
-}
-
+/**
+ * Offset for [Brush.linearGradient] to rotate gradient depending on [start] and [end] offsets.
+ */
 data class GradientOffset(val start: Offset, val end: Offset)
 
 enum class GradientAngle {

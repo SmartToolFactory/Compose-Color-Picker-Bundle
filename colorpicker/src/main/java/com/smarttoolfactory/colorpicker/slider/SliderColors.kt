@@ -9,14 +9,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import com.smarttoolfactory.colorpicker.ui.ActiveTrackColor
-import com.smarttoolfactory.colorpicker.ui.InactiveTrackColor
 import com.smarttoolfactory.colorpicker.ui.ThumbColor
 
 /**
  * Data class that contains color or/and brush property for drawing track section of
  * [ColorfulSlider]
  */
-data class ColorBrush(val brush: Brush? = null, val color: Color)
+data class ColorBrush(val brush: Brush? = null, val color: Color = Color.Unspecified)
 
 /**
  * Creates a [MaterialSliderColors] that represents the different colors used in parts of the
