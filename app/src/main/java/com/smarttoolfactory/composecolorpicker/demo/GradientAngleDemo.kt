@@ -1,6 +1,5 @@
 package com.smarttoolfactory.composecolorpicker.demo
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,29 +10,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.colorpicker.drawBlendingRectGradient
-import com.smarttoolfactory.colorpicker.drawIntoLayer
-import com.smarttoolfactory.colorpicker.saturationpicker.rhombusPath
 import com.smarttoolfactory.colorpicker.ui.*
+import com.smarttoolfactory.colorpicker.ui.brush.*
+import com.smarttoolfactory.composecolorpicker.ui.CanvasWithTitle
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 import kotlin.math.roundToInt
-import kotlin.math.sqrt
 
 /**
  * Demo for creating gradients for different type of pickers or sliders
  */
 @Composable
-fun HSVHSLGradientsDemo() {
+fun GradientAngleDemo() {
 
     val canvasModifier = Modifier.size(300.dp)
 
@@ -48,12 +40,12 @@ fun HSVHSLGradientsDemo() {
 
     val whiteToBlackGradient = whiteToBlackGradient()
 
-    val hsvGradient = whiteToSaturationForHSVGradient(
+    val hsvGradient = saturationHSVGradient(
         hue = 0f,
         start = gradientOffset.start,
         end = gradientOffset.end
     )
-    val hslGradient = whiteToSaturationForHSLGradient(
+    val hslGradient = saturationHSLGradient(
         hue = 0f,
         start = gradientOffset.start,
         end = gradientOffset.end
@@ -175,19 +167,6 @@ fun HSVHSLGradientsDemo() {
                 drawRect(hslGradient)
             }
 
-            // Create gradients for rectangle Hue selector
-            HuePickerRectangleGradientExample(
-                modifier = canvasModifier,
-                hsvGradient = hsvGradient,
-                hslGradient = hslGradient
-            )
-
-            // Create gradients for rhombus Hue selector
-            HuePickerRhombusGradientExample(modifier = canvasModifier)
-
-            // Create gradients for rectangle Hue selector using
-            // Saturation and Value points
-            HuePickerPointsGradientExample(modifier = canvasModifier)
 
             // Create gradients for rectangle hue saturation or value/lightness selector
             RectangleColorPickerGradientExample(
@@ -202,217 +181,6 @@ fun HSVHSLGradientsDemo() {
             // Create gradients for different type of sliders such as Saturation, Value, RGB
             SliderGradientExample(gradientOffset = gradientOffset)
         }
-    }
-}
-
-@Composable
-private fun HuePickerRectangleGradientExample(
-    modifier: Modifier,
-    hsvGradient: Brush,
-    hslGradient: Brush
-) {
-    val whiteToBlackGradient = whiteToBlackGradient()
-
-    CanvasWithTitle(
-        modifier = modifier,
-        text = "HSV Selection Brush"
-    ) {
-        drawBlendingRectGradient(
-            dst = whiteToBlackGradient,
-            src = hsvGradient
-        )
-    }
-
-    CanvasWithTitle(
-        modifier = modifier.background(Color.LightGray),
-        text = "HSL Selection Brush"
-    ) {
-        drawBlendingRectGradient(
-            dst = whiteToBlackGradient,
-            src = hslGradient
-        )
-    }
-}
-
-@Composable
-private fun HuePickerRhombusGradientExample(modifier: Modifier) {
-
-    // 🔥 This is a rectangle within borders of canvas that is rotate 45 degrees
-    // with a gradient starts at left top position of rectangle and ends right top
-    // position of rectangle
-    CanvasWithTitle(
-        modifier = modifier.background(Color.LightGray),
-        text = "HSL Rhombus\n" +
-                "Rotated Rectangle"
-    ) {
-
-        drawRhombusFromRotateRect(
-            listOf(
-                Color.White,
-                Color.hsl(hue =0f, saturation = 1f, lightness = .5f)
-            )
-        )
-    }
-
-    CanvasWithTitle(
-        modifier = modifier.background(Color.LightGray),
-        text = "HSV Rhombus\n" +
-                "Rotated Rectangle"
-    ) {
-        drawRhombusFromRotateRect(
-            listOf(
-                Color.White,
-                Color.hsv(hue =0f, saturation = 1f, value = 1f)
-            )
-        )
-    }
-
-    CanvasWithTitle(
-        modifier = modifier.background(Color.LightGray),
-        text = "HSL Rhombus"
-    ) {
-        drawRhombus(
-            listOf(
-                Color.White,
-                Color.hsl(hue = 0f, saturation = 1f, lightness = .5f)
-            )
-        )
-    }
-
-    CanvasWithTitle(
-        modifier = modifier.background(Color.LightGray),
-        text = "HSV Rhombus"
-    ) {
-        drawRhombus(
-            listOf(
-                Color.White,
-                Color.hsv(hue = 0f, saturation = 1f, value = 1f)
-            )
-        )
-    }
-}
-
-private fun DrawScope.drawRhombusFromRotateRect(hueSaturationColors: List<Color>) {
-
-    val length = size.width
-    /*
-        Calculate a square positions and length
-        inside square shaped Canvas with each
-        sides have length of rhombus
-     */
-
-    // calc square root of sum of two sides with
-    // half of width of canvas to find rhombus length
-    val canvasCenHalfWidth = length / 2
-    val res = canvasCenHalfWidth * canvasCenHalfWidth
-
-    val rhombusLength = sqrt(res + res)
-    val start = (length - rhombusLength) / 2
-    val end = length - start
-
-    val whiteBlackGradient = Brush.linearGradient(
-        colors = listOf(Color.Black, Color.White),
-        start = Offset(start, end),
-        end = Offset(start, start)
-    )
-
-    val hueSaturationGradient = Brush.linearGradient(
-        colors = hueSaturationColors,
-        start = Offset(start, start),
-        end = Offset(end, start)
-    )
-
-    // 🔥 Rotate rectangle with rhombus length to have a rhombus
-    withTransform(
-        {
-            rotate(45f)
-        }
-    ) {
-
-        drawIntoLayer {
-            drawRect(
-                brush = whiteBlackGradient,
-                topLeft = Offset(start, start),
-                size = Size(rhombusLength, rhombusLength)
-            )
-
-            drawRect(
-                brush = hueSaturationGradient,
-                topLeft = Offset(start, start),
-                size = Size(rhombusLength, rhombusLength),
-                blendMode = BlendMode.Multiply
-            )
-        }
-    }
-}
-
-private fun DrawScope.drawRhombus(hueSaturationColors: List<Color>) {
-    val length = size.width
-
-    // Positions for start and end for white to hue gradient
-    val startHueX = length / 2
-    val startHueY = 0f
-    val endHueX = length
-    val endHueY = length / 2
-
-    // Positions for start and end for white to black gradient
-    val startBWX = length / 4
-    val startBWY = length * 3 / 4
-    val endBWX = length * 3 / 4
-    val endBWY = length / 4
-
-    // Lightness gradient
-    val whiteBlackGradient = Brush.linearGradient(
-        colors = listOf(Color.Black, Color.White),
-        start = Offset(startBWX, startBWY),
-        end = Offset(endBWX, endBWY)
-    )
-
-    // Hue gradient
-    val hueSaturationGradient = Brush.linearGradient(
-        colors = hueSaturationColors,
-        start = Offset(startHueX, startHueY),
-        end = Offset(endHueX, endHueY)
-    )
-
-    val rhombusPath = rhombusPath(Size(length, length))
-
-    drawIntoLayer {
-        drawPath(
-            path = rhombusPath(size = Size(length, length)),
-            whiteBlackGradient
-        )
-        drawPath(
-            path = rhombusPath,
-            hueSaturationGradient,
-            blendMode = BlendMode.Multiply
-        )
-    }
-
-    // Debug Position
-    drawCircle(Color.Green, center = Offset(startBWX, startBWY), radius = 8f)
-    drawCircle(Color.Yellow, center = Offset(endBWX, endBWY), radius = 8f)
-
-    drawCircle(Color.Cyan, center = Offset(startHueX, startHueY), radius = 8f)
-    drawCircle(Color.Magenta, center = Offset(endHueX, endHueY), radius = 8f)
-}
-
-@Composable
-private fun HuePickerPointsGradientExample(modifier: Modifier) {
-    CanvasWithTitle(
-        modifier = modifier,
-        text = "Draw Rectangles on positions\n" +
-                "50 samples"
-    ) {
-        drawSaturationLightnessWithSampling(sampleRate = 50)
-    }
-
-    CanvasWithTitle(
-        modifier = modifier,
-        text = "Draw Rectangles on positions\n" +
-                "10 samples"
-    ) {
-        drawSaturationLightnessWithSampling(sampleRate = 10)
     }
 }
 
@@ -525,7 +293,7 @@ private fun SliderGradientExample(gradientOffset: GradientOffset) {
         .height(20.dp)
 
     // Colors for HSV
-    val sliderHueSelectionHSVGradient = sliderHueSelectionHSVGradient(
+    val sliderHueSelectionHSVGradient = sliderHueHSVGradient(
         start = gradientOffset.start,
         end = gradientOffset.end
     )
@@ -544,7 +312,7 @@ private fun SliderGradientExample(gradientOffset: GradientOffset) {
     )
 
     // Colors for HSL
-    val sliderColorScaleHSLGradient = sliderHueSelectionHSLGradient(
+    val sliderColorScaleHSLGradient = sliderHueHSLGradient(
         start = gradientOffset.start,
         end = gradientOffset.end
     )
@@ -556,7 +324,7 @@ private fun SliderGradientExample(gradientOffset: GradientOffset) {
     )
 
     // Lightness for HSL with 2 stops, 0f->1f
-    val sliderLightnessGradient2Stops = sliderLightnessGradient2Stops(
+    val sliderLightnessGradient2Stops = sliderLightnessGradient(
         hue = 0f,
         start = gradientOffset.start,
         end = gradientOffset.end
@@ -639,45 +407,4 @@ private fun SliderGradientExample(gradientOffset: GradientOffset) {
     CanvasWithTitle(modifier = sliderModifier, text = "Slider RGB Blue") {
         drawRoundRect(sliderBlueGradient, cornerRadius = CornerRadius(25f, 25f))
     }
-}
-
-@Composable
-private fun CanvasWithTitle(
-    modifier: Modifier = Modifier,
-    text: String,
-    onDraw: DrawScope.() -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .wrapContentWidth()
-    ) {
-
-        Text(
-            text = text,
-            color = Blue400,
-            modifier = Modifier
-                .padding(8.dp),
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-        )
-
-        Canvas(modifier = modifier, onDraw = onDraw)
-    }
-}
-
-private fun DrawScope.drawSaturationLightnessWithSampling(sampleRate: Int) {
-
-    val width = size.width
-    val samplingRate = (width / sampleRate).toInt()
-
-    for (x in 0 until width.toInt() - samplingRate step samplingRate)
-        for (y in 0 until width.toInt() - samplingRate step samplingRate) {
-            val saturation = x / width
-            val value = 1 - (y / width)
-            drawRect(
-                color = Color.hsv(0f, saturation, value),
-                size = Size(samplingRate.toFloat(), samplingRate.toFloat()),
-                topLeft = Offset(x.toFloat(), y.toFloat())
-            )
-        }
 }

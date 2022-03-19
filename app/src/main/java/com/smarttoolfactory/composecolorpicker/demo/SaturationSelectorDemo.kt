@@ -10,24 +10,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.colorpicker.hueselector.HueSelectorRing
 import com.smarttoolfactory.colorpicker.saturationselector.SaturationPickerDiamond
+import com.smarttoolfactory.colorpicker.saturationselector.SaturationPickerRectangle
 import com.smarttoolfactory.colorpicker.slider.ColorBrush
 import com.smarttoolfactory.colorpicker.slider.ColorfulSlider
 import com.smarttoolfactory.colorpicker.slider.MaterialSliderDefaults
-import com.smarttoolfactory.colorpicker.ui.Blue400
-import com.smarttoolfactory.colorpicker.ui.brush.sliderHueHSLGradient
-import com.smarttoolfactory.colorpicker.ui.brush.sliderLightnessGradient
-import com.smarttoolfactory.colorpicker.ui.brush.sliderSaturationHSLGradient
+import com.smarttoolfactory.colorpicker.ui.brush.*
+import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 
 @Composable
-fun ColorPickerDemo() {
+fun SaturationSelectorDemo() {
     Column(
         modifier = Modifier
-            .background(Color(0xff424242))
+            .background(backgroundColor)
 //            .background(Color.White)
             .fillMaxSize()
             .padding(8.dp)
@@ -35,21 +31,18 @@ fun ColorPickerDemo() {
     ) {
 
         var hue by remember { mutableStateOf(0f) }
-        var saturation by remember { mutableStateOf(.5f) }
+        var saturationHSL by remember { mutableStateOf(.5f) }
+        var saturationHSV by remember { mutableStateOf(.5f) }
         var lightness by remember { mutableStateOf(.5f) }
+        var value by remember { mutableStateOf(1f) }
 
-        val color = Color.hsl(hue = hue, saturation = saturation, lightness = lightness)
+//        val color = Color.hsl(hue = hue, saturation = saturation, lightness = lightness)
+        val colorHSL = Color.hsl(hue = hue, saturation = saturationHSL, lightness = lightness)
+        val colorHSV = Color.hsv(hue = hue, saturation = saturationHSV, value = value)
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
             Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = "Color",
-                color = Blue400,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 12.dp)
-            )
 
             // Initial and Current Colors
             Row(
@@ -63,7 +56,7 @@ fun ColorPickerDemo() {
                         .weight(1f)
                         .height(40.dp)
                         .background(
-                            Color.Black,
+                            colorHSL,
                             shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
                         )
                 )
@@ -72,7 +65,7 @@ fun ColorPickerDemo() {
                         .weight(1f)
                         .height(40.dp)
                         .background(
-                            color,
+                            colorHSV,
                             shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp)
                         )
                 )
@@ -85,36 +78,51 @@ fun ColorPickerDemo() {
                 contentAlignment = Alignment.Center
             ) {
 
-                HueSelectorRing(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f),
-                    selectionRadius = 8.dp
-                ) { hueChange ->
-                    hue = hueChange.toFloat()
-                }
-
                 Column {
                     SaturationPickerDiamond(
                         modifier = Modifier.size(200.dp),
                         hue = hue,
-                        saturation = saturation,
+                        saturation = saturationHSL,
                         lightness = lightness,
                         selectionRadius = 8.dp
                     ) { s, l ->
                         println("CHANGING sat: $s, lightness: $l")
-                        saturation = s
+                        saturationHSL = s
                         lightness = l
+                    }
+
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                    SaturationPickerRectangle(
+                        modifier = Modifier.size(200.dp),
+                        hue = hue,
+                        saturation = saturationHSV,
+                        value = value,
+                        selectionRadius = 8.dp
+                    ) { s, v ->
+                        println("CHANGING sat: $s, lightness: $v")
+                        saturationHSV = s
+                        value = v
                     }
                 }
             }
 
+            /*
+                Sliders and Gradients
+             */
             val sliderHueSelectionHSLGradient = sliderHueHSLGradient(
-                saturation = saturation,
+                saturation = saturationHSL,
                 lightness = lightness,
             )
-            val sliderSaturationHSLGradient = sliderSaturationHSLGradient(hue, lightness)
-            val sliderLightnessGradient = sliderLightnessGradient(0f)
+
+            // HSL Sliders
+            val sliderSaturationHSLGradient =
+                sliderSaturationHSLGradient(hue = hue, lightness = lightness)
+            val sliderLightnessGradient = sliderLightnessGradient(hue = 0f)
+
+            // HSV Sliders
+            val sliderSaturationHSVGradient = sliderSaturationHSVGradient(hue = hue, value = value)
+            val sliderValueGradient = sliderValueGradient(hue = hue)
 
             ColorfulSlider(
                 value = hue,
@@ -131,15 +139,16 @@ fun ColorPickerDemo() {
                 ),
                 drawInactiveTrack = false
             )
-
             Spacer(modifier = Modifier.height(4.dp))
+
+            Text("HSL Sliders")
             ColorfulSlider(
-                value = saturation,
+                value = saturationHSL,
                 modifier = Modifier.width(300.dp),
                 thumbRadius = 12.dp,
                 trackHeight = 12.dp,
                 onValueChange = { value, _, _ ->
-                    saturation = value
+                    saturationHSL = value
                 },
                 coerceThumbInTrack = true,
                 colors = MaterialSliderDefaults.materialColors(
@@ -163,6 +172,40 @@ fun ColorPickerDemo() {
                 ),
                 drawInactiveTrack = false
             )
+
+            Text("HSV Sliders")
+
+            ColorfulSlider(
+                value = saturationHSV,
+                modifier = Modifier.width(300.dp),
+                thumbRadius = 12.dp,
+                trackHeight = 12.dp,
+                onValueChange = { value, _, _ ->
+                    saturationHSV = value
+                },
+                coerceThumbInTrack = true,
+                colors = MaterialSliderDefaults.materialColors(
+                    activeTrackColor = ColorBrush(brush = sliderSaturationHSVGradient),
+                ),
+                drawInactiveTrack = false
+            )
+
+
+            ColorfulSlider(
+                value = value,
+                modifier = Modifier.width(300.dp),
+                thumbRadius = 12.dp,
+                trackHeight = 12.dp,
+                onValueChange = { result, _, _ ->
+                    value = result
+                },
+                coerceThumbInTrack = true,
+                colors = MaterialSliderDefaults.materialColors(
+                    activeTrackColor = ColorBrush(brush = sliderValueGradient),
+                ),
+                drawInactiveTrack = false
+            )
+            Spacer(modifier = Modifier.height(4.dp))
         }
     }
 }
