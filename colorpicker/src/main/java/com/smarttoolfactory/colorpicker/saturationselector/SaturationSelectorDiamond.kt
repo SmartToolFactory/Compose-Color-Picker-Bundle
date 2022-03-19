@@ -23,7 +23,6 @@ import com.smarttoolfactory.colorpicker.drawIntoLayer
 import com.smarttoolfactory.colorpicker.gesture.pointerMotionEvents
 import com.smarttoolfactory.colorpicker.ui.GradientAngle
 import com.smarttoolfactory.colorpicker.ui.GradientOffset
-import kotlin.math.roundToInt
 
 
 @Composable
@@ -164,7 +163,7 @@ fun SaturationPickerDiamond(
         }
 
         val saturationHSLGradient = remember(hue) {
-            val gradientOffset = GradientOffset(GradientAngle.CCW0)
+            val gradientOffset = GradientOffset(GradientAngle.CW0)
 
             Brush.linearGradient(
                 colors = listOf(

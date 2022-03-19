@@ -31,7 +31,7 @@ fun GradientAngleDemo() {
 
     // Offsets for gradients based on selected angle
     var gradientOffset by remember {
-        mutableStateOf(GradientOffset(GradientAngle.CCW0))
+        mutableStateOf(GradientOffset(GradientAngle.CW0))
     }
 
     var angleSelection by remember { mutableStateOf(0f) }
@@ -85,41 +85,41 @@ fun GradientAngleDemo() {
             onValueChange = {
                 angleSelection = it
 
-                println("🔥 Angle selection: $angleSelection")
+                println("🔥Angle selection: $angleSelection")
 
                 gradientOffset = when (angleSelection.roundToInt()) {
                     0 -> {
                         angleText = "0 Degrees"
-                        GradientOffset(GradientAngle.CCW0)
+                        GradientOffset(GradientAngle.CW0)
                     }
                     1 -> {
                         angleText = "45 Degrees"
-                        GradientOffset(GradientAngle.CCW45)
+                        GradientOffset(GradientAngle.CW45)
                     }
                     2 -> {
                         angleText = "90 Degrees"
-                        GradientOffset(GradientAngle.CCW90)
+                        GradientOffset(GradientAngle.CW90)
                     }
                     3 -> {
                         angleText = "135 Degrees"
-                        GradientOffset(GradientAngle.CCW135)
+                        GradientOffset(GradientAngle.CW135)
                     }
                     4 -> {
                         angleText = "180 Degrees"
-                        GradientOffset(GradientAngle.CCW180)
+                        GradientOffset(GradientAngle.CW180)
                     }
 
                     5 -> {
                         angleText = "225 Degrees"
-                        GradientOffset(GradientAngle.CCW225)
+                        GradientOffset(GradientAngle.CW225)
                     }
                     6 -> {
                         angleText = "270 Degrees"
-                        GradientOffset(GradientAngle.CCW270)
+                        GradientOffset(GradientAngle.CW270)
                     }
                     else -> {
                         angleText = "315 Degrees"
-                        GradientOffset(GradientAngle.CCW315)
+                        GradientOffset(GradientAngle.CW315)
                     }
                 }
             },

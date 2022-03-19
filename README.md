@@ -12,7 +12,7 @@ Color Picker Wheel for selecting hue, SaturationDiamond for selection saturation
 - [x] Add Saturation Rectangle for selecting Saturation and Lightness
 - [x] Add Saturation Diamond for selecting Saturation and Lightness
 - [x] Add Composable to display previous and current color
-- [x] Fix Saturation Diamond color display(Currently drawing lots of circles), add gradient instead
+- [x] Fix Saturation Diamond color display for HSL
 - [x] Finish colorful Sliders to have more stylish sliders
 - [x] Add gradient rotation option(GradientOffset)
 - [x] Add HSV-HSL gradient demo

@@ -34,7 +34,7 @@ fun SaturationSelectorDemo() {
         var saturationHSL by remember { mutableStateOf(.5f) }
         var saturationHSV by remember { mutableStateOf(.5f) }
         var lightness by remember { mutableStateOf(.5f) }
-        var value by remember { mutableStateOf(1f) }
+        var value by remember { mutableStateOf(.5f) }
 
 //        val color = Color.hsl(hue = hue, saturation = saturation, lightness = lightness)
         val colorHSL = Color.hsl(hue = hue, saturation = saturationHSL, lightness = lightness)

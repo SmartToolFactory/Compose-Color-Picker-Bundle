@@ -101,7 +101,7 @@ private fun HuePickerHSVGradientExample(
     }
 
     CanvasWithTitle(
-        modifier = modifier.background(Color.LightGray),
+        modifier = modifier,
         text = "HSV Diamond"
     ) {
         val length = size.width
@@ -172,30 +172,8 @@ private fun HuePickerHSLGradientExample(
         drawSaturationWithSampling(sampleRate = 10, hsv = false)
     }
 
-    val lg = remember {
-        Brush.verticalGradient(
-            colors = listOf(
-                Color.hsl(hue = 0f, saturation = .5f, lightness = 1f),
-                Color.hsl(hue = 0f, saturation = .5f, lightness = 0f)
-            )
-        )
-    }
-
-    val sl = remember {
-        val gradientOffset = GradientOffset(GradientAngle.CCW0)
-
-        Brush.linearGradient(
-            colors = listOf(
-                Color.hsl(0f, 0f, .5f),
-                Color.hsl(0f, 1f, .5f)
-            ),
-            start = gradientOffset.start,
-            end = gradientOffset.end
-        )
-    }
-
     CanvasWithTitle(
-        modifier = modifier.background(Color.LightGray),
+        modifier = modifier,
         text = "HSL Diamond"
     ) {
         val length = size.width

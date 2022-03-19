@@ -6,6 +6,8 @@ import androidx.compose.ui.graphics.Brush
 
 /**
  *
+ * Get a [GradientOffset] that rotate a gradient clockwise with specified angle in degrees.
+ *
  * Get start and end offsets that are limited between [0f, Float.POSITIVE_INFINITY] in x and
  * y axes wrapped in [GradientOffset].
  * Infinity is converted to Composable width on x axis, height on y axis in shader.
@@ -38,31 +40,31 @@ import androidx.compose.ui.graphics.Brush
  */
 fun GradientOffset(angle: GradientAngle): GradientOffset {
     return when (angle) {
-        GradientAngle.CCW45 -> GradientOffset(
+        GradientAngle.CW45 -> GradientOffset(
             start = Offset.Zero,
             end = Offset.Infinite
         )
-        GradientAngle.CCW90 -> GradientOffset(
+        GradientAngle.CW90 -> GradientOffset(
             start = Offset.Zero,
             end = Offset(0f, Float.POSITIVE_INFINITY)
         )
-        GradientAngle.CCW135 -> GradientOffset(
+        GradientAngle.CW135 -> GradientOffset(
             start = Offset(Float.POSITIVE_INFINITY, 0f),
             end = Offset(0f, Float.POSITIVE_INFINITY)
         )
-        GradientAngle.CCW180 -> GradientOffset(
+        GradientAngle.CW180 -> GradientOffset(
             start = Offset(Float.POSITIVE_INFINITY, 0f),
             end = Offset.Zero,
         )
-        GradientAngle.CCW225 -> GradientOffset(
+        GradientAngle.CW225 -> GradientOffset(
             start = Offset.Infinite,
             end = Offset.Zero
         )
-        GradientAngle.CCW270 -> GradientOffset(
+        GradientAngle.CW270 -> GradientOffset(
             start = Offset(0f, Float.POSITIVE_INFINITY),
             end = Offset.Zero
         )
-        GradientAngle.CCW315 -> GradientOffset(
+        GradientAngle.CW315 -> GradientOffset(
             start = Offset(0f, Float.POSITIVE_INFINITY),
             end = Offset(Float.POSITIVE_INFINITY, 0f)
         )
@@ -79,5 +81,5 @@ fun GradientOffset(angle: GradientAngle): GradientOffset {
 data class GradientOffset(val start: Offset, val end: Offset)
 
 enum class GradientAngle {
-    CCW0, CCW45, CCW90, CCW135, CCW180, CCW225, CCW270, CCW315
+    CW0, CW45, CW90, CW135, CW180, CW225, CW270, CW315
 }
