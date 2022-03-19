@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker.saturationpicker
+package com.smarttoolfactory.colorpicker.saturationselector
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -8,7 +8,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
@@ -24,7 +27,7 @@ import kotlin.math.roundToInt
 
 
 @Composable
-fun SaturationPickerRhombusHSV(
+fun SaturationPickerDiamondHSV(
     modifier: Modifier = Modifier,
     hue: Float,
     saturation: Float = 0.5f,
@@ -37,12 +40,12 @@ fun SaturationPickerRhombusHSV(
 
 /**
  * This is a [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV)
- * saturation and lightness selector in shape of [Rhombus](https://en.wikipedia.org/wiki/Rhombus)
+ * saturation and lightness selector in shape of [Diamond]
  *
  *  * Since this is not a rectangle, initially current position of selector is
  *  set by [setSelectorPositionFromColorParams] which limits position of saturation to a range
  *  determined by 1-length of dimension since sum of x and y position should be equal to
- *  **length of  rhombus**.
+ *  **length of  diamond**.
  *
  *  * On touch and selection process same principle applies to bound positions.
  *
@@ -51,7 +54,7 @@ fun SaturationPickerRhombusHSV(
  *
  */
 @Composable
-fun SaturationRhombus(
+fun SaturationPickerDiamond(
     modifier: Modifier = Modifier,
     hue: Float,
     saturation: Float = .5f,
@@ -65,7 +68,7 @@ fun SaturationRhombus(
         val density = LocalDensity.current.density
 
         /**
-         * Width and height of the rhombus is geometrically equal so it's sufficient to
+         * Width and height of the diamond is geometrically equal so it's sufficient to
          * use either width or height to have a length parameter
          */
         val length = maxWidth.value * density
@@ -78,9 +81,9 @@ fun SaturationRhombus(
 
         /**
          *  Current position is initially set by [saturation] and [lightness] that is bound
-         *  in rhombus since (1,1) points to bottom left corner of a rectangle but it's bounded
-         *  in rhombus by [setSelectorPositionFromColorParams].
-         *  When user touches anywhere in rhombus current position is updaed and
+         *  in diamond since (1,1) points to bottom left corner of a rectangle but it's bounded
+         *  in diamond by [setSelectorPositionFromColorParams].
+         *  When user touches anywhere in diamond current position is updaed and
          *  this composable is recomposed
          */
         var currentPosition by remember(saturation, lightness) {
@@ -90,7 +93,7 @@ fun SaturationRhombus(
         }
 
         /**
-         * Check if first pointer that touched this compsable inside bounds of rhombus
+         * Check if first pointer that touched this compsable inside bounds of diamond
          */
         var isTouched by remember { mutableStateOf(false) }
 
@@ -103,8 +106,8 @@ fun SaturationRhombus(
                     val posX = position.x
                     val posY = position.y
 
-                    // Horizontal range for keeping x position in rhombus bounds
-                    val range = getRangeForPositionInRhombus(length, posY)
+                    // Horizontal range for keeping x position in diamond bounds
+                    val range = getRangeForPositionInDiamond(length, posY)
                     val start = range.start - selectorRadius
                     val end = range.endInclusive + selectorRadius
 
@@ -129,9 +132,8 @@ fun SaturationRhombus(
                         val posX = position.x.coerceIn(0f, length)
                         val posY = position.y.coerceIn(0f, length)
 
-                        // Horizontal range for keeping x position in rhombus bounds
-                        val range = getRangeForPositionInRhombus(length, posY)
-
+                        // Horizontal range for keeping x position in diamond bounds
+                        val range = getRangeForPositionInDiamond(length, posY)
 
                         val posXInPercent = (posX / length).coerceIn(0f, 1f)
                         val posYInPercent = (posY / length).coerceIn(0f, 1f)
@@ -150,49 +152,41 @@ fun SaturationRhombus(
                 }
             )
 
-        val rhombusPath = remember { rhombusPath(Size(length, length)) }
+        val diamondPath = remember { diamondPath(Size(length, length)) }
+
+        val lightnessGradient = remember {
+            Brush.verticalGradient(
+                colors = listOf(
+                    Color.hsl(hue = hue, saturation = .5f, lightness = 1f),
+                    Color.hsl(hue = hue, saturation = .5f, lightness = 0f)
+                )
+            )
+        }
+
+        val saturationHSLGradient = remember(hue) {
+            val gradientOffset = GradientOffset(GradientAngle.CCW0)
+
+            Brush.linearGradient(
+                colors = listOf(
+                    Color.hsl(hue, 0f, .5f),
+                    Color.hsl(hue, 1f, .5f)
+                ),
+                start = gradientOffset.start,
+                end = gradientOffset.end
+            )
+        }
 
         Canvas(modifier = canvasModifier) {
 
-            val canvasWidth = size.width
-            val canvasHeight = size.height
-
-            // Positions for start and end for white to hue gradient
-            val startHueX = canvasWidth / 2
-            val startHueY = 0f
-            val endHueX = canvasWidth
-            val endHueY = canvasWidth / 2
-
-            // Positions for start and end for white to black gradient
-            val startBWX = canvasWidth / 4
-            val startBWY = canvasWidth * 3 / 4
-            val endBWX = canvasWidth * 3 / 4
-            val endBWY = canvasWidth / 4
-
-            val whiteBlackGradient = Brush.linearGradient(
-                colors = listOf(Color.Black, Color.White),
-                start = Offset(startBWX, startBWY),
-                end = Offset(endBWX, endBWY)
-            )
-
-            val rhombusHsl = Brush.linearGradient(
-                colors = listOf(
-                    Color.White,
-                    Color.hsl(hue, 1f, .5f)
-                ),
-                start = Offset(startHueX, startHueY),
-                end = Offset(endHueX, endHueY)
-            )
-
             drawIntoLayer {
                 drawPath(
-                    path = rhombusPath(size = Size(canvasWidth, canvasWidth)),
-                    whiteBlackGradient
+                    path = diamondPath,
+                    lightnessGradient,
                 )
                 drawPath(
-                    path = rhombusPath,
-                    rhombusHsl,
-                    blendMode = BlendMode.Multiply
+                    path = diamondPath,
+                    saturationHSLGradient,
+                    blendMode = BlendMode.Overlay
                 )
             }
 
@@ -214,32 +208,32 @@ fun SaturationRhombus(
  *
  * @param saturation of the current color from Composable parameters
  * @param lightness of the current color from Composable parameters
- * @param length of the rhombus
+ * @param length of the diamond
  */
 fun setSelectorPositionFromColorParams(
     saturation: Float,
     lightness: Float,
     length: Float
 ): Offset {
-    // Get possible horizontal range for the current position of lightness on rhombus
-    val range = getRangeForPositionInRhombus(length, lightness * length)
+    // Get possible horizontal range for the current position of lightness on diamond
+    val range = getRangeForPositionInDiamond(length, lightness * length)
     // Since lightness must increase while going up we need to reverse position
-    val verticalPositionOnRhombus = (1 - lightness) * length
-    // limit saturation bounds to range to not overflow from rhombus
-    val horizontalPositionOnRhombus = (saturation * length).coerceIn(range)
-    return Offset(horizontalPositionOnRhombus, verticalPositionOnRhombus)
+    val verticalPositionOnDiamond = (1 - lightness) * length
+    // limit saturation bounds to range to not overflow from diamond
+    val horizontalPositionOnDiamond = (saturation * length).coerceIn(range)
+    return Offset(horizontalPositionOnDiamond, verticalPositionOnDiamond)
 }
 
 /**
- * Returns [ClosedFloatingPointRange] that this position can be in a rhombus wit.
- * Limits available range inside rhombus.
+ * Returns [ClosedFloatingPointRange] that this position can be in a diamond wit.
+ * Limits available range inside diamond.
  * For instance if y position is 10, then x should either be center - 10 or center + 10 to maintain
  * triangular bounds in both axes.
  *
- * @param length of the rhombus
- * @param position current position in x,y coordinates in rhombus
+ * @param length of the diamond
+ * @param position current position in x,y coordinates in diamond
  */
-fun getRangeForPositionInRhombus(
+fun getRangeForPositionInDiamond(
     length: Float,
     position: Float
 ): ClosedFloatingPointRange<Float> {
@@ -258,7 +252,7 @@ fun getRangeForPositionInRhombus(
 
 
 /**
- * Rhombus path as below with equal length and width
+ * Diamond path as below with equal length and width
  * ```
  *      / \
  *     /   \
@@ -268,7 +262,7 @@ fun getRangeForPositionInRhombus(
  *      \ /
  * ```
  */
-fun rhombusPath(size: Size) = Path().apply {
+fun diamondPath(size: Size) = Path().apply {
 
     moveTo(size.width / 2f, 0f)
     lineTo(size.width, size.height / 2f)
@@ -276,16 +270,11 @@ fun rhombusPath(size: Size) = Path().apply {
     lineTo(0f, size.height / 2f)
 }
 
-val rhombusShape = GenericShape { size: Size, _: LayoutDirection ->
+val diamondShape = GenericShape { size: Size, _: LayoutDirection ->
     moveTo(size.width / 2f, 0f)
     lineTo(size.width, size.height / 2f)
     lineTo(size.width / 2f, size.height)
     lineTo(0f, size.height / 2f)
 }
 
-data class ColorPoint(
-    val point: Offset,
-    val saturation: Float,
-    val lightness: Float,
-    val path: Path
-)
+

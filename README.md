@@ -2,23 +2,31 @@
 
 A stylish color picker written with Jetpack Compose.
 
-Color Picker Wheel for selecting hue, SaturationRhombus for selection saturation and lightness
+Color Picker Wheel for selecting hue, SaturationDiamond for selection saturation and lightness
 
 <img src="/./screenshots/intro.gif" align="right" width="32%"/>
 
 ### Completed:
-- [x] Add Color Picker Wheel for selecting Hue
-- [x] Add Saturation Rhombus for selecting Saturation and Lightness
+
+- [x] Add Hue Picker Wheel for selecting Hue
+- [x] Add Saturation Rectangle for selecting Saturation and Lightness
+- [x] Add Saturation Diamond for selecting Saturation and Lightness
 - [x] Add Composable to display previous and current color
+- [x] Fix Saturation Diamond color display(Currently drawing lots of circles), add gradient instead
+- [x] Finish colorful Sliders to have more stylish sliders
+- [x] Add gradient rotation option(GradientOffset)
+- [x] Add HSV-HSL gradient demo
+- [x] Add gradient rotation demo
 
 ### TODOs:
+
 - [ ] Add RGB color selection
-- [ ] Fix Saturation Rhombus color display(Currently drawing lots of circles), add gradient instead
+- [ ] Add Circle Hue Selector
+- [ ] Add Rectangle Hue Selector
 - [ ] Add option to display colors in a dialog
-- [ ] Finish colorful Sliders to have more stylish sliders
 - [ ] Add and display colors selected previously
-- [ ] Add checker Composable/Modifier that draws checker pattern behind to display alpha 
+- [ ] Add checker Composable/Modifier that draws checker pattern behind to display alpha
 - [ ] Add gradient color selection with percentage stops, linear, radial and sweep options
-- [ ] Add option to select colors from screen
+- [ ] Add option to select colors from Image, Screen or Camera
 
 

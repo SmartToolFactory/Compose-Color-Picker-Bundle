@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker.saturationpicker
+package com.smarttoolfactory.colorpicker.saturationselector
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.consumeDownChange
@@ -16,8 +15,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.drawBlendingRectGradient
 import com.smarttoolfactory.colorpicker.gesture.pointerMotionEvents
-import com.smarttoolfactory.colorpicker.ui.GradientAngle
-import com.smarttoolfactory.colorpicker.ui.GradientOffset
+import com.smarttoolfactory.colorpicker.ui.brush.saturationHSVGradient
+import com.smarttoolfactory.colorpicker.ui.brush.valueGradient
 
 @Composable
 fun SaturationPickerRectangleHSL(
@@ -47,7 +46,7 @@ fun SaturationPickerRectangle(
         val density = LocalDensity.current.density
 
         /**
-         * Width and height of the rhombus is geometrically equal so it's sufficient to
+         * Width and height of the diamond is geometrically equal so it's sufficient to
          * use either width or height to have a length parameter
          */
         val length = maxWidth.value * density
@@ -60,9 +59,9 @@ fun SaturationPickerRectangle(
 
         /**
          *  Current position is initially set by [saturation] and [value] that is bound
-         *  in rhombus since (1,1) points to bottom left corner of a rectangle but it's bounded
-         *  in rhombus by [setSelectorPositionFromColorParams].
-         *  When user touches anywhere in rhombus current position is updaed and
+         *  in diamond since (1,1) points to bottom left corner of a rectangle but it's bounded
+         *  in diamond by [setSelectorPositionFromColorParams].
+         *  When user touches anywhere in diamond current position is updaed and
          *  this composable is recomposed
          */
         var currentPosition by remember(saturation, value) {
@@ -85,8 +84,6 @@ fun SaturationPickerRectangle(
                     val posXInPercent = (posX / length).coerceIn(0f, 1f)
                     val posYInPercent = (posY / length).coerceIn(0f, 1f)
 
-                    println("🔥 DOWN posX:$posX, posXInPercent:$posXInPercent, posY:$posY, posYInPercent: $posYInPercent")
-
                     // Send x position as saturation and reverse of y position as value
                     // value increases while going up but android drawing system is opposite
                     onChange(posXInPercent, 1 - posYInPercent)
@@ -102,9 +99,6 @@ fun SaturationPickerRectangle(
                     val posXInPercent = (posX / length).coerceIn(0f, 1f)
                     val posYInPercent = (posY / length).coerceIn(0f, 1f)
 
-                    println("🚀 MOVE posX:$posX, posXInPercent:$posXInPercent, posY:$posY, posYInPercent: $posYInPercent")
-
-
                     // Send x position as saturation and reverse of y position as value
                     // value increases while going up but android drawing system is opposite
                     onChange(posXInPercent, 1 - posYInPercent)
@@ -118,19 +112,11 @@ fun SaturationPickerRectangle(
 
         Canvas(modifier = canvasModifier) {
 
-            val whiteToBlackGradient = Brush.linearGradient(
-                colors = listOf(Color.Black, Color.White),
-                start = GradientOffset(GradientAngle.CCW90).start,
-                end = GradientOffset(GradientAngle.CCW90).end
-            )
+            val valueGradient = valueGradient(hue)
 
-            val hueSaturation = Brush.linearGradient(
-                colors = listOf(Color.White, Color.hsv(hue, 1f, 1f)),
-                start = GradientOffset(GradientAngle.CCW0).start,
-                end = GradientOffset(GradientAngle.CCW0).end
-            )
+            val hueSaturation = saturationHSVGradient(hue)
 
-            drawBlendingRectGradient(dst = whiteToBlackGradient, src = hueSaturation)
+            drawBlendingRectGradient(dst = valueGradient, src = hueSaturation)
 
             // Saturation and Value/Lightness or value selector
             drawCircle(

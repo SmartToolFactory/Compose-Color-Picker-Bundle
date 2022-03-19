@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker.colorpicker
+package com.smarttoolfactory.colorpicker.hueselector
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.input.pointer.consumeDownChange
-import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -22,9 +22,13 @@ import kotlin.math.atan2
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
-
+/**
+ * Hue selector Ring that selects hue based on rotation of circle selector.
+ *
+ * @param selectionRadius radius of selection circle that moves based on touch position
+ */
 @Composable
-fun ColorPickerWheel(
+fun HueSelectorRing(
     modifier: Modifier = Modifier,
     selectionRadius: Dp = (-1).dp,
     onChange: (Int) -> Unit
@@ -50,7 +54,9 @@ fun ColorPickerWheel(
          * Circle selector radius for setting [angle] which sets hue
          */
         val selectorRadius =
-            if (selectionRadius > 0.dp) selectionRadius.value * density else radiusInner * 2 * .04f
+            (if (selectionRadius > 0.dp) selectionRadius.value * density
+            else radiusInner * 2 * .04f)
+                .coerceAtMost(radiusOuter - radiusInner)
 
         val colorPickerModifier = modifier
             .clipToBounds()
@@ -65,20 +71,25 @@ fun ColorPickerWheel(
                     if (isTouched) {
                         angle = calculateAngleFomLocalCoordinates(center, position)
                         onChange(angle)
+                        it.consumeDownChange()
                     }
-                    it.consumeDownChange()
+
                 },
                 onMove = {
                     if (isTouched) {
                         val position = it.position
                         angle = calculateAngleFomLocalCoordinates(center, position)
                         onChange(angle)
+                        it.consumePositionChange()
                     }
-                    it.positionChange()
+
                 },
                 onUp = {
+                    if (isTouched) {
+                        it.consumeDownChange()
+                    }
                     isTouched = false
-                    it.consumeDownChange()
+
                 },
                 delayAfterDownInMillis = 20
             )
