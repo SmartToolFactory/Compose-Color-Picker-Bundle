@@ -64,6 +64,23 @@ fun sliderValueGradient(
     )
 }
 
+fun sliderAlphaHSVGradient(
+    hue: Float = 0f,
+    saturation: Float = 1f,
+    value: Float = 1f,
+    start: Offset = Offset.Zero,
+    end: Offset = Offset.Infinite
+): Brush {
+    return Brush.linearGradient(
+        colors = listOf(
+            Color.hsv(hue = hue, saturation = saturation, value = value, alpha = 0f),
+            Color.hsv(hue = hue, saturation = saturation, value = value, alpha = 1f)
+        ),
+        start = start,
+        end = end
+    )
+}
+
 
 /*
     HSL Gradients
@@ -123,7 +140,8 @@ fun sliderLightnessGradient(
 }
 
 fun sliderLightnessGradient3Stops(
-    hue: Float, alpha: Float = 1f,
+    hue: Float,
+    alpha: Float = 1f,
     start: Offset = Offset.Zero,
     end: Offset = Offset.Infinite
 ): Brush {
@@ -132,6 +150,23 @@ fun sliderLightnessGradient3Stops(
             Color.hsl(hue = hue, saturation = 1f, lightness = 0f, alpha = alpha),
             Color.hsl(hue = hue, saturation = 1f, lightness = .5f, alpha = alpha),
             Color.hsl(hue = hue, saturation = 1f, lightness = 1f, alpha = alpha)
+        ),
+        start = start,
+        end = end
+    )
+}
+
+fun sliderAlphaHSLGradient(
+    hue: Float,
+    saturation: Float = 1f,
+    lightness: Float = .5f,
+    start: Offset = Offset.Zero,
+    end: Offset = Offset.Infinite
+): Brush {
+    return Brush.linearGradient(
+        colors = listOf(
+            Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = 0f),
+            Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = 1f)
         ),
         start = start,
         end = end

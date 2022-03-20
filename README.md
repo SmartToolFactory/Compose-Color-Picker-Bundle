@@ -17,6 +17,7 @@ Color Picker Wheel for selecting hue, SaturationDiamond for selection saturation
 - [x] Add gradient rotation option(GradientOffset)
 - [x] Add HSV-HSL gradient demo
 - [x] Add gradient rotation demo
+- [x] Add checker Composable/Modifier that draws checker pattern behind to display alpha
 
 ### TODOs:
 
@@ -25,7 +26,6 @@ Color Picker Wheel for selecting hue, SaturationDiamond for selection saturation
 - [ ] Add Rectangle Hue Selector
 - [ ] Add option to display colors in a dialog
 - [ ] Add and display colors selected previously
-- [ ] Add checker Composable/Modifier that draws checker pattern behind to display alpha
 - [ ] Add gradient color selection with percentage stops, linear, radial and sweep options
 - [ ] Add option to select colors from Image, Screen or Camera
 

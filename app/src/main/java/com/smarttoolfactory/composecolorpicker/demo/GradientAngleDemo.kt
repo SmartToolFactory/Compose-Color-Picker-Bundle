@@ -3,6 +3,7 @@ package com.smarttoolfactory.composecolorpicker.demo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.ui.*
 import com.smarttoolfactory.colorpicker.ui.brush.*
+import com.smarttoolfactory.colorpicker.widget.drawChecker
 import com.smarttoolfactory.composecolorpicker.ui.CanvasWithTitle
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 import kotlin.math.roundToInt
@@ -229,6 +231,13 @@ private fun SliderGradientExample(gradientOffset: GradientOffset) {
         end = gradientOffset.end
     )
 
+    // Alpha for HSV
+    val sliderAlphaHSVGradient = sliderAlphaHSVGradient(
+        hue = 0f,
+        start = gradientOffset.start,
+        end = gradientOffset.end
+    )
+
     // Colors for HSL
     val sliderColorScaleHSLGradient = sliderHueHSLGradient(
         start = gradientOffset.start,
@@ -255,6 +264,12 @@ private fun SliderGradientExample(gradientOffset: GradientOffset) {
             start = gradientOffset.start,
             end = gradientOffset.end
         )
+
+    val sliderAlphaHSLGradient = sliderAlphaHSLGradient(
+        hue = 0f,
+        start = gradientOffset.start,
+        end = gradientOffset.end
+    )
 
     // Black to Red
     val sliderRedGradient = sliderRedGradient(
@@ -290,6 +305,13 @@ private fun SliderGradientExample(gradientOffset: GradientOffset) {
         drawRoundRect(sliderValueGradient, cornerRadius = CornerRadius(25f, 25f))
     }
 
+    CanvasWithTitle(
+        modifier = sliderModifier.drawChecker(RoundedCornerShape(10.dp)),
+        text = "sliderAlphaHSVGradient"
+    ) {
+        drawRoundRect(sliderAlphaHSVGradient, cornerRadius = CornerRadius(25f, 25f))
+    }
+
     /*
         HSL
      */
@@ -307,6 +329,13 @@ private fun SliderGradientExample(gradientOffset: GradientOffset) {
 
     CanvasWithTitle(modifier = sliderModifier, text = "sliderLightnessGradient") {
         drawRoundRect(sliderLightnessGradient2Stops, cornerRadius = CornerRadius(25f, 25f))
+    }
+
+    CanvasWithTitle(
+        modifier = sliderModifier.drawChecker(RoundedCornerShape(10.dp)),
+        text = "sliderAlphaHSLGradient"
+    ) {
+        drawRoundRect(sliderAlphaHSLGradient, cornerRadius = CornerRadius(25f, 25f))
     }
 
 

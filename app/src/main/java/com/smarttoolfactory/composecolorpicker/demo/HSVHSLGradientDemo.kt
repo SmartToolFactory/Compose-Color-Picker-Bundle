@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.drawIntoLayer
-import com.smarttoolfactory.colorpicker.selector.saturationselector.diamondPath
+import com.smarttoolfactory.colorpicker.selector.diamondPath
 import com.smarttoolfactory.colorpicker.ui.*
 import com.smarttoolfactory.colorpicker.ui.brush.*
 import com.smarttoolfactory.composecolorpicker.ui.CanvasWithTitle
