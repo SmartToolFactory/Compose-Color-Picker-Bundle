@@ -8,7 +8,21 @@ import java.util.*
     HSV-HSL Conversions
  */
 /**
- * Convert HSV (hue-saturation-value) components to HSL (hue-saturation-lightness)
+ * Convert HSV components(hue-saturation-value) to HSL
+ * (hue-saturation-lightness) components.
+ *
+ * ```
+ * hsv[0] is Hue [0 .. 360)
+ * hsv[1] is Saturation [0...1]
+ * hsv[2] is Value [0...1]
+ * ```
+ *
+ * ```
+ * hsl[0] is Hue [0 .. 360)
+ * hsl[1] is Saturation [0...1]
+ * hsl[2] is Lightness [0...1]
+ * ```
+ *
  */
 fun hsvToHSL(hue: Float, saturation: Float, value: Float): FloatArray {
     val lightness = (2 - saturation) * value / 2
@@ -28,23 +42,70 @@ fun hsvToHSL(hue: Float, saturation: Float, value: Float): FloatArray {
         }
     }
 
-    return floatArrayOf(hue, saturationHSL, lightness)
+    return floatArrayOf(hue, saturationHSL.coerceIn(0f,1f), lightness.coerceIn(0f,1f))
 }
 
-
 /**
- * Convert HSV (hue-saturation-value) components to HSL (hue-saturation-lightness)
+ * Convert HSV components(hue-saturation-value) to HSL
+ * (hue-saturation-lightness) components.
+ *
+ * ```
+ * hsv[0] is Hue [0 .. 360)
+ * hsv[1] is Saturation [0...1]
+ * hsv[2] is Value [0...1]
+ * ```
+ *
+ * ```
+ * hsl[0] is Hue [0 .. 360)
+ * hsl[1] is Saturation [0...1]
+ * hsl[2] is Lightness [0...1]
+ * ```
+ *
  */
 fun hsvToHSL(hsvIn: FloatArray): FloatArray {
     return hsvToHSL(hsvIn[0], hsvIn[1], hsvIn[2])
 }
 
+/**
+ * Convert HSL components(hue-saturation-lightness) to HSV
+ * (hue-saturation-value) components.
+ *
+ * ```
+ * hsv[0] is Hue [0 .. 360)
+ * hsv[1] is Saturation [0...1]
+ * hsv[2] is Value [0...1]
+ * ```
+ *
+ * ```
+ * hsl[0] is Hue [0 .. 360)
+ * hsl[1] is Saturation [0...1]
+ * hsl[2] is Lightness [0...1]
+ * ```
+ *
+ */
 fun hslToHSV(hue: Float, saturation: Float, lightness: Float): FloatArray {
     val value = lightness + saturation * lightness.coerceAtMost(1 - lightness)
     val saturationHSV = if (value == 0f) 0f else 2 * (1 - lightness / value)
-    return floatArrayOf(hue, saturationHSV, value)
+    return floatArrayOf(hue, saturationHSV.coerceIn(0f,1f), value.coerceIn(0f,1f))
 }
 
+/**
+ * Convert HSL components(hue-saturation-lightness) to HSV
+ * (hue-saturation-value) components.
+ *
+ * ```
+ * hsv[0] is Hue [0 .. 360)
+ * hsv[1] is Saturation [0...1]
+ * hsv[2] is Value [0...1]
+ * ```
+ *
+ * ```
+ * hsl[0] is Hue [0 .. 360)
+ * hsl[1] is Saturation [0...1]
+ * hsl[2] is Lightness [0...1]
+ * ```
+ *
+ */
 fun hslToHSV(hslIn: FloatArray): FloatArray {
     return hslToHSV(hslIn[0], hslIn[1], hslIn[2])
 }
@@ -52,14 +113,39 @@ fun hslToHSV(hslIn: FloatArray): FloatArray {
 /*
     HSL-COLOR Conversions
  */
+
+/**
+ * Convert HSL (hue-saturation-lightness) components to a RGB color.
+ * ```
+ * hsl[0] is Hue [0 .. 360)
+ * hsl[1] is Saturation [0...1]
+ * hsl[2] is Lightness [0...1]
+ * ```
+ */
 fun hslToColor(hslIn: FloatArray): Int {
     return hslToColor(hslIn[0], hslIn[1], hslIn[2])
 }
 
+/**
+ * Convert HSL (hue-saturation-lightness) components to a RGB color.
+ * ```
+ * hsl[0] is Hue [0 .. 360)
+ * hsl[1] is Saturation [0...1]
+ * hsl[2] is Lightness [0...1]
+ * ```
+ */
 fun hslToColor(hue: Float, saturation: Float, lightness: Float): Int {
     return ColorUtils.HSLToColor(floatArrayOf(hue, saturation, lightness))
 }
 
+/**
+ * Convert RGB color to HSL (hue-saturation-lightness) components.
+ * ```
+ * hsl[0] is Hue [0 .. 360)
+ * hsl[1] is Saturation [0...1]
+ * hsl[2] is Lightness [0...1]
+ * ```
+ */
 fun colorToHsl(color: Int): FloatArray {
     val outHsl = floatArrayOf(0f, 0f, 0f)
     ColorUtils.colorToHSL(color, outHsl)
@@ -69,14 +155,57 @@ fun colorToHsl(color: Int): FloatArray {
 /*
     HSL-RGB Conversions
  */
+
+/**
+ * Convert HSL (hue-saturation-lightness) components to a RGB red, green blue array.
+ * ```
+ * hsl[0] is Hue [0 .. 360)
+ * hsl[1] is Saturation [0...1]
+ * hsl[2] is Lightness [0...1]
+ * ```
+ *
+ * ```
+ * rgb[0] is Red [0 .. 255]
+ * rgb[1] is Green [0...255]
+ * rgb[2] is Blue [0...255]
+ * ```
+ */
 fun hslToRGBArray(hslIn: FloatArray): IntArray {
     return colorToRGBArray(hslToColor(hslIn))
 }
 
+/**
+ * Convert HSL (hue-saturation-lightness) components to a RGB red, green blue array.
+ * ```
+ * hsl[0] is Hue [0 .. 360)
+ * hsl[1] is Saturation [0...1]
+ * hsl[2] is Lightness [0...1]
+ * ```
+ *
+ * ```
+ * rgb[0] is Red [0 .. 255]
+ * rgb[1] is Green [0...255]
+ * rgb[2] is Blue [0...255]
+ * ```
+ */
 fun hslToRGBArray(hue: Float, saturation: Float, lightness: Float): IntArray {
     return colorToRGBArray(hslToColor(hue, saturation, lightness))
 }
 
+/**
+ * Convert HSL (hue-saturation-lightness) components to a RGB red, green blue array.
+ * ```
+ * hsl[0] is Hue [0 .. 360)
+ * hsl[1] is Saturation [0...1]
+ * hsl[2] is Lightness [0...1]
+ * ```
+ *
+ * ```
+ * rgb[0] is Red [0 .. 255]
+ * rgb[1] is Green [0...255]
+ * rgb[2] is Blue [0...255]
+ * ```
+ */
 fun rgbToHSL(red: Int, green: Int, blue: Int): FloatArray {
     val outHsl = floatArrayOf(0f, 0f, 0f)
     ColorUtils.RGBToHSL(red, green, blue, outHsl)

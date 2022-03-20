@@ -167,16 +167,12 @@ fun GradientAngleDemo() {
                 drawRect(hslGradient)
             }
 
-
             // Create gradients for rectangle hue saturation or value/lightness selector
             RectangleColorPickerGradientExample(
                 modifier = canvasModifier,
                 colorScaleHSLGradient = colorScaleHSLGradient,
                 colorScaleHSVGradient = colorScaleHSVGradient
             )
-
-            // Creat gradients for circle hue-saturation selector
-            CirclePickerGradientExample(modifier = canvasModifier)
 
             // Create gradients for different type of sliders such as Saturation, Value, RGB
             SliderGradientExample(gradientOffset = gradientOffset)
@@ -190,12 +186,6 @@ private fun RectangleColorPickerGradientExample(
     colorScaleHSLGradient: Brush,
     colorScaleHSVGradient: Brush
 ) {
-
-    // Transparent to White or Black or from White to Black with transparent colors between
-    val transparentToBlackGradient = transparentToBlackVerticalGradient()
-    val transparentToWhiteGradient = transparentToWhiteVerticalGradient()
-    val transparentToGrayGradient = transparentToGrayVerticalGradient()
-    val transitionGradient = whiteToTransparentToBlackVerticalGradient()
 
     CanvasWithTitle(
         modifier = modifier,
@@ -211,78 +201,6 @@ private fun RectangleColorPickerGradientExample(
 
     ) {
         drawRect(colorScaleHSLGradient)
-    }
-
-
-
-    CanvasWithTitle(
-        modifier = modifier,
-        text = "HSL Color Scale Gradient\n" +
-                "with black gradient"
-
-    ) {
-        drawRect(colorScaleHSLGradient)
-        drawRect(transparentToBlackGradient)
-    }
-
-    CanvasWithTitle(
-        modifier = modifier,
-        text = "HSL Color Scale Gradient\n" +
-                "with white gradient"
-
-    ) {
-        drawRect(colorScaleHSLGradient)
-        drawRect(transparentToWhiteGradient)
-    }
-
-    CanvasWithTitle(
-        modifier = modifier,
-        text = "HSL Color Scale Gradient\n" +
-                "with white gradient"
-
-    ) {
-        drawRect(colorScaleHSLGradient)
-        drawRect(transparentToGrayGradient)
-    }
-
-    CanvasWithTitle(
-        modifier = modifier,
-        text = "HSL Color Scale with\n" +
-                "white to black transition"
-
-    ) {
-        drawRect(colorScaleHSLGradient)
-        drawRect(transitionGradient)
-    }
-
-}
-
-@Composable
-private fun CirclePickerGradientExample(modifier: Modifier) {
-    CanvasWithTitle(
-        modifier = modifier,
-        text = "Hue Saturation Circle(HSV)"
-
-    ) {
-        val colorScaleHSVSweep = Brush.sweepGradient(gradientColorScaleHSVReversed)
-        val whiteToTransparentRadial = Brush.radialGradient(
-            colors = listOf(Color.White, Color(0x00FFFFFF))
-        )
-        drawCircle(colorScaleHSVSweep)
-        drawCircle(whiteToTransparentRadial)
-    }
-
-    CanvasWithTitle(
-        modifier = modifier,
-        text = "Hue Saturation Circle(HSL)"
-
-    ) {
-        val colorScaleHSLSweep = Brush.sweepGradient(gradientColorScaleHSLReversed)
-        val whiteToTransparentRadial = Brush.radialGradient(
-            colors = listOf(Color.White, Color(0x00FFFFFF))
-        )
-        drawCircle(colorScaleHSLSweep)
-        drawCircle(whiteToTransparentRadial)
     }
 }
 

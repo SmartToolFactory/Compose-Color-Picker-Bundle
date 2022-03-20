@@ -7,13 +7,15 @@ import androidx.compose.ui.graphics.Brush
 /**
  *
  * Get a [GradientOffset] that rotate a gradient clockwise with specified angle in degrees.
+ * Default value for [GradientOffset] is [GradientAngle.CW0] which is 0 degrees
+ * that returns a horizontal gradient.
  *
  * Get start and end offsets that are limited between [0f, Float.POSITIVE_INFINITY] in x and
  * y axes wrapped in [GradientOffset].
  * Infinity is converted to Composable width on x axis, height on y axis in shader.
  *
- * Default angle for [Brush.linearGradient] is 135 degrees, [Brush.verticalGradient] also is
- * [Brush.linearGradient] with 90 degrees.
+ * Default angle for [Brush.linearGradient] when no offset is 0 degrees in Compose ,
+ * [Brush.verticalGradient]  is [Brush.linearGradient] with 90 degrees.
  *
  * ```
  *  0 degrees
@@ -38,7 +40,7 @@ import androidx.compose.ui.graphics.Brush
  *
  * ```
  */
-fun GradientOffset(angle: GradientAngle): GradientOffset {
+fun GradientOffset(angle: GradientAngle = GradientAngle.CW0): GradientOffset {
     return when (angle) {
         GradientAngle.CW45 -> GradientOffset(
             start = Offset.Zero,

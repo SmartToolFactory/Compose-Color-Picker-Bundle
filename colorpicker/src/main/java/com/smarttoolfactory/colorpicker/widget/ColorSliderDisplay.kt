@@ -1,4 +1,4 @@
-package com.smarttoolfactory.composecolorpicker.demo
+package com.smarttoolfactory.colorpicker.widget
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
  * Composable that shows a title as initial letter, title color and a Slider to pick color
  */
 @Composable
-fun ColorSlider(
+fun ColorSliderDisplay(
     modifier: Modifier,
     title: String,
     titleColor: Color,

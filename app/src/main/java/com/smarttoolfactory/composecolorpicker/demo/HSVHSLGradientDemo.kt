@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -19,12 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.drawIntoLayer
-import com.smarttoolfactory.colorpicker.saturationselector.diamondPath
+import com.smarttoolfactory.colorpicker.selector.saturationselector.diamondPath
 import com.smarttoolfactory.colorpicker.ui.*
-import com.smarttoolfactory.colorpicker.ui.brush.lightnessGradient
-import com.smarttoolfactory.colorpicker.ui.brush.saturationHSLGradient
-import com.smarttoolfactory.colorpicker.ui.brush.saturationHSVGradient
-import com.smarttoolfactory.colorpicker.ui.brush.valueGradient
+import com.smarttoolfactory.colorpicker.ui.brush.*
 import com.smarttoolfactory.composecolorpicker.ui.CanvasWithTitle
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 import kotlin.math.roundToInt
@@ -64,6 +60,11 @@ fun HSVHSLGradientDemo() {
             saturationGradient = saturationHSLGradient,
             lightnessGradient = lightnessGradient
         )
+
+        RectangleColorPickerGradientExample(modifier = canvasModifier)
+
+        // Crate gradients for circle hue-saturation selector
+        CirclePickerGradientExample(modifier = canvasModifier)
     }
 }
 
@@ -133,7 +134,7 @@ private fun HuePickerHSVGradientExample(
         text = "HSV Diamond positions\n" +
                 "10 samples"
     ) {
-        drawSaturationPointsInDiamond(sampleRate =30, hsv = true)
+        drawSaturationPointsInDiamond(sampleRate = 30, hsv = true)
     }
 
 
@@ -205,7 +206,91 @@ private fun HuePickerHSLGradientExample(
         text = "HSL Diamond positions\n" +
                 "10 samples"
     ) {
-        drawSaturationPointsInDiamond(sampleRate =30, hsv = false)
+        drawSaturationPointsInDiamond(sampleRate = 30, hsv = false)
+    }
+}
+
+@Composable
+private fun RectangleColorPickerGradientExample(
+    modifier: Modifier
+) {
+
+    val gradientOffset = GradientOffset(GradientAngle.CW0)
+
+    //  Red, Magenta, Blue, Cyan, Green, Yellow, Red
+    val colorScaleHSVGradient = Brush.linearGradient(
+        colors = gradientColorScaleHSV,
+        start = gradientOffset.start,
+        end = gradientOffset.end
+    )
+    val colorScaleHSLGradient = Brush.linearGradient(
+        colors = gradientColorScaleHSL,
+        start = gradientOffset.start,
+        end = gradientOffset.end
+    )
+
+
+    // Transparent to White or Black or from White to Black with transparent colors between
+    val transparentToBlackGradient = transparentToBlackVerticalGradient()
+    val transparentToWhiteGradient = transparentToWhiteVerticalGradient()
+    val transparentToGrayGradient = transparentToGrayVerticalGradient()
+    val transitionGradient = whiteToTransparentToBlackVerticalGradient()
+
+    CanvasWithTitle(
+        modifier = modifier,
+        text = "HSV Color Scale Gradient\n" +
+                "HV Selector"
+
+    ) {
+        drawRect(colorScaleHSVGradient)
+        drawRect(transparentToBlackGradient)
+    }
+
+    CanvasWithTitle(
+        modifier = modifier,
+        text = "HSV Color Scale Gradient\n" +
+                "HS Selector"
+
+    ) {
+        drawRect(colorScaleHSVGradient)
+        drawRect(transparentToWhiteGradient)
+    }
+
+    CanvasWithTitle(
+        modifier = modifier,
+        text = "HSL Color Scale Gradient\n" +
+                "HS Selector"
+
+    ) {
+        drawRect(colorScaleHSLGradient)
+        drawRect(transparentToGrayGradient)
+    }
+
+    CanvasWithTitle(
+        modifier = modifier,
+        text = "HSL Color Scale Gradient\n" +
+                "HL Selector"
+
+    ) {
+        drawRect(colorScaleHSLGradient)
+        drawRect(transitionGradient)
+    }
+}
+
+@Composable
+private fun CirclePickerGradientExample(modifier: Modifier) {
+    CanvasWithTitle(
+        modifier = modifier,
+        text = "HSV Color Scale Gradient\n" +
+                "HS Selector"
+
+    ) {
+        val colorScaleHSVSweep = Brush.sweepGradient(gradientColorScaleHSVReversed)
+        val whiteToTransparentRadial = Brush.radialGradient(
+            colors = listOf(Color.White, Color(0x00FFFFFF))
+        )
+        drawCircle(colorScaleHSVSweep)
+        drawCircle(whiteToTransparentRadial)
     }
 }
 
