@@ -42,9 +42,6 @@ android {
 }
 
 dependencies {
-
-    // TODO Upload these libraries to Maven
-    implementation project(':slider')
     implementation project(':gesture')
 
     implementation 'androidx.core:core-ktx:1.7.0'

@@ -21,9 +21,9 @@ Color Picker Wheel for selecting hue, SaturationDiamond for selection saturation
 
 ### TODOs:
 
+- [ ] Add Rectangle Hue+Saturation/Value/Lightness HSV/HSL Selectors
+- [ ] Add Circle Hue Saturation Selector
 - [ ] Add RGB color selection
-- [ ] Add Circle Hue Selector
-- [ ] Add Rectangle Hue Selector
 - [ ] Add option to display colors in a dialog
 - [ ] Add and display colors selected previously
 - [ ] Add gradient color selection with percentage stops, linear, radial and sweep options

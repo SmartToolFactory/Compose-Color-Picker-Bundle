@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker.gesture
+package com.smarttoolfactory.gesture
 
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.ui.Modifier

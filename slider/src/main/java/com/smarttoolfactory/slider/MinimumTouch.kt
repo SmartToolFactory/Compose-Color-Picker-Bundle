@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker.slider
+package com.smarttoolfactory.slider
 
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.LocalMinimumTouchTargetEnforcement

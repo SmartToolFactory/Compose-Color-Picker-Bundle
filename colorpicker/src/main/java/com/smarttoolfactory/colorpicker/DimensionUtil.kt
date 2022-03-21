@@ -42,7 +42,6 @@ fun scale(
         end2
     )
 
-
 /**
  * Calculate fraction for value between a range [end] and [start] coerced into 0f-1f range
  */

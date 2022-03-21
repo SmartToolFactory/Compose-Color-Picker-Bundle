@@ -13,15 +13,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.colorpicker.hueselector.HueSelectorRing
-import com.smarttoolfactory.colorpicker.saturationselector.SaturationPickerDiamond
-import com.smarttoolfactory.colorpicker.slider.ColorBrush
-import com.smarttoolfactory.colorpicker.slider.ColorfulSlider
-import com.smarttoolfactory.colorpicker.slider.MaterialSliderDefaults
+import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
+import com.smarttoolfactory.colorpicker.selector.SLSelectorFromHSLDiamond
 import com.smarttoolfactory.colorpicker.ui.Blue400
 import com.smarttoolfactory.colorpicker.ui.brush.sliderHueHSLGradient
 import com.smarttoolfactory.colorpicker.ui.brush.sliderLightnessGradient
 import com.smarttoolfactory.colorpicker.ui.brush.sliderSaturationHSLGradient
+import com.smarttoolfactory.slider.ColorBrush
+import com.smarttoolfactory.slider.ColorfulSlider
+import com.smarttoolfactory.slider.MaterialSliderDefaults
 
 @Composable
 fun ColorPickerDemo() {
@@ -95,7 +95,7 @@ fun ColorPickerDemo() {
                 }
 
                 Column {
-                    SaturationPickerDiamond(
+                    SLSelectorFromHSLDiamond(
                         modifier = Modifier.size(200.dp),
                         hue = hue,
                         saturation = saturation,
@@ -121,7 +121,7 @@ fun ColorPickerDemo() {
                 modifier = Modifier.width(300.dp),
                 thumbRadius = 12.dp,
                 trackHeight = 12.dp,
-                onValueChange = { value, _, _ ->
+                onValueChange = { value ->
                     hue = value
                 },
                 valueRange = 0f..360f,
@@ -138,7 +138,7 @@ fun ColorPickerDemo() {
                 modifier = Modifier.width(300.dp),
                 thumbRadius = 12.dp,
                 trackHeight = 12.dp,
-                onValueChange = { value, _, _ ->
+                onValueChange = { value ->
                     saturation = value
                 },
                 coerceThumbInTrack = true,
@@ -154,7 +154,7 @@ fun ColorPickerDemo() {
                 modifier = Modifier.width(300.dp),
                 thumbRadius = 12.dp,
                 trackHeight = 12.dp,
-                onValueChange = { result, _, _ ->
+                onValueChange = { result ->
                     lightness = result
                 },
                 coerceThumbInTrack = true,

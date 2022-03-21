@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker.slider
+package com.smarttoolfactory.slider
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -10,10 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.lerp
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PointMode
-import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
@@ -22,10 +19,42 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.colorpicker.calculateFraction
-import com.smarttoolfactory.colorpicker.gesture.pointerMotionEvents
-import com.smarttoolfactory.colorpicker.scale
+import com.smarttoolfactory.gesture.pointerMotionEvents
+
 import kotlin.math.abs
+
+@Composable
+fun ColorfulSlider(
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    steps: Int = 0,
+    onValueChangeFinished: (() -> Unit)? = null,
+    trackHeight: Dp = TrackHeight,
+    thumbRadius: Dp = ThumbRadius,
+    coerceThumbInTrack: Boolean = false,
+    drawInactiveTrack: Boolean = true,
+    colors: MaterialSliderColors = MaterialSliderDefaults.defaultColors()
+) {
+    ColorfulSlider(
+        modifier = modifier,
+        value = value,
+        onValueChange = { progress, _ ->
+            onValueChange(progress)
+        },
+        enabled = enabled,
+        valueRange = valueRange,
+        steps = steps,
+        onValueChangeFinished = onValueChangeFinished,
+        trackHeight = trackHeight,
+        thumbRadius = thumbRadius,
+        coerceThumbInTrack = coerceThumbInTrack,
+        drawInactiveTrack = drawInactiveTrack,
+        colors = colors
+    )
+}
 
 /**
  *
@@ -42,12 +71,12 @@ import kotlin.math.abs
  *
  * Material Slider allows to choose height for track and thumb radius and selection between
  * [Color] or [Brush] using [ColorBrush]. If brush of [ColorBrush.brush] is not null gradient
- * provided in this [Brush] is used for drawing otherwise solid color [ColorBrush.color] is used.
+ * provided in this [Brush] is used for drawing otherwise solid color [ColorBrush.solidColor] is used.
  *
  * @param value current value of the Slider. If outside of [valueRange] provided, value will be
  * coerced to this range.
  * @param onValueChange lambda that returns value, position of **thumb** as [Offset], vertical
- * center is stored in y, and [SliderTouchEvent] that stores touch state of the slider.
+ * center is stored in y.
  * @param modifier modifiers for the Slider layout
  * @param trackHeight height of the track that will be drawn on [Canvas]. half of [trackHeight]
  * is used as **stroke** width.
@@ -69,14 +98,15 @@ import kotlin.math.abs
  */
 @Composable
 fun ColorfulSlider(
-    value: Float,
-    onValueChange: (Float, Offset, SliderTouchEvent) -> Unit,
     modifier: Modifier = Modifier,
-    trackHeight: Dp = TrackHeight,
-    thumbRadius: Dp = ThumbRadius,
+    value: Float,
+    onValueChange: (Float, Offset) -> Unit,
     enabled: Boolean = true,
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     steps: Int = 0,
+    onValueChangeFinished: (() -> Unit)? = null,
+    trackHeight: Dp = TrackHeight,
+    thumbRadius: Dp = ThumbRadius,
     coerceThumbInTrack: Boolean = false,
     drawInactiveTrack: Boolean = true,
     colors: MaterialSliderColors = MaterialSliderDefaults.defaultColors()
@@ -87,7 +117,6 @@ fun ColorfulSlider(
     val tickFractions = remember(steps) {
         stepsToTickFractions(steps)
     }
-
     // TODO Check these modifiers with different slider width, height and size params
     BoxWithConstraints(
         modifier = modifier
@@ -138,7 +167,7 @@ fun ColorfulSlider(
                     val offsetInTrack = rawOffset.value.coerceIn(trackStart, trackEnd)
                     onValueChangeState.value.invoke(
                         scaleToUserValue(offsetInTrack),
-                        Offset(rawOffset.value, strokeRadius), SliderTouchEvent.OnDragStart
+                        Offset(rawOffset.value, strokeRadius)
                     )
                     it.consumeDownChange()
                 }
@@ -149,7 +178,7 @@ fun ColorfulSlider(
                     val offsetInTrack = rawOffset.value.coerceIn(trackStart, trackEnd)
                     onValueChangeState.value.invoke(
                         scaleToUserValue(offsetInTrack),
-                        Offset(rawOffset.value, strokeRadius), SliderTouchEvent.OnDrag
+                        Offset(rawOffset.value, strokeRadius)
                     )
                     it.consumePositionChange()
                 }
@@ -157,12 +186,7 @@ fun ColorfulSlider(
             },
             onUp = {
                 if (enabled) {
-                    rawOffset.value = if (!isRtl) it.position.x else trackEnd - it.position.x
-                    val offsetInTrack = rawOffset.value.coerceIn(trackStart, trackEnd)
-                    onValueChangeState.value.invoke(
-                        scaleToUserValue(offsetInTrack),
-                        Offset(rawOffset.value, strokeRadius), SliderTouchEvent.OnDragEnd
-                    )
+                    onValueChangeFinished?.invoke()
                     it.consumeDownChange()
                 }
             }
@@ -247,7 +271,7 @@ private fun SliderImpl(
  * is drawn between start and current value.
  *
  * Drawing both tracks use [ColorBrush] to draw a nullable [Brush] first. If it's not then
- * [ColorBrush.color] is used to draw with solid colors provided by [MaterialSliderColors]
+ * [ColorBrush.solidColor] is used to draw with solid colors provided by [MaterialSliderColors]
  */
 @Composable
 private fun Track(
@@ -267,9 +291,9 @@ private fun Track(
     val debug = false
 
     // Colors for drawing track and/or ticks
-    val activeTrackColor: ColorBrush =
+    val activeTrackColor: Brush =
         colors.trackColor(enabled = enabled, active = true).value
-    val inactiveTrackColor: ColorBrush =
+    val inactiveTrackColor: Brush =
         colors.trackColor(enabled = enabled, active = false).value
     val inactiveTickColor = colors.tickColor(enabled, active = false).value
     val activeTickColor = colors.tickColor(enabled, active = true).value
@@ -305,65 +329,25 @@ private fun Track(
             center.y
         )
 
-//        println(
-//            "🔥 CANVAS isRtL:$isRtl, trackStart:$trackStart, strokeRadius:$strokeRadius thumbRadius:$thumbRadius\n" +
-//                    "drawStart:$drawStart, fraction:$fraction\n" +
-//                    "SliderLeft:${sliderLeft.x}, sliderStart:${sliderStart.x}, sliderValue:${sliderValue.x}\n"
-//        )
+        drawLine(
+            brush = inactiveTrackColor,
+            start = sliderStart,
+            end = sliderEnd,
+            strokeWidth = trackHeight,
+            cap = StrokeCap.Round
+        )
 
-        inactiveTrackColor.let { colorBrush: ColorBrush ->
-            var drawWithBrush = false
-            colorBrush.brush?.let { brush: Brush ->
-                drawLine(
-                    brush = brush,
-                    start = sliderStart,
-                    end = sliderEnd,
-                    strokeWidth = trackHeight,
-                    cap = StrokeCap.Round
-                )
-                drawWithBrush = true
-            }
-
-            if (!drawWithBrush) {
-
-                drawLine(
-                    color = colorBrush.color,
-                    start = sliderStart,
-                    end = sliderEnd,
-                    strokeWidth = trackHeight,
-                    cap = StrokeCap.Round
-                )
-            }
-        }
-
-        activeTrackColor.let { colorBrush: ColorBrush ->
-
-            var drawWithBrush = false
-            colorBrush.brush?.let { brush: Brush ->
-                drawLine(
-                    brush = brush,
-                    start = sliderStart,
-                    end = sliderEnd,
-                    strokeWidth = trackHeight,
-                    cap = StrokeCap.Round
-                )
-                drawWithBrush = true
-            }
-
-            if (!drawWithBrush) {
-                drawLine(
-                    color = colorBrush.color,
-                    start = sliderStart,
-                    end = if (drawInactiveTrack) sliderValue else sliderEnd,
-                    strokeWidth = trackHeight,
-                    cap = StrokeCap.Round
-                )
-            }
-        }
+        drawLine(
+            brush = activeTrackColor,
+            start = sliderStart,
+            end = if (drawInactiveTrack) sliderValue else sliderEnd,
+            strokeWidth = trackHeight,
+            cap = StrokeCap.Round
+        )
 
         if (debug) {
             drawLine(
-                color = activeTrackColor.color.copy(.7f) ?: Color.Yellow,
+                color = Color.Yellow,
                 start = sliderStart,
                 end = sliderEnd,
                 strokeWidth = strokeRadius / 4
@@ -378,8 +362,8 @@ private fun Track(
                             Offset(lerp(sliderStart, sliderEnd, it).x, center.y)
                         },
                         pointMode = PointMode.Points,
-                        color = if (outsideFraction) inactiveTickColor.color
-                        else activeTickColor.color,
+                        brush = if (outsideFraction) inactiveTickColor
+                        else activeTickColor,
                         strokeRadius.coerceAtMost(thumbRadius / 2),
                         cap = StrokeCap.Round
                     )
@@ -397,7 +381,7 @@ private fun Thumb(
     enabled: Boolean
 ) {
 
-    val colorBrush = colors.thumbColor(enabled).value
+    val thumbColor: Brush = colors.thumbColor(enabled).value
 
     Spacer(
         modifier = modifier
@@ -405,9 +389,7 @@ private fun Thumb(
             .shadow(1.dp, shape = CircleShape)
             .size(thumbSize)
             .then(
-                colorBrush.brush?.let { brush: Brush ->
-                    Modifier.background(brush)
-                } ?: Modifier.background(colorBrush.color)
+                Modifier.background(thumbColor)
             )
     )
 }
@@ -447,7 +429,3 @@ private val DefaultSliderConstraints =
     Modifier
         .widthIn(min = SliderMinWidth)
         .heightIn(max = SliderHeight)
-
-enum class SliderTouchEvent {
-    OnDragStart, OnDrag, OnDragEnd
-}

@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker.gesture
+package com.smarttoolfactory.gesture
 
 enum class MotionEvent {
     Idle, Down, Move, Up

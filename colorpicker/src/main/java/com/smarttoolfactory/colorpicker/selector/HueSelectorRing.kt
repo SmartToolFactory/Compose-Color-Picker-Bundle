@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker.hueselector
+package com.smarttoolfactory.colorpicker.selector
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -15,12 +15,10 @@ import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.colorpicker.gesture.pointerMotionEvents
+import com.smarttoolfactory.colorpicker.calculateAngleFomLocalCoordinates
+import com.smarttoolfactory.colorpicker.calculateDistanceFromCenter
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleRGB
-import kotlin.math.PI
-import kotlin.math.atan2
-import kotlin.math.roundToInt
-import kotlin.math.sqrt
+import com.smarttoolfactory.gesture.pointerMotionEvents
 
 /**
  * Hue selector Ring that selects hue based on rotation of circle selector.
@@ -139,40 +137,4 @@ fun HueSelectorRing(
             }
         }
     }
-
-}
-
-/**
- * Calculate distance from center to touch position
- */
-private fun calculateDistanceFromCenter(center: Offset, position: Offset): Float {
-    val dy = center.y - position.y
-    val dx = position.x - center.x
-    return sqrt(dx * dx + dy * dy)
-}
-
-/**
- * Get angle between 0 and 360 degrees from local coordinate system of a composable
- * Local coordinates of touch are equal to Composable position when in bounds, when
- * touch position is above this composable it returns minus in y axis.
- */
-private fun calculateAngleFomLocalCoordinates(center: Offset, position: Offset): Int {
-    if (center == Offset.Unspecified || position == Offset.Unspecified) return -1
-
-    val dy = center.y - position.y
-    val dx = position.x - center.x
-    return ((360 + ((atan2(dy, dx) * 180 / PI))) % 360).roundToInt()
-
-}
-
-/**
- * Get angle between 0 and 360 degrees using coordinates of the root composable. Root composable
- * needs to cover whole screen to return correct results.
- */
-private fun calculateAngleFromRootCoordinates(center: Offset, position: Offset): Int {
-    if (center == Offset.Unspecified || position == Offset.Unspecified) return -1
-
-    val dy = (position.y - center.y)
-    val dx = (center.x - position.x)
-    return ((360 + ((atan2(dy, dx) * 180 / PI))) % 360).roundToInt()
 }

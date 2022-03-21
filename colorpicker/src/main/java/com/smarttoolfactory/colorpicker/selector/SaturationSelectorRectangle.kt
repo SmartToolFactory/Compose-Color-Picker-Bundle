@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker.saturationselector
+package com.smarttoolfactory.colorpicker.selector
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -14,25 +14,12 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.drawBlendingRectGradient
-import com.smarttoolfactory.colorpicker.gesture.pointerMotionEvents
 import com.smarttoolfactory.colorpicker.ui.brush.saturationHSVGradient
 import com.smarttoolfactory.colorpicker.ui.brush.valueGradient
+import com.smarttoolfactory.gesture.pointerMotionEvents
 
 @Composable
-fun SaturationPickerRectangleHSL(
-    modifier: Modifier = Modifier,
-    hue: Float,
-    saturation: Float = 0.5f,
-    lightness: Float = 1f,
-    selectionRadius: Dp = (-1).dp,
-    onChange: (Float, Float) -> Unit
-){
-
-}
-
-
-@Composable
-fun SaturationPickerRectangle(
+fun SVSelectorFromHSVRectangle(
     modifier: Modifier = Modifier,
     hue: Float,
     saturation: Float = 0.5f,

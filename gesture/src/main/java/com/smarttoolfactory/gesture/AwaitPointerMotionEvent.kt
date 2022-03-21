@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker.gesture
+package com.smarttoolfactory.gesture
 
 import androidx.compose.foundation.gestures.*
 import androidx.compose.ui.input.pointer.*
