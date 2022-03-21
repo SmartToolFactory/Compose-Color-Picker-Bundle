@@ -7,7 +7,7 @@ colors.
 You can check out gradient, slider demos for rotating gradients, creating HSV, HSL gradients,
 and check out Colorful Sliders to get familiar with.
 
-<img src="/./screenshots/intro.mp4" align="right" width="32%"/>
+<img src="/./screenshots/intro.giif" align="right" width="32%"/>
 
 ### Completed:
 
