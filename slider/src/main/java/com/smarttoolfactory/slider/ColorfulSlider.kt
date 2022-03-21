@@ -2,6 +2,7 @@ package com.smarttoolfactory.slider
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.*
@@ -418,14 +419,14 @@ private fun stepsToTickFractions(steps: Int): List<Float> {
 }
 
 // Internal to be referred to in tests
-internal val TrackHeight = 4.dp
-private val SliderHeight = 60.dp
-private val SliderMinWidth = 144.dp
+internal val ThumbRadius = 10.dp
 
 // Internal to be referred to in tests
-internal val ThumbRadius = 10.dp
+internal val TrackHeight = 4.dp
+private val SliderHeight = 48.dp
+private val SliderMinWidth = 144.dp
 
 private val DefaultSliderConstraints =
     Modifier
         .widthIn(min = SliderMinWidth)
-        .heightIn(max = SliderHeight)
+        .heightIn(min = SliderHeight)

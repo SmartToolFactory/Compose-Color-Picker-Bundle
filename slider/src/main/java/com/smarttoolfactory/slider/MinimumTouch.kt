@@ -43,8 +43,6 @@ private class MinimumTouchTargetModifier(val size: DpSize) : LayoutModifier {
         val width = maxOf(placeable.width, size.width.roundToPx())
         val height = maxOf(placeable.height, size.height.roundToPx())
 
-//        println("MinimumTouchTargetModifier width: $width, height: $height")
-
         return layout(width, height) {
             val centerX = ((width - placeable.width) / 2f).roundToInt()
             val centerY = ((height - placeable.height) / 2f).roundToInt()

@@ -1,120 +1,223 @@
 package com.smarttoolfactory.composecolorpicker.demo
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.colorpicker.slider.ColorBrush
-import com.smarttoolfactory.colorpicker.slider.ColorfulSlider
-import com.smarttoolfactory.colorpicker.slider.MaterialSliderDefaults
-import com.smarttoolfactory.colorpicker.ui.gradientColorScaleRGB
-import com.smarttoolfactory.colorpicker.ui.gradientColorScaleRGBReversed
+import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.colorpicker.ui.Blue400
+import com.smarttoolfactory.colorpicker.widget.*
 
 @Composable
 fun ColorfulSliderDemo() {
 
     Column(
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .background(Color.LightGray)
-            .padding(vertical = 20.dp)
-        ,
+            .padding(vertical = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val density = LocalDensity.current.density
 
-        var progress by remember { mutableStateOf(0f) }
+        val modifier = Modifier
+            .padding(8.dp)
+            .shadow(2.dp, RoundedCornerShape(8.dp))
+            .background(Color.White)
+            .padding(4.dp)
 
-        ColorfulSlider(
-            value = progress,
-            modifier = Modifier.width(240.dp),
-            thumbRadius = 10.dp,
-            trackHeight = 12.dp,
-            onValueChange = {value,_,_->
-                progress = value
-            },
-            enabled = false,
-            colors = MaterialSliderDefaults.defaultColors()
+        val sliderModifier = Modifier.padding(horizontal = 8.dp)
+
+        val boxModifier = Modifier
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .drawChecker(RoundedCornerShape(8.dp))
+            .fillMaxWidth(.5f)
+            .height(40.dp)
+
+        HSVSliderExamples(modifier, sliderModifier, boxModifier)
+        HSLSliderExamples(modifier, sliderModifier, boxModifier)
+        RGBSliderExamples(modifier, sliderModifier, boxModifier)
+    }
+}
+
+@Composable
+private fun HSVSliderExamples(modifier: Modifier, sliderModifier: Modifier, boxModifier: Modifier) {
+
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var value by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    val colorHSV = Color.hsv(hue = hue, saturation = saturation, value = value, alpha = alpha)
+
+    Text(text = "HSV Sliders", fontSize = 18.sp, color = Blue400, modifier =Modifier.padding(2.dp))
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Box(modifier = boxModifier.background(colorHSV))
+
+        SliderHueHSV(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            onValueChange = {
+                hue = it
+            }
         )
 
 
-        var hue by remember { mutableStateOf(0f) }
-        var saturation by remember { mutableStateOf(1f) }
-        var lighness by remember { mutableStateOf(.5f) }
-        var value by remember { mutableStateOf(1f) }
-
-        var red by remember { mutableStateOf(0f) }
-        var green by remember { mutableStateOf(0f) }
-        var blue by remember { mutableStateOf(0f) }
-        var alpha by remember { mutableStateOf(1f) }
-
-        ColorfulSlider(
-            value = red,
-            modifier = Modifier.width(240.dp),
-            thumbRadius = 10.dp,
-            trackHeight = 12.dp,
-            onValueChange = {value,_,_->
-                progress = value
-            },
-            valueRange = 0f..255f,
-            coerceThumbInTrack = true,
-            colors = MaterialSliderDefaults.materialColors(
-                activeTrackColor = ColorBrush(
-                    brush = Brush.linearGradient(gradientColorScaleRGBReversed),
-                    color = Color.Transparent
-                ),
-                inactiveTrackColor = ColorBrush(
-                    brush = Brush.linearGradient(gradientColorScaleRGB),
-                    color = Color.Transparent
-                )
-            )
+        SliderSaturationHSV(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            onValueChange = { value ->
+                saturation = value
+            }
         )
 
-        ColorfulSlider(
-            value = green,
-            modifier = Modifier.width(240.dp),
-            thumbRadius = 10.dp,
-            trackHeight = 12.dp,
-            onValueChange = {value,_,_->
-                progress = value
-            },
-            valueRange = 0f..255f,
-            coerceThumbInTrack = true,
-            colors = MaterialSliderDefaults.materialColors(
-                activeTrackColor = ColorBrush(
-                    brush = Brush.linearGradient(gradientColorScaleRGBReversed),
-                    color = Color.Transparent
-                ),
-                inactiveTrackColor = ColorBrush(color = Color.Transparent)
-            )
+        SliderValueHSV(
+            modifier = sliderModifier,
+            hue = hue,
+            value = value,
+            onValueChange = { result ->
+                value = result
+            }
         )
 
+        SliderAlphaHSV(
+            modifier = sliderModifier,
+            hue = hue, alpha = alpha,
+            onValueChange = {
+                alpha = it
+            }
+        )
+    }
 
-        ColorfulSlider(
-            value = blue,
-            modifier = Modifier.width(240.dp),
-            thumbRadius = 10.dp,
-            trackHeight = 12.dp,
-            onValueChange = {value,_,_->
-                progress = value
-            },
-            valueRange = 0f..255f,
-            coerceThumbInTrack = true,
-            colors = MaterialSliderDefaults.materialColors(
-                activeTrackColor = ColorBrush(
-                    brush = Brush.linearGradient(listOf(Color.Black, Color.Blue)),
-                    color = Color.Transparent
-                ),
-                inactiveTrackColor = ColorBrush(color = Color.Transparent)
-            )
+}
+
+@Composable
+private fun HSLSliderExamples(modifier: Modifier, sliderModifier: Modifier, boxModifier: Modifier) {
+
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var lightness by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    val colorHSL =
+        Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
+
+    Text(text = "HSL Sliders", fontSize = 18.sp, color = Blue400, modifier = Modifier.padding(2.dp))
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(modifier = boxModifier.background(colorHSL))
+
+        SliderHueHSL(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            onValueChange = {
+                hue = it
+            }
+        )
+
+        SliderSaturationHSL(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            onValueChange = { value ->
+                saturation = value
+            }
+        )
+
+        SliderLightnessHSL(
+            modifier = sliderModifier,
+            lightness = lightness,
+            onValueChange = { result ->
+                lightness = result
+            }
+        )
+
+        SliderAlphaHSL(
+            modifier = sliderModifier,
+            hue = hue,
+            alpha = alpha,
+            onValueChange = {
+                alpha = it
+            }
+        )
+    }
+}
+
+@Composable
+private fun RGBSliderExamples(modifier: Modifier, sliderModifier: Modifier, boxModifier: Modifier) {
+
+    var red by remember { mutableStateOf(1f) }
+    var green by remember { mutableStateOf(0f) }
+    var blue by remember { mutableStateOf(0f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    val colorRGB = Color(red, green, blue, alpha = alpha)
+
+    Text(text = "RGB Sliders", fontSize = 18.sp, color = Blue400, modifier = Modifier.padding(2.dp))
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Box(modifier = boxModifier.background(colorRGB))
+
+        SliderRedRGB(
+            modifier = sliderModifier,
+            red = red,
+            onValueChange = { result ->
+                red = result.coerceIn(0f, 1f)
+            }
+        )
+
+        SliderGreenRGB(
+            modifier = sliderModifier,
+            green = green,
+            onValueChange = { result ->
+                green = result.coerceIn(0f, 1f)
+            }
+        )
+
+        SliderBlueRGB(
+            modifier = sliderModifier,
+            blue = blue,
+            onValueChange = { result ->
+                blue = result.coerceIn(0f, 1f)
+            }
+        )
+
+        SliderAlphaRGB(
+            modifier = sliderModifier,
+            red = red,
+            green = green,
+            blue = blue,
+            alpha = alpha,
+            onValueChange = {
+                alpha = it
+            }
         )
 
     }

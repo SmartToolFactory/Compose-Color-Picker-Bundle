@@ -11,12 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.colorpicker.saturationselector.SaturationPickerDiamond
-import com.smarttoolfactory.colorpicker.saturationselector.SaturationPickerRectangle
-import com.smarttoolfactory.colorpicker.slider.ColorBrush
-import com.smarttoolfactory.colorpicker.slider.ColorfulSlider
-import com.smarttoolfactory.colorpicker.slider.MaterialSliderDefaults
-import com.smarttoolfactory.colorpicker.ui.brush.*
+import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.colorpicker.selector.SLSelectorFromHSLDiamond
+import com.smarttoolfactory.colorpicker.selector.SVSelectorFromHSVRectangle
+import com.smarttoolfactory.colorpicker.ui.Blue400
+import com.smarttoolfactory.colorpicker.ui.brush.sliderSaturationHSVGradient
+import com.smarttoolfactory.colorpicker.ui.brush.sliderValueGradient
+import com.smarttoolfactory.colorpicker.widget.*
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 
 @Composable
@@ -79,28 +80,26 @@ fun SaturationSelectorDemo() {
             ) {
 
                 Column {
-                    SaturationPickerDiamond(
+                    SLSelectorFromHSLDiamond(
                         modifier = Modifier.size(200.dp),
                         hue = hue,
                         saturation = saturationHSL,
                         lightness = lightness,
                         selectionRadius = 8.dp
                     ) { s, l ->
-                        println("CHANGING sat: $s, lightness: $l")
                         saturationHSL = s
                         lightness = l
                     }
 
 
                     Spacer(modifier = Modifier.height(20.dp))
-                    SaturationPickerRectangle(
+                    SVSelectorFromHSVRectangle(
                         modifier = Modifier.size(200.dp),
                         hue = hue,
                         saturation = saturationHSV,
                         value = value,
                         selectionRadius = 8.dp
                     ) { s, v ->
-                        println("CHANGING sat: $s, lightness: $v")
                         saturationHSV = s
                         value = v
                     }
@@ -108,102 +107,59 @@ fun SaturationSelectorDemo() {
             }
 
             /*
-                Sliders and Gradients
+                Sliders
              */
-            val sliderHueSelectionHSLGradient = sliderHueHSLGradient(
+
+            SliderHueHSL(
+                modifier = Modifier.width(300.dp),
+                hue = hue,
                 saturation = saturationHSL,
                 lightness = lightness,
+                onValueChange = {
+                    hue = it
+                }
             )
 
-            // HSL Sliders
-            val sliderSaturationHSLGradient =
-                sliderSaturationHSLGradient(hue = hue, lightness = lightness)
-            val sliderLightnessGradient = sliderLightnessGradient(hue = 0f)
-
-            // HSV Sliders
-            val sliderSaturationHSVGradient = sliderSaturationHSVGradient(hue = hue, value = value)
-            val sliderValueGradient = sliderValueGradient(hue = hue)
-
-            ColorfulSlider(
-                value = hue,
-                modifier = Modifier.width(300.dp),
-                thumbRadius = 12.dp,
-                trackHeight = 12.dp,
-                onValueChange = { value, _, _ ->
-                    hue = value
-                },
-                valueRange = 0f..360f,
-                coerceThumbInTrack = true,
-                colors = MaterialSliderDefaults.materialColors(
-                    activeTrackColor = ColorBrush(brush = sliderHueSelectionHSLGradient),
-                ),
-                drawInactiveTrack = false
-            )
             Spacer(modifier = Modifier.height(4.dp))
 
-            Text("HSL Sliders")
-            ColorfulSlider(
-                value = saturationHSL,
+            Text("HSL Sliders", fontSize = 16.sp, color = Blue400)
+
+            SliderSaturationHSL(
                 modifier = Modifier.width(300.dp),
-                thumbRadius = 12.dp,
-                trackHeight = 12.dp,
-                onValueChange = { value, _, _ ->
+                hue = hue,
+                saturation = saturationHSL,
+                lightness = lightness,
+                onValueChange = { value ->
                     saturationHSL = value
-                },
-                coerceThumbInTrack = true,
-                colors = MaterialSliderDefaults.materialColors(
-                    activeTrackColor = ColorBrush(brush = sliderSaturationHSLGradient),
-                ),
-                drawInactiveTrack = false
+                }
             )
-            Spacer(modifier = Modifier.height(4.dp))
 
-            ColorfulSlider(
-                value = lightness,
+            SliderLightnessHSL(
                 modifier = Modifier.width(300.dp),
-                thumbRadius = 12.dp,
-                trackHeight = 12.dp,
-                onValueChange = { result, _, _ ->
+                lightness = lightness,
+                onValueChange = { result ->
                     lightness = result
-                },
-                coerceThumbInTrack = true,
-                colors = MaterialSliderDefaults.materialColors(
-                    activeTrackColor = ColorBrush(brush = sliderLightnessGradient),
-                ),
-                drawInactiveTrack = false
+                }
             )
 
-            Text("HSV Sliders")
-
-            ColorfulSlider(
-                value = saturationHSV,
+            Text("HSV Sliders", fontSize = 16.sp, color = Blue400)
+            SliderSaturationHSV(
                 modifier = Modifier.width(300.dp),
-                thumbRadius = 12.dp,
-                trackHeight = 12.dp,
-                onValueChange = { value, _, _ ->
-                    saturationHSV = value
-                },
-                coerceThumbInTrack = true,
-                colors = MaterialSliderDefaults.materialColors(
-                    activeTrackColor = ColorBrush(brush = sliderSaturationHSVGradient),
-                ),
-                drawInactiveTrack = false
-            )
-
-
-            ColorfulSlider(
+                hue = hue,
+                saturation = saturationHSV,
                 value = value,
+                onValueChange = { value ->
+                    saturationHSV = value
+                }
+            )
+
+            SliderValueHSV(
                 modifier = Modifier.width(300.dp),
-                thumbRadius = 12.dp,
-                trackHeight = 12.dp,
-                onValueChange = { result, _, _ ->
+                hue = hue,
+                value = value,
+                onValueChange = { result ->
                     value = result
-                },
-                coerceThumbInTrack = true,
-                colors = MaterialSliderDefaults.materialColors(
-                    activeTrackColor = ColorBrush(brush = sliderValueGradient),
-                ),
-                drawInactiveTrack = false
+                }
             )
             Spacer(modifier = Modifier.height(4.dp))
         }

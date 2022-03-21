@@ -16,12 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
 import com.smarttoolfactory.colorpicker.selector.SLSelectorFromHSLDiamond
 import com.smarttoolfactory.colorpicker.ui.Blue400
-import com.smarttoolfactory.colorpicker.ui.brush.sliderHueHSLGradient
-import com.smarttoolfactory.colorpicker.ui.brush.sliderLightnessGradient
-import com.smarttoolfactory.colorpicker.ui.brush.sliderSaturationHSLGradient
-import com.smarttoolfactory.slider.ColorBrush
-import com.smarttoolfactory.slider.ColorfulSlider
-import com.smarttoolfactory.slider.MaterialSliderDefaults
+import com.smarttoolfactory.colorpicker.widget.*
 
 @Composable
 fun ColorPickerDemo() {
@@ -37,8 +32,11 @@ fun ColorPickerDemo() {
         var hue by remember { mutableStateOf(0f) }
         var saturation by remember { mutableStateOf(.5f) }
         var lightness by remember { mutableStateOf(.5f) }
+        var alpha by remember { mutableStateOf(1f) }
 
-        val color = Color.hsl(hue = hue, saturation = saturation, lightness = lightness)
+
+        val color =
+            Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
@@ -71,10 +69,12 @@ fun ColorPickerDemo() {
                     modifier = Modifier
                         .weight(1f)
                         .height(40.dp)
+                        .drawChecker(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp))
                         .background(
                             color,
                             shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp)
                         )
+
                 )
             }
 
@@ -102,66 +102,45 @@ fun ColorPickerDemo() {
                         lightness = lightness,
                         selectionRadius = 8.dp
                     ) { s, l ->
-                        println("CHANGING sat: $s, lightness: $l")
                         saturation = s
                         lightness = l
                     }
                 }
             }
 
-            val sliderHueSelectionHSLGradient = sliderHueHSLGradient(
+            SliderHueHSL(
+                modifier = Modifier.width(300.dp),
+                hue = hue,
                 saturation = saturation,
                 lightness = lightness,
-            )
-            val sliderSaturationHSLGradient = sliderSaturationHSLGradient(hue, lightness)
-            val sliderLightnessGradient = sliderLightnessGradient(0f)
-
-            ColorfulSlider(
-                value = hue,
-                modifier = Modifier.width(300.dp),
-                thumbRadius = 12.dp,
-                trackHeight = 12.dp,
-                onValueChange = { value ->
-                    hue = value
-                },
-                valueRange = 0f..360f,
-                coerceThumbInTrack = true,
-                colors = MaterialSliderDefaults.materialColors(
-                    activeTrackColor = ColorBrush(brush = sliderHueSelectionHSLGradient),
-                ),
-                drawInactiveTrack = false
+                onValueChange = {
+                    hue = it
+                }
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
-            ColorfulSlider(
-                value = saturation,
+            SliderSaturationHSL(
                 modifier = Modifier.width(300.dp),
-                thumbRadius = 12.dp,
-                trackHeight = 12.dp,
+                hue = hue, saturation = saturation, lightness = lightness,
                 onValueChange = { value ->
                     saturation = value
-                },
-                coerceThumbInTrack = true,
-                colors = MaterialSliderDefaults.materialColors(
-                    activeTrackColor = ColorBrush(brush = sliderSaturationHSLGradient),
-                ),
-                drawInactiveTrack = false
+                }
             )
-            Spacer(modifier = Modifier.height(4.dp))
 
-            ColorfulSlider(
-                value = lightness,
+            SliderLightnessHSL(
                 modifier = Modifier.width(300.dp),
-                thumbRadius = 12.dp,
-                trackHeight = 12.dp,
+                lightness = lightness,
                 onValueChange = { result ->
                     lightness = result
-                },
-                coerceThumbInTrack = true,
-                colors = MaterialSliderDefaults.materialColors(
-                    activeTrackColor = ColorBrush(brush = sliderLightnessGradient),
-                ),
-                drawInactiveTrack = false
+                }
+            )
+
+            SliderAlphaHSL(
+                modifier = Modifier.width(300.dp),
+                hue = hue,
+                alpha = alpha,
+                onValueChange = {
+                    alpha = it
+                }
             )
         }
     }

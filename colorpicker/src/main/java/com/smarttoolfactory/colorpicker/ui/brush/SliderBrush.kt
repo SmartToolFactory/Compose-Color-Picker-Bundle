@@ -220,3 +220,20 @@ fun sliderBlueGradient(
         end = end
     )
 }
+
+fun sliderAlphaRGBGradient(
+    red: Float,
+    green: Float,
+    blue: Float,
+    start: Offset = Offset.Zero,
+    end: Offset = Offset.Infinite
+): Brush {
+    return Brush.linearGradient(
+        colors = listOf(
+            Color(red,green, blue,0f),
+            Color(red,green, blue,1f)
+        ),
+        start = start,
+        end = end
+    )
+}

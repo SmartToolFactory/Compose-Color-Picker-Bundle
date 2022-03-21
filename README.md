@@ -1,10 +1,13 @@
 ### Jetpack Compose Color Picker
 
-A stylish color picker written with Jetpack Compose.
+Bundle of Stylish customizable Color pickers, selectors, colorful written with Jetpack Compose that
+enables users to choose from HSL, HSV or RGB color modes or return gradients instead of solid 
+colors.
 
-Color Picker Wheel for selecting hue, SaturationDiamond for selection saturation and lightness
+You can check out gradient, slider demos for rotating gradients, creating HSV, HSL gradients,
+and check out Colorful Sliders to get familiar with.
 
-<img src="/./screenshots/intro.gif" align="right" width="32%"/>
+<img src="/./screenshots/intro.mp4" align="right" width="32%"/>
 
 ### Completed:
 
@@ -13,7 +16,7 @@ Color Picker Wheel for selecting hue, SaturationDiamond for selection saturation
 - [x] Add Saturation Diamond for selecting Saturation and Lightness
 - [x] Add Composable to display previous and current color
 - [x] Fix Saturation Diamond color display for HSL
-- [x] Finish colorful Sliders to have more stylish sliders
+- [x] Add colorful Sliders to have more stylish sliders
 - [x] Add gradient rotation option(GradientOffset)
 - [x] Add HSV-HSL gradient demo
 - [x] Add gradient rotation demo

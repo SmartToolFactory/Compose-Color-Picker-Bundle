@@ -87,8 +87,6 @@ fun GradientAngleDemo() {
             onValueChange = {
                 angleSelection = it
 
-                println("🔥Angle selection: $angleSelection")
-
                 gradientOffset = when (angleSelection.roundToInt()) {
                     0 -> {
                         angleText = "0 Degrees"
