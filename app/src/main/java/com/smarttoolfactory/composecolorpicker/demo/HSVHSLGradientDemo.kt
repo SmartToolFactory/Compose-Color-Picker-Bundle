@@ -102,7 +102,7 @@ private fun HuePickerHSVGradientExample(
     }
 
     CanvasWithTitle(
-        modifier = modifier,
+        modifier = modifier.background(Color.LightGray),
         text = "HSV Diamond"
     ) {
         val length = size.width

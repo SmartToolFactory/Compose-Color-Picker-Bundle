@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.ui.Blue400
@@ -41,12 +42,23 @@ fun ColorfulSliderDemo() {
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .clip(RoundedCornerShape(8.dp))
             .drawChecker(RoundedCornerShape(8.dp))
-            .fillMaxWidth(.5f)
+            .fillMaxWidth(.8f)
             .height(40.dp)
 
+        // Colorful sliders that change color based on the current properties they had
         HSVSliderExamples(modifier, sliderModifier, boxModifier)
         HSLSliderExamples(modifier, sliderModifier, boxModifier)
         RGBSliderExamples(modifier, sliderModifier, boxModifier)
+
+        // Sliders with Title on left, and value display on right
+        HSVSliderDisplayExamples(modifier, sliderModifier, boxModifier)
+        HSLSliderDisplayExamples(modifier, sliderModifier, boxModifier)
+        RGBASliderDisplayExamples(modifier, sliderModifier, boxModifier)
+
+        // Panels that contain 0 to 4 sliders based on which callback is implemented
+        HSVSliderDisplayPanelExample(modifier, sliderModifier, boxModifier)
+        HSLSliderDisplayPanelExample(modifier, sliderModifier, boxModifier)
+        RGBASliderDisplayPanelExample(modifier, sliderModifier, boxModifier)
     }
 }
 
@@ -60,8 +72,7 @@ private fun HSVSliderExamples(modifier: Modifier, sliderModifier: Modifier, boxM
 
     val colorHSV = Color.hsv(hue = hue, saturation = saturation, value = value, alpha = alpha)
 
-    Text(text = "HSV Sliders", fontSize = 18.sp, color = Blue400, modifier =Modifier.padding(2.dp))
-
+    Title(text = "HSV Sliders")
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -121,7 +132,7 @@ private fun HSLSliderExamples(modifier: Modifier, sliderModifier: Modifier, boxM
     val colorHSL =
         Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
 
-    Text(text = "HSL Sliders", fontSize = 18.sp, color = Blue400, modifier = Modifier.padding(2.dp))
+    Title(text = "HSL Sliders")
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -177,7 +188,7 @@ private fun RGBSliderExamples(modifier: Modifier, sliderModifier: Modifier, boxM
 
     val colorRGB = Color(red, green, blue, alpha = alpha)
 
-    Text(text = "RGB Sliders", fontSize = 18.sp, color = Blue400, modifier = Modifier.padding(2.dp))
+    Title(text = "RGB Sliders")
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -219,8 +230,306 @@ private fun RGBSliderExamples(modifier: Modifier, sliderModifier: Modifier, boxM
                 alpha = it
             }
         )
-
     }
 }
 
+@Composable
+private fun HSVSliderDisplayExamples(
+    modifier: Modifier,
+    sliderModifier: Modifier,
+    boxModifier: Modifier
+) {
 
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var value by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    val colorHSV = Color.hsv(hue = hue, saturation = saturation, value = value, alpha = alpha)
+
+    Title(text = "HSV SliderDisplays")
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Box(modifier = boxModifier.background(colorHSV))
+
+        SliderDisplayHueHSV(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            onValueChange = {
+                hue = it
+            }
+        )
+
+
+        SliderDisplaySaturationHSV(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            onValueChange = { value ->
+                saturation = value
+            }
+        )
+
+        SliderDisplayValueHSV(
+            modifier = sliderModifier,
+            hue = hue,
+            value = value,
+            onValueChange = { result ->
+                value = result
+            }
+        )
+
+        SliderDisplayAlphaHSV(
+            modifier = sliderModifier,
+            hue = hue, alpha = alpha,
+            onValueChange = {
+                alpha = it
+            }
+        )
+    }
+
+}
+
+@Composable
+private fun HSLSliderDisplayExamples(
+    modifier: Modifier,
+    sliderModifier: Modifier,
+    boxModifier: Modifier
+) {
+
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var lightness by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    val colorHSL =
+        Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
+
+    Title(text = "HSL SliderDisplays")
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(modifier = boxModifier.background(colorHSL))
+
+        SliderDisplayHueHSL(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            onValueChange = {
+                println("🔥 HUE $hue")
+                hue = it
+            }
+        )
+
+        SliderDisplaySaturationHSL(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            onValueChange = { value ->
+                saturation = value
+            }
+        )
+
+        SliderDisplayLightnessHSL(
+            modifier = sliderModifier,
+            lightness = lightness,
+            onValueChange = { result ->
+                lightness = result
+            }
+        )
+
+        SliderDisplayAlphaHSL(
+            modifier = sliderModifier,
+            hue = hue,
+            alpha = alpha,
+            onValueChange = {
+                alpha = it
+            }
+        )
+    }
+}
+
+@Composable
+private fun RGBASliderDisplayExamples(
+    modifier: Modifier,
+    sliderModifier: Modifier,
+    boxModifier: Modifier
+) {
+
+    var red by remember { mutableStateOf(1f) }
+    var green by remember { mutableStateOf(0f) }
+    var blue by remember { mutableStateOf(0f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    val colorRGB = Color(red, green, blue, alpha = alpha)
+
+    Title(text = "RGB SliderDisplays")
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Box(modifier = boxModifier.background(colorRGB))
+
+        SliderDisplayRedRGB(
+            modifier = sliderModifier,
+            red = red,
+            onValueChange = { result ->
+                red = result.coerceIn(0f, 1f)
+            }
+        )
+
+        SliderDisplayGreenRGB(
+            modifier = sliderModifier,
+            green = green,
+            onValueChange = { result ->
+                green = result.coerceIn(0f, 1f)
+            }
+        )
+
+        SliderDisplayBlueRGB(
+            modifier = sliderModifier,
+            blue = blue,
+            onValueChange = { result ->
+                blue = result.coerceIn(0f, 1f)
+            }
+        )
+
+        SliderDisplayAlphaRGB(
+            modifier = sliderModifier,
+            red = red,
+            green = green,
+            blue = blue,
+            alpha = alpha,
+            onValueChange = {
+                alpha = it
+            }
+        )
+    }
+}
+
+@Composable
+private fun HSVSliderDisplayPanelExample(
+    modifier: Modifier,
+    sliderModifier: Modifier,
+    boxModifier: Modifier
+) {
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var value by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    val colorHSV = Color.hsv(hue = hue, saturation = saturation, value = value, alpha = alpha)
+
+    Title(text = "HSV SliderDisplayPanel")
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Box(modifier = boxModifier.background(colorHSV))
+
+        SliderDisplayPanelHSV(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            alpha = alpha,
+            onHueChange = { hue = it },
+            onSaturationChange = { saturation = it },
+            onValueChange = { value = it },
+            onAlphaChange = { alpha = it },
+        )
+    }
+}
+
+@Composable
+private fun HSLSliderDisplayPanelExample(
+    modifier: Modifier,
+    sliderModifier: Modifier,
+    boxModifier: Modifier
+) {
+
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var lightness by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    val colorHSL =
+        Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
+
+    Title(text = "HSL SliderDisplayPanel")
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(modifier = boxModifier.background(colorHSL))
+        SliderDisplayPanelHSL(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            alpha = alpha,
+            onHueChange = { hue = it },
+            onSaturationChange = { saturation = it },
+            onLightnessChange = { lightness = it },
+            onAlphaChange = { alpha = it },
+        )
+    }
+}
+
+@Composable
+private fun RGBASliderDisplayPanelExample(
+    modifier: Modifier,
+    sliderModifier: Modifier,
+    boxModifier: Modifier
+) {
+
+    var red by remember { mutableStateOf(1f) }
+    var green by remember { mutableStateOf(0f) }
+    var blue by remember { mutableStateOf(0f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    val colorRGB = Color(red, green, blue, alpha = alpha)
+
+    Title(text = "RGB SliderDisplays")
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(modifier = boxModifier.background(colorRGB))
+        SliderDisplayPanelRGBA(
+            modifier = sliderModifier,
+            red = red,
+            green = green,
+            blue = blue,
+            alpha = alpha,
+            onRedChange = { red = it },
+            onGreenChange = { green = it },
+            onBlueChange = { blue = it },
+            onAlphaChange = { alpha = it },
+        )
+    }
+}
+
+@Composable
+private fun Title(text: String) {
+    Text(
+        text,
+        color = Blue400,
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp,
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
+}

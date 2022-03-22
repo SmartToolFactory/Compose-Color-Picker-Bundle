@@ -2,7 +2,6 @@ package com.smarttoolfactory.slider
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.*
@@ -21,7 +20,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.gesture.pointerMotionEvents
-
 import kotlin.math.abs
 
 @Composable

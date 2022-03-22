@@ -16,29 +16,29 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
 import com.smarttoolfactory.colorpicker.selector.SLSelectorFromHSLDiamond
 import com.smarttoolfactory.colorpicker.ui.Blue400
-import com.smarttoolfactory.colorpicker.widget.*
+import com.smarttoolfactory.colorpicker.widget.SliderDisplayPanelHSL
+import com.smarttoolfactory.colorpicker.widget.SliderPanelHSL
+import com.smarttoolfactory.colorpicker.widget.drawChecker
 
 @Composable
 fun ColorPickerDemo() {
     Column(
         modifier = Modifier
-            .background(Color(0xff424242))
 //            .background(Color.White)
             .fillMaxSize()
             .padding(8.dp)
             .verticalScroll(rememberScrollState())
     ) {
 
-        var hue by remember { mutableStateOf(0f) }
-        var saturation by remember { mutableStateOf(.5f) }
-        var lightness by remember { mutableStateOf(.5f) }
-        var alpha by remember { mutableStateOf(1f) }
-
-
-        val color =
-            Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
-
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+            var hue by remember { mutableStateOf(0f) }
+            var saturation by remember { mutableStateOf(.5f) }
+            var lightness by remember { mutableStateOf(.5f) }
+            var alpha by remember { mutableStateOf(1f) }
+
+            val color =
+                Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
 
             Spacer(modifier = Modifier.height(10.dp))
             Text(
@@ -81,13 +81,13 @@ fun ColorPickerDemo() {
             // ColorWheel for hue selection
             // SaturationDiamond for saturation and lightness selections
             Box(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier,
                 contentAlignment = Alignment.Center
             ) {
 
                 HueSelectorRing(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .width(350.dp)
                         .aspectRatio(1f),
                     selectionRadius = 8.dp
                 ) { hueChange ->
@@ -108,39 +108,16 @@ fun ColorPickerDemo() {
                 }
             }
 
-            SliderHueHSL(
-                modifier = Modifier.width(300.dp),
+            SliderDisplayPanelHSL(
+                modifier = Modifier.width(340.dp),
                 hue = hue,
                 saturation = saturation,
                 lightness = lightness,
-                onValueChange = {
-                    hue = it
-                }
-            )
-
-            SliderSaturationHSL(
-                modifier = Modifier.width(300.dp),
-                hue = hue, saturation = saturation, lightness = lightness,
-                onValueChange = { value ->
-                    saturation = value
-                }
-            )
-
-            SliderLightnessHSL(
-                modifier = Modifier.width(300.dp),
-                lightness = lightness,
-                onValueChange = { result ->
-                    lightness = result
-                }
-            )
-
-            SliderAlphaHSL(
-                modifier = Modifier.width(300.dp),
-                hue = hue,
                 alpha = alpha,
-                onValueChange = {
-                    alpha = it
-                }
+                onHueChange = { hue = it },
+                onSaturationChange = { saturation = it },
+                onLightnessChange = { lightness = it },
+                onAlphaChange = { alpha = it },
             )
         }
     }

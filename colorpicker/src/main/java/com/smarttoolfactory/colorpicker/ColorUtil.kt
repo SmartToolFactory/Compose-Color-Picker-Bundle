@@ -3,7 +3,6 @@ package com.smarttoolfactory.colorpicker
 import androidx.core.graphics.ColorUtils
 import java.util.*
 
-
 /*
     HSV-HSL Conversions
  */
@@ -42,7 +41,7 @@ fun hsvToHSL(hue: Float, saturation: Float, value: Float): FloatArray {
         }
     }
 
-    return floatArrayOf(hue, saturationHSL.coerceIn(0f,1f), lightness.coerceIn(0f,1f))
+    return floatArrayOf(hue, saturationHSL.coerceIn(0f, 1f), lightness.coerceIn(0f, 1f))
 }
 
 /**
@@ -86,7 +85,7 @@ fun hsvToHSL(hsvIn: FloatArray): FloatArray {
 fun hslToHSV(hue: Float, saturation: Float, lightness: Float): FloatArray {
     val value = lightness + saturation * lightness.coerceAtMost(1 - lightness)
     val saturationHSV = if (value == 0f) 0f else 2 * (1 - lightness / value)
-    return floatArrayOf(hue, saturationHSV.coerceIn(0f,1f), value.coerceIn(0f,1f))
+    return floatArrayOf(hue, saturationHSV.coerceIn(0f, 1f), value.coerceIn(0f, 1f))
 }
 
 /**
@@ -291,4 +290,15 @@ inline val Int.green: Int
 
 inline val Int.blue: Int
     get() = this and 0xFF
+
+/**
+ * Converts **RGB** colors in range of [0f-1f] to [0-255]
+ */
+fun Float.toColorString() = "${(this * 255).toInt()}"
+
+/**
+ * Converts **HSV** or **HSL** colors that are in range of [0f-1f] to [0-100] int range to
+ * display in a String
+ */
+fun Float.toPercent() = (this * 100).toInt()
 

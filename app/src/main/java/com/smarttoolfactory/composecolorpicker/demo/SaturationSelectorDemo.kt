@@ -115,8 +115,8 @@ fun SaturationSelectorDemo() {
                 hue = hue,
                 saturation = saturationHSL,
                 lightness = lightness,
-                onValueChange = {
-                    hue = it
+                onValueChange = {result ->
+                    hue = result
                 }
             )
 
@@ -129,8 +129,8 @@ fun SaturationSelectorDemo() {
                 hue = hue,
                 saturation = saturationHSL,
                 lightness = lightness,
-                onValueChange = { value ->
-                    saturationHSL = value
+                onValueChange = { result ->
+                    saturationHSL = result
                 }
             )
 
@@ -148,8 +148,8 @@ fun SaturationSelectorDemo() {
                 hue = hue,
                 saturation = saturationHSV,
                 value = value,
-                onValueChange = { value ->
-                    saturationHSV = value
+                onValueChange = { result ->
+                    saturationHSV = result
                 }
             )
 
