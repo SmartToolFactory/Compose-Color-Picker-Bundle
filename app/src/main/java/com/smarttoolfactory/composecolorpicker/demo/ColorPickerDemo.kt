@@ -17,7 +17,6 @@ import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
 import com.smarttoolfactory.colorpicker.selector.SLSelectorFromHSLDiamond
 import com.smarttoolfactory.colorpicker.ui.Blue400
 import com.smarttoolfactory.colorpicker.widget.SliderDisplayPanelHSL
-import com.smarttoolfactory.colorpicker.widget.SliderPanelHSL
 import com.smarttoolfactory.colorpicker.widget.drawChecker
 
 @Composable

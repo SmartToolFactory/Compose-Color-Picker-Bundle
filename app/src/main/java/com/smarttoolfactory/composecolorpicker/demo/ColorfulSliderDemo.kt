@@ -503,7 +503,7 @@ private fun RGBASliderDisplayPanelExample(
 
     val colorRGB = Color(red, green, blue, alpha = alpha)
 
-    Title(text = "RGB SliderDisplays")
+    Title(text = "RGB SliderDisplayPanel")
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally

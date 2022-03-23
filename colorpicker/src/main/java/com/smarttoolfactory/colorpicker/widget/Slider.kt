@@ -155,11 +155,12 @@ fun SliderSaturationHSL(
 @Composable
 fun SliderLightnessHSL(
     modifier: Modifier = Modifier,
+    hue: Float = 0f,
     lightness: Float,
     onValueChange: (Float) -> Unit
 ) {
 
-    val sliderLightnessGradient = sliderLightnessGradient(0f)
+    val sliderLightnessGradient = sliderLightnessGradient(hue)
 
     CheckeredColorfulSlider(
         modifier = modifier,
@@ -208,8 +209,8 @@ fun SliderRedRGB(
 fun SliderGreenRGB(
     modifier: Modifier = Modifier,
     green: Float,
-    onValueChange: (Float) -> Unit) {
-
+    onValueChange: (Float) -> Unit
+) {
     val sliderGreenGradient = sliderGreenGradient()
     CheckeredColorfulSlider(
         modifier = modifier,
