@@ -120,7 +120,11 @@ fun ColorfulSlider(
     BoxWithConstraints(
         modifier = modifier
             .minimumTouchTargetSize()
-            .requiredSizeIn(minWidth = ThumbRadius * 2, minHeight = ThumbRadius * 2),
+            .requiredSizeIn(
+                minWidth = ThumbRadius * 2,
+                minHeight = ThumbRadius * 2,
+                maxHeight = 48.dp
+            ),
         contentAlignment = Alignment.CenterStart
     ) {
 

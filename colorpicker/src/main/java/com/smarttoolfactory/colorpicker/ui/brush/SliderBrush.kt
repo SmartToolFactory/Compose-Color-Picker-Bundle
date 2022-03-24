@@ -125,14 +125,16 @@ fun sliderSaturationHSLGradient(
 
 fun sliderLightnessGradient(
     hue: Float,
+    saturation: Float = 0f,
     alpha: Float = 1f,
     start: Offset = Offset.Zero,
     end: Offset = Offset.Infinite
 ): Brush {
     return Brush.linearGradient(
         colors = listOf(
-            Color.hsl(hue = hue, saturation = 1f, lightness = 0f, alpha = alpha),
-            Color.hsl(hue = hue, saturation = 1f, lightness = 1f, alpha = alpha)
+            Color.hsl(hue = hue, saturation = saturation, lightness = 0f, alpha = alpha),
+            Color.hsl(hue = hue, saturation = saturation, lightness = .5f, alpha = alpha),
+            Color.hsl(hue = hue, saturation = saturation, lightness = 1f, alpha = alpha)
         ),
         start = start,
         end = end

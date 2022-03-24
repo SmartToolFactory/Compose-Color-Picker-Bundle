@@ -59,6 +59,11 @@ fun ColorfulSliderDemo() {
         HSVSliderDisplayPanelExample(modifier, sliderModifier, boxModifier)
         HSLSliderDisplayPanelExample(modifier, sliderModifier, boxModifier)
         RGBASliderDisplayPanelExample(modifier, sliderModifier, boxModifier)
+
+        // Sliders with Circle Color display on left
+        SliderCircleColorDisplayHSLExamples(modifier, sliderModifier, boxModifier)
+        SliderCircleColorDisplayHSVExamples(modifier, sliderModifier, boxModifier)
+
     }
 }
 
@@ -440,6 +445,8 @@ private fun HSVSliderDisplayPanelExample(
 
         Box(modifier = boxModifier.background(colorHSV))
 
+        Title(text = "SliderDisplayPanel with 4 Sliders")
+
         SliderDisplayPanelHSV(
             modifier = sliderModifier,
             hue = hue,
@@ -450,6 +457,39 @@ private fun HSVSliderDisplayPanelExample(
             onSaturationChange = { saturation = it },
             onValueChange = { value = it },
             onAlphaChange = { alpha = it },
+        )
+
+        Title(text = "SliderDisplayPanel with 3 Sliders")
+        SliderDisplayPanelHSV(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            alpha = alpha,
+            onHueChange = { hue = it },
+            onSaturationChange = { saturation = it },
+            onAlphaChange = { alpha = it }
+        )
+
+        Title(text = "SliderDisplayPanel with 2 Sliders")
+        SliderDisplayPanelHSV(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            alpha = alpha,
+            onValueChange = { value = it },
+            onAlphaChange = { alpha = it }
+        )
+
+        Title(text = "SliderDisplayPanel with 1 Slider")
+        SliderDisplayPanelHSV(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            value = 1f,
+            alpha = alpha,
+            onSaturationChange = { saturation = it }
         )
     }
 }
@@ -475,6 +515,7 @@ private fun HSLSliderDisplayPanelExample(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(modifier = boxModifier.background(colorHSL))
+        Title(text = "SliderDisplayPanelHSL with 4 sliders")
         SliderDisplayPanelHSL(
             modifier = sliderModifier,
             hue = hue,
@@ -485,6 +526,38 @@ private fun HSLSliderDisplayPanelExample(
             onSaturationChange = { saturation = it },
             onLightnessChange = { lightness = it },
             onAlphaChange = { alpha = it },
+        )
+
+        Title(text = "SliderDisplayPanelHSL with 3 sliders")
+        SliderDisplayPanelHSL(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            alpha = alpha,
+            onSaturationChange = { saturation = it },
+            onLightnessChange = { lightness = it },
+            onAlphaChange = { alpha = it }
+        )
+        Title(text = "SliderDisplayPanelHSL with 2 sliders")
+        SliderDisplayPanelHSL(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            alpha = alpha,
+            onLightnessChange = { lightness = it },
+            onAlphaChange = { alpha = it }
+        )
+
+        Title(text = "SliderDisplayPanelHSL with 1 slider")
+        SliderDisplayPanelHSL(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            lightness = .5f,
+            alpha = alpha,
+            onHueChange = { hue = it },
         )
     }
 }
@@ -519,6 +592,96 @@ private fun RGBASliderDisplayPanelExample(
             onGreenChange = { green = it },
             onBlueChange = { blue = it },
             onAlphaChange = { alpha = it },
+        )
+    }
+}
+
+
+@Composable
+private fun SliderCircleColorDisplayHSVExamples(
+    modifier: Modifier,
+    sliderModifier: Modifier,
+    boxModifier: Modifier
+) {
+    val hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var value by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    val colorHSV = Color.hsv(hue = hue, saturation = saturation, value = value, alpha = alpha)
+
+    Title(text = "HSV SliderCircleColorDisplays")
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Box(modifier = boxModifier.background(colorHSV))
+
+        Title(text = "SliderCircleColorDisplay Saturation-Alpha")
+        SliderCircleColorDisplaySaturationHSV(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            alpha,
+            onSaturationChange = { saturation = it },
+            onAlphaChange = { alpha = it }
+        )
+
+        Title(text = "SliderCircleColorDisplay Value-Alpha")
+        SliderCircleColorDisplayValueHSV(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            alpha,
+            onValueChange = { value = it },
+            onAlphaChange = { alpha = it }
+        )
+    }
+}
+
+@Composable
+private fun SliderCircleColorDisplayHSLExamples(
+    modifier: Modifier,
+    sliderModifier: Modifier,
+    boxModifier: Modifier
+) {
+    val hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var lightness by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    val colorHSL =
+        Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
+
+    Title(text = "HSL SliderCircleColorDisplays")
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(modifier = boxModifier.background(colorHSL))
+
+        Title(text = "SliderCircleColorDisplay Saturation-Alpha")
+        SliderCircleColorDisplaySaturationHSL(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            alpha = alpha,
+            onSaturationChange = { saturation = it },
+            onAlphaChange = { alpha = it }
+        )
+        Title(text = "SliderCircleColorDisplay Lightness-Alpha")
+        SliderCircleColorDisplayLightnessHSL(
+            modifier = sliderModifier,
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            alpha = alpha,
+            onLightnessChange = { lightness = it },
+            onAlphaChange = { alpha = it }
         )
     }
 }

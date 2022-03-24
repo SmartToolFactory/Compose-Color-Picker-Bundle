@@ -3,9 +3,35 @@ package com.smarttoolfactory.colorpicker.widget
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.smarttoolfactory.slider.ColorfulSlider
 
 /*
     Slider Panels
+ */
+
+/**
+ * Composable that contains variant number of [ColorfulSlider],
+ * and current value from slider depending on **onChange** callbacks are null or not.
+ *
+ * Based on availability of callbacks order of sliders are placed in order from top to bottom
+ * ```
+ * Hue Slider
+ * Saturation Slider
+ * Value Slider
+ * Alpha Slider
+ * ```
+ * @param hue Hue of HSV
+ * @param saturation Hue of HSV
+ * @param value Hue of HSV
+ * @param alpha Hue of HSV
+ * @param onHueChange lambda in which [hue] should be updated. when this lambda is not nul
+ * [SliderHueHSV] is added to Column of sliders.
+ * @param onSaturationChange lambda in which [saturation] should be updated. when this lambda is not nul
+ * [[SliderSaturationHSV] is added to Column of sliders.
+ * @param onValueChange lambda in which [value] should be updated. when this lambda is not nul
+ * [[SliderValueHSV] is added to Column of sliders.
+ * @param onAlphaChange lambda in which [alpha] should be updated. when this lambda is not nul
+ * [[SliderAlphaHSV] is added to Column of Sliders.
  */
 @Composable
 fun SliderPanelHSV(
@@ -61,6 +87,30 @@ fun SliderPanelHSV(
     }
 }
 
+/**
+ * Composable that contains variant number of [ColorfulSlider],
+ * and current value from slider depending on **onChange** callbacks are null or not.
+ *
+ * Based on availability of callbacks order of sliders are placed in order from top to bottom
+ * ```
+ * Hue Slider
+ * Saturation Slider
+ * Lightness Slider
+ * Alpha Slider
+ * ```
+ * @param hue Hue of HSL
+ * @param saturation Hue of HSL
+ * @param lightness Hue of HSL
+ * @param alpha Hue of HSL
+ * @param onHueChange lambda in which [hue] should be updated. when this lambda is not nul
+ * [SliderHueHSL] is added to Column of sliders.
+ * @param onSaturationChange lambda in which [saturation] should be updated. when this lambda is not nul
+ * [[SliderSaturationHSL] is added to Column of sliders.
+ * @param onLightnessChange lambda in which [lightness] should be updated. when this lambda is not nul
+ * [[SliderLightnessHSL] is added to Column of sliders.
+ * @param onAlphaChange lambda in which [alpha] should be updated. when this lambda is not nul
+ * [SliderAlphaHSL] is added to Column of sliders.
+ */
 @Composable
 fun SliderPanelHSL(
     modifier: Modifier,
@@ -114,6 +164,30 @@ fun SliderPanelHSL(
     }
 }
 
+/**
+ * Composable that contains variant number of Sliders with Title on left, [ColorfulSlider],
+ * and current value from slider depending on **onChange** callbacks are null or not.
+ *
+ * Based on availability of callbacks order of sliders are placed in order from top to bottom
+ * ```
+ * Red Slider
+ * Green Slider
+ * Blue Slider
+ * Alpha Slider
+ * ```
+ * @param red Red of RGBA
+ * @param green Hue of RGBA
+ * @param blue Hue of RGBA
+ * @param alpha Hue of RGBA
+ * @param onRedChange lambda in which [red] should be updated. when this lambda is not nul
+ * [SliderRedRGB] is added to Column of sliders.
+ * @param onGreenChange lambda in which [green] should be updated. when this lambda is not nul
+ * [[SliderGreenRGB] is added to Column of sliders.
+ * @param onBlueChange lambda in which [blue] should be updated. when this lambda is not nul
+ * [[SliderBlueRGB] is added to Column of sliders.
+ * @param onAlphaChange lambda in which [alpha] should be updated. when this lambda is not nul
+ * [SliderAlphaRGB] is added to Column of sliders.
+ */
 @Composable
 fun SliderPanelRGBA(
     modifier: Modifier,

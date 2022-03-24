@@ -20,8 +20,12 @@ import com.smarttoolfactory.slider.MaterialSliderDefaults
  */
 
 /**
- * [CheckeredColorfulSlider] that displays [hue] change in
- * [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color mode.
+ * [CheckeredColorfulSlider] is a slider to select
+ * [hue] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param saturation in [0..1f]
+ * @param value in [0..1f]
+ * @param onValueChange callback that returns change in [hue] when Slider is dragged
  */
 @Composable
 fun SliderHueHSV(
@@ -46,8 +50,12 @@ fun SliderHueHSV(
 }
 
 /**
- * [CheckeredColorfulSlider] that display [saturation] change in
- * [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color mode.
+ * [CheckeredColorfulSlider] is a slider to select
+ * [saturation] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param saturation in [0..1f]
+ * @param value in [0..1f]
+ * @param onValueChange callback that returns change in [saturation] when Slider is dragged
  */
 @Composable
 fun SliderSaturationHSV(
@@ -69,6 +77,13 @@ fun SliderSaturationHSV(
     )
 }
 
+/**
+ * [CheckeredColorfulSlider] is a slider to select
+ * [value] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param value in [0..1f]
+ * @param onValueChange callback that returns change in [value] when Slider is dragged
+ */
 @Composable
 fun SliderValueHSV(
     modifier: Modifier = Modifier,
@@ -87,6 +102,10 @@ fun SliderValueHSV(
     )
 }
 
+/**
+ * [CheckeredColorfulSlider] that displays [alpha] change in
+ * [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ */
 @Composable
 fun SliderAlphaHSV(
     modifier: Modifier = Modifier,
@@ -108,6 +127,14 @@ fun SliderAlphaHSV(
     HSL Sliders
  */
 
+/**
+ * [CheckeredColorfulSlider] is a slider to select
+ * [hue] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param saturation in [0..1f]
+ * @param lightness in [0..1f]
+ * @param onValueChange callback that returns change in [hue] when Slider is dragged
+ */
 @Composable
 fun SliderHueHSL(
     modifier: Modifier = Modifier,
@@ -131,6 +158,14 @@ fun SliderHueHSL(
     )
 }
 
+/**
+ * [CheckeredColorfulSlider] is a slider to select
+ * [saturation] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param saturation in [0..1f]
+ * @param lightness in [0..1f]
+ * @param onValueChange callback that returns change in [saturation] when Slider is dragged
+ */
 @Composable
 fun SliderSaturationHSL(
     modifier: Modifier = Modifier,
@@ -152,15 +187,29 @@ fun SliderSaturationHSL(
     )
 }
 
+/**
+ * [CheckeredColorfulSlider] is a slider to select
+ * [lightness] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param lightness in [0..1f]
+ * @param gradientStops number of stops for gradient of this slider. 2 stops return
+ * white-black in hsl, others transition from hue with lightness.
+ * @param onValueChange callback that returns change in [lightness] when Slider is dragged
+ */
 @Composable
 fun SliderLightnessHSL(
     modifier: Modifier = Modifier,
     hue: Float = 0f,
+    saturation: Float = 0f,
     lightness: Float,
     onValueChange: (Float) -> Unit
 ) {
 
-    val sliderLightnessGradient = sliderLightnessGradient(hue)
+//    val sliderLightnessGradient = if (gradientStops!=2)
+//        sliderLightnessGradient3Stops(hue)
+//        else sliderLightnessGradient(hue)
+
+    val sliderLightnessGradient = sliderLightnessGradient(hue, saturation)
 
     CheckeredColorfulSlider(
         modifier = modifier,
@@ -170,10 +219,17 @@ fun SliderLightnessHSL(
     )
 }
 
+/**
+ * [CheckeredColorfulSlider] is a slider to select
+ * [alpha] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param onValueChange callback that returns change in [alpha] when Slider is dragged
+ */
 @Composable
 fun SliderAlphaHSL(
     modifier: Modifier = Modifier,
-    hue: Float, alpha: Float,
+    hue: Float,
+    alpha: Float,
     onValueChange: (Float) -> Unit
 ) {
     val sliderAlphaHSLGradient = sliderAlphaHSLGradient(hue = hue)
@@ -190,6 +246,12 @@ fun SliderAlphaHSL(
     RGB Sliders
  */
 
+/**
+ * [CheckeredColorfulSlider] that displays [red] change in
+ * [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
+ * @param red in [0..1f]
+ * @param onValueChange callback that returns change in [red] when Slider is dragged
+ */
 @Composable
 fun SliderRedRGB(
     modifier: Modifier = Modifier,
@@ -205,6 +267,12 @@ fun SliderRedRGB(
     )
 }
 
+/**
+ * [CheckeredColorfulSlider] that displays [green] change in
+ * [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
+ * @param green in [0..1f]
+ * @param onValueChange callback that returns change in [green] when Slider is dragged
+ */
 @Composable
 fun SliderGreenRGB(
     modifier: Modifier = Modifier,
@@ -220,6 +288,12 @@ fun SliderGreenRGB(
     )
 }
 
+/**
+ * [CheckeredColorfulSlider] that displays [blue] change in
+ * [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
+ * @param blue in [0..1f]
+ * @param onValueChange callback that returns change in [blue] when Slider is dragged
+ */
 @Composable
 fun SliderBlueRGB(
     modifier: Modifier = Modifier,
@@ -235,6 +309,15 @@ fun SliderBlueRGB(
     )
 }
 
+/**
+ * [CheckeredColorfulSlider] that displays [alpha] change in
+ * [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
+ * @param red in [0..1f]
+ * @param green in [0..1f]
+ * @param blue in [0..1f]
+ * @param alpha in [0..1f]
+ * @param onValueChange callback that returns change in [alpha] when Slider is dragged
+ */
 @Composable
 fun SliderAlphaRGB(
     modifier: Modifier = Modifier,
@@ -258,6 +341,12 @@ fun SliderAlphaRGB(
  * Slider implementation that uses [ColorfulSlider] to have create **Slider** with gradient
  * colors with custom thumb radius and track height, and draws checker pattern behind the
  * track of [ColorfulSlider] if [drawChecker] is set to true
+ * @param value that is read by [ColorfulSlider]
+ * @param valueRange is the values are selected from
+ * @param onValueChange is triggered when slider is dragged returns float between [valueRange]
+ * @param brush is used for drawing gradient for track of [ColorfulSlider]
+ * @param drawChecker when set to true draws checker behind track of [ColorfulSlider] to
+ * display alpha
  */
 @Composable
 fun CheckeredColorfulSlider(

@@ -12,11 +12,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.colorpicker.fractionToRGBString
 import com.smarttoolfactory.colorpicker.fractionToPercent
+import com.smarttoolfactory.colorpicker.fractionToRGBString
 
 /*
     HSV Slider Displays
+ */
+/**
+ * Composable that shows a title as initial letter, title color and a Slider to select
+ * [hue] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param saturation in [0..1f]
+ * @param value in [0..1f]
+ * @param onValueChange callback that returns change in [hue] when Slider is dragged
  */
 @Composable
 fun SliderDisplayHueHSV(
@@ -41,6 +49,14 @@ fun SliderDisplayHueHSV(
     }
 }
 
+/**
+ * Composable that shows a title as initial letter, title color and a Slider to select
+ * [saturation] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param saturation in [0..1f]
+ * @param value in [0..1f]
+ * @param onValueChange callback that returns change in [saturation] when Slider is dragged
+ */
 @Composable
 fun SliderDisplaySaturationHSV(
     modifier: Modifier,
@@ -63,6 +79,13 @@ fun SliderDisplaySaturationHSV(
     }
 }
 
+/**
+ * Composable that shows a title as initial letter, title color and a Slider to select
+ * [value] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param value in [0..1f]
+ * @param onValueChange callback that returns change in [value] when Slider is dragged
+ */
 @Composable
 fun SliderDisplayValueHSV(
     modifier: Modifier,
@@ -83,6 +106,13 @@ fun SliderDisplayValueHSV(
     }
 }
 
+/**
+ * Composable that shows a title as initial letter, title color and a Slider to select
+ * [alpha] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param alpha in [0..1f]
+ * @param onValueChange callback that returns change in [alpha] when Slider is dragged
+ */
 @Composable
 fun SliderDisplayAlphaHSV(
     modifier: Modifier,
@@ -105,6 +135,14 @@ fun SliderDisplayAlphaHSV(
 
 /*
     HSL Slider Displays
+ */
+/**
+ * Composable that shows a title as initial letter, title color and a Slider to select
+ * [hue] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param saturation in [0..1f]
+ * @param lightness in [0..1f]
+ * @param onValueChange callback that returns change in [hue] when Slider is dragged
  */
 @Composable
 fun SliderDisplayHueHSL(
@@ -130,6 +168,14 @@ fun SliderDisplayHueHSL(
     }
 }
 
+/**
+ * Composable that shows a title as initial letter, title color and a Slider to select
+ * [saturation] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param saturation in [0..1f]
+ * @param lightness in [0..1f]
+ * @param onValueChange callback that returns change in [saturation] when Slider is dragged
+ */
 @Composable
 fun SliderDisplaySaturationHSL(
     modifier: Modifier,
@@ -154,6 +200,12 @@ fun SliderDisplaySaturationHSL(
     }
 }
 
+/**
+ * Composable that shows a title as initial letter, title color and a Slider to select
+ * [lightness] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param lightness in [0..1f]
+ * @param onValueChange callback that returns change in [lightness] when Slider is dragged
+ */
 @Composable
 fun SliderDisplayLightnessHSL(
     modifier: Modifier,
@@ -172,6 +224,12 @@ fun SliderDisplayLightnessHSL(
     }
 }
 
+/**
+ * Composable that shows a title as initial letter, title color and a Slider to select
+ * [alpha] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..1f]
+ * @param onValueChange callback that returns change in [alpha] when Slider is dragged
+ */
 @Composable
 fun SliderDisplayAlphaHSL(
     modifier: Modifier,
@@ -195,6 +253,13 @@ fun SliderDisplayAlphaHSL(
 /*
     RGB Slider Displays
  */
+
+/**
+ * Composable that shows a title as initial letter, title color and a Slider to select
+ * [red] in [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
+ * @param red in [0..1f]
+ * @param onValueChange callback that returns change in [red] when Slider is dragged
+ */
 @Composable
 fun SliderDisplayRedRGB(
     modifier: Modifier,
@@ -214,6 +279,12 @@ fun SliderDisplayRedRGB(
     }
 }
 
+/**
+ * Composable that shows a title as initial letter, title color and a Slider to select
+ * [green] in [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
+ * @param green in [0..1f]
+ * @param onValueChange callback that returns change in [green] when Slider is dragged
+ */
 @Composable
 fun SliderDisplayGreenRGB(
     modifier: Modifier,
@@ -233,6 +304,12 @@ fun SliderDisplayGreenRGB(
     }
 }
 
+/**
+ * Composable that shows a title as initial letter, title color and a Slider to select
+ * [blue] in [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
+ * @param blue in [0..1f]
+ * @param onValueChange callback that returns change in [blue] when Slider is dragged
+ */
 @Composable
 fun SliderDisplayBlueRGB(
     modifier: Modifier,
@@ -251,7 +328,15 @@ fun SliderDisplayBlueRGB(
         )
     }
 }
-
+/**
+ * Composable that shows a title as initial letter, title color and a Slider to select
+ * [alpha] in [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
+ * @param red in [0..1f]
+ * @param green in [0..1f]
+ * @param blue in [0..1f]
+ * @param alpha in [0..1f]
+ * @param onValueChange callback that returns change in [alpha] when Slider is dragged
+ */
 @Composable
 fun SliderDisplayAlphaRGB(
     modifier: Modifier,
@@ -276,8 +361,6 @@ fun SliderDisplayAlphaRGB(
         )
     }
 }
-
-
 
 /**
  * Composable that shows a title as initial letter, title color and a Slider to pick color.
