@@ -1,8 +1,10 @@
 package com.smarttoolfactory.colorpicker
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.ColorUtils
 import java.util.*
+import kotlin.math.roundToInt
 
 /*
     HSV-HSL Conversions
@@ -17,7 +19,6 @@ import java.util.*
  * hsv[1] is Saturation [0...1]
  * hsv[2] is Value [0...1]
  * ```
- *
  * ```
  * Hue [0 .. 360)
  * Saturation is [0...1]
@@ -56,7 +57,6 @@ fun hsvToHSL(hue: Float, saturation: Float, value: Float): FloatArray {
  * hsv[1] is Saturation [0...1]
  * hsv[2] is Value [0...1]
  * ```
- *
  * ```
  * Hue [0 .. 360)
  * Saturation is [0...1]
@@ -97,7 +97,6 @@ fun hsvToHSL(hue: Float, saturation: Float, value: Float, hslOut: FloatArray) {
  * hsv[1] is Saturation [0...1]
  * hsv[2] is Value [0...1]
  * ```
- *
  * ```
  * hsl[0] is Hue [0 .. 360)
  * hsl[1] is Saturation [0...1]
@@ -117,7 +116,6 @@ fun hsvToHSL(hsvIn: FloatArray): FloatArray {
  * hsv[1] is Saturation [0...1]
  * hsv[2] is Value [0...1]
  * ```
- *
  * ```
  * hsl[0] is Hue [0 .. 360)
  * hsl[1] is Saturation [0...1]
@@ -137,13 +135,11 @@ fun hsvToHSL(hsvIn: FloatArray, hslOut: FloatArray) {
  * hsv[1] is Saturation [0...1]
  * hsv[2] is Value [0...1]
  * ```
- *
  * ```
  * Hue is [0 .. 360)
  * Saturation is [0...1]
  * Lightness is [0...1]
  * ```
- *
  */
 fun hslToHSV(hue: Float, saturation: Float, lightness: Float): FloatArray {
     val value = lightness + saturation * lightness.coerceAtMost(1 - lightness)
@@ -160,13 +156,11 @@ fun hslToHSV(hue: Float, saturation: Float, lightness: Float): FloatArray {
  * hsv[1] is Saturation [0...1]
  * hsv[2] is Value [0...1]
  * ```
- *
  * ```
  * hsl[0] is Hue [0 .. 360)
  * hsl[1] is Saturation [0...1]
  * hsl[2] is Lightness [0...1]
  * ```
- *
  */
 fun hslToHSV(hslIn: FloatArray): FloatArray {
     return hslToHSV(hslIn[0], hslIn[1], hslIn[2])
@@ -195,10 +189,11 @@ fun hsvToColorInt(hue: Float, saturation: Float, value: Float): Int {
  *
  *  * For instance, red =255, green =0, blue=0 is -65536
  * ```
- * Hue is [0 .. 360)
- * Saturation is [0...1]
- * Value is [0...1]
+ * hsv[0] is Hue [0 .. 360)
+ * hsv[1] is Saturation [0...1]
+ * hsv[2] is Value [0...1]
  * ```
+ * @param hsvIn 3 element array which holds the input HSV components.
  */
 fun hsvToColorInt(hsvIn: FloatArray): Int {
     return android.graphics.Color.HSVToColor(hsvIn)
@@ -208,9 +203,9 @@ fun hsvToColorInt(hsvIn: FloatArray): Int {
  * Convert a RGB color in [Integer] form to HSV (hue-saturation-value) components.
  *  * For instance, red =255, green =0, blue=0 is -65536
  * ```
- * Hue is [0 .. 360)
- * Saturation is [0...1]
- * Value is [0...1]
+ * hsv[0] is Hue [0 .. 360)
+ * hsv[1] is Saturation [0...1]
+ * hsv[2] is Value [0...1]
  * ```
  */
 fun colorIntToHSV(color: Int): FloatArray {
@@ -224,10 +219,11 @@ fun colorIntToHSV(color: Int): FloatArray {
  *  * For instance, red =255, green =0, blue=0 is -65536
  *
  * ```
- * Hue is [0 .. 360)
- * Saturation is [0...1]
- * Value is [0...1]
+ * hsv[0] is Hue [0 .. 360)
+ * hsv[1] is Saturation [0...1]
+ * hsv[2] is Value [0...1]
  * ```
+ * @param hsvIn 3 element array which holds the input HSV components.
  */
 fun colorIntToHSV(color: Int, hsvIn: FloatArray) {
     android.graphics.Color.colorToHSV(color, hsvIn)
@@ -243,6 +239,7 @@ fun colorIntToHSV(color: Int, hsvIn: FloatArray) {
  * Hue is [0 .. 360)
  * Saturation is [0...1]
  * Value is [0...1]
+ * Alpha is [0...1]
  * ```
  */
 fun hsvToColor(hue: Float, saturation: Float, value: Float, alpha: Float): Color {
@@ -256,11 +253,13 @@ fun hsvToColor(hue: Float, saturation: Float, value: Float, alpha: Float): Color
  * Saturation is [0...1]
  * Value is [0...1]
  * ```
+ * @param hslIn 3 element array which holds the input HSL components.
  */
 fun colorToHSV(color: Color, hslIn: FloatArray) {
-    val red = color.red.toColorInt()
-    val green = color.green.toColorInt()
-    val blue = color.blue.toColorInt()
+    val rgbArray: IntArray = colorIntToRGBArray(color.toArgb())
+    val red = rgbArray[1]
+    val green = rgbArray[2]
+    val blue = rgbArray[3]
     rgbToHSV(red, green, blue, hslIn)
 }
 
@@ -273,9 +272,10 @@ fun colorToHSV(color: Color, hslIn: FloatArray) {
  * ```
  */
 fun colorToHSV(color: Color): FloatArray {
-    val red = color.red.toColorInt()
-    val green = color.green.toColorInt()
-    val blue = color.blue.toColorInt()
+    val rgbArray: IntArray = colorIntToRGBArray(color.toArgb())
+    val red = rgbArray[1]
+    val green = rgbArray[2]
+    val blue = rgbArray[3]
     return rgbToHSV(red, green, blue)
 }
 
@@ -286,11 +286,13 @@ fun colorToHSV(color: Color): FloatArray {
  * hsl[1] is Saturation [0...1]
  * hsl[2] is Lightness [0...1]
  * ```
+ * @param hslIn 3 element array which holds the input HSL components.
  */
 fun colorToHSL(color: Color, hslIn: FloatArray) {
-    val red = color.red.toColorInt()
-    val green = color.green.toColorInt()
-    val blue = color.blue.toColorInt()
+    val rgbArray: IntArray = colorIntToRGBArray(color.toArgb())
+    val red = rgbArray[1]
+    val green = rgbArray[2]
+    val blue = rgbArray[3]
     rgbToHSL(red, green, blue, hslIn)
 }
 
@@ -303,9 +305,10 @@ fun colorToHSL(color: Color, hslIn: FloatArray) {
  * ```
  */
 fun colorToHSL(color: Color): FloatArray {
-    val red = color.red.toColorInt()
-    val green = color.green.toColorInt()
-    val blue = color.blue.toColorInt()
+    val rgbArray: IntArray = colorIntToRGBArray(color.toArgb())
+    val red = rgbArray[1]
+    val green = rgbArray[2]
+    val blue = rgbArray[3]
     return rgbToHSL(red, green, blue)
 }
 
@@ -316,11 +319,10 @@ fun colorToHSL(color: Color): FloatArray {
 /**
  * Convert HSV (hue-saturation-value) components to a RGB red, green blue array.
  * ```
- * hsv[0] is Hue [0 .. 360)
- * hsv[1] is Saturation [0...1]
- * hsv[2] is Value [0...1]
+ * Hue is [0 .. 360)
+ * Saturation is [0...1]
+ * Value is [0...1]
  * ```
- *
  * ```
  * rgb[0] is Red [0 .. 255]
  * rgb[1] is Green [0...255]
@@ -340,12 +342,12 @@ fun hsvToRGB(hue: Float, saturation: Float, value: Float): IntArray {
  * hsv[1] is Saturation [0...1]
  * hsv[2] is Value [0...1]
  * ```
- *
  * ```
  * rgb[0] is Red [0 .. 255]
  * rgb[1] is Green [0...255]
  * rgb[2] is Blue [0...255]
  * ```
+ * @param hsvIn 3 element array which holds the input HSV components.
  */
 fun hsvToRGB(hsvIn: FloatArray): IntArray {
     return colorIntToRGBArray(
@@ -356,16 +358,16 @@ fun hsvToRGB(hsvIn: FloatArray): IntArray {
 /**
  * Convert HSV (hue-saturation-value) components to a RGB red, green blue array.
  * ```
- * hsv[0] is Hue [0 .. 360)
- * hsv[1] is Saturation [0...1]
- * hsv[2] is Value [0...1]
+ * Hue is [0 .. 360)
+ * Saturation is [0...1]
+ * Value is [0...1]
  * ```
- *
  * ```
  * rgb[0] is Red [0 .. 255]
  * rgb[1] is Green [0...255]
  * rgb[2] is Blue [0...255]
  * ```
+ * @param rgbIn 3 element array which holds the input RGB components.
  */
 fun hsvToRGB(hue: Float, saturation: Float, value: Float, rgbIn: IntArray) {
     colorIntToRGBArray(
@@ -381,12 +383,9 @@ fun hsvToRGB(hue: Float, saturation: Float, value: Float, rgbIn: IntArray) {
  * hsv[1] is Saturation [0...1]
  * hsv[2] is Value [0...1]
  * ```
- *
- * ```
- * Red is [0 .. 255]
- * Green is [0...255]
- * Blue is [0...255]
- * ```
+ * @param red  Red component [0..255] of the color
+ * @param green  Green component [0..255] of the color
+ * @param blue Blue component [0..255] of the color
  */
 fun rgbToHSV(red: Int, green: Int, blue: Int): FloatArray {
     val hsvOut = floatArrayOf(0f, 0f, 0f)
@@ -401,15 +400,13 @@ fun rgbToHSV(red: Int, green: Int, blue: Int): FloatArray {
  * hsv[1] is Saturation [0...1]
  * hsv[2] is Value [0...1]
  * ```
- *
- * ```
- * Red is [0 .. 255]
- * Green is [0...255]
- * Blue is [0...255]
- * ```
+ * @param red  Red component [0..255] of the color
+ * @param green  Green component [0..255] of the color
+ * @param blue Blue component [0..255] of the color
+ * @param hsvIn 3 element array which holds the output HSV components.
  */
-fun rgbToHSV(red: Int, green: Int, blue: Int, hsvOut: FloatArray) {
-    android.graphics.Color.RGBToHSV(red, green, blue, hsvOut)
+fun rgbToHSV(red: Int, green: Int, blue: Int, hsvIn: FloatArray) {
+    android.graphics.Color.RGBToHSV(red, green, blue, hsvIn)
 }
 
 /*
@@ -420,7 +417,6 @@ fun rgbToHSV(red: Int, green: Int, blue: Int, hsvOut: FloatArray) {
  * Convert HSL (hue-saturation-lightness) components to a RGB color in [Integer] format.
  *
  * For instance, red =255, green =0, blue=0 is -65536
- *
  * ```
  * hsl[0] is Hue [0 .. 360)
  * hsl[1] is Saturation [0...1]
@@ -480,14 +476,14 @@ fun colorIntToHSL(color: Int, hslIn: FloatArray) {
  * hsl[1] is Saturation [0...1]
  * hsl[2] is Lightness [0...1]
  * ```
- *
  * ```
  * rgb[0] is Red [0 .. 255]
  * rgb[1] is Green [0...255]
  * rgb[2] is Blue [0...255]
  * ```
+ * @param hslIn 3 element array which holds the input HSL components.
  */
-fun hslToRGBArray(hslIn: FloatArray): IntArray {
+fun hslToRGB(hslIn: FloatArray): IntArray {
     return colorIntToRGBArray(hslToColorInt(hslIn))
 }
 
@@ -505,8 +501,10 @@ fun hslToRGBArray(hslIn: FloatArray): IntArray {
  * rgb[2] is Blue [0...255]
  * ```
  */
-fun hslToRGBArray(hue: Float, saturation: Float, lightness: Float): IntArray {
-    return colorIntToRGBArray(hslToColorInt(hue, saturation, lightness))
+fun hslToRGB(hue: Float, saturation: Float, lightness: Float): IntArray {
+    return colorIntToRGBArray(
+        color = hslToColorInt(hue, saturation, lightness)
+    )
 }
 
 /**
@@ -516,14 +514,14 @@ fun hslToRGBArray(hue: Float, saturation: Float, lightness: Float): IntArray {
  * Saturation is [0...1]
  * Lightness is [0...1]
  * ```
- *
  * ```
  * rgb[0] is Red [0 .. 255]
  * rgb[1] is Green [0...255]
  * rgb[2] is Blue [0...255]
  * ```
+ * @param rgbIn 3 element array which holds the input RGB components.
  */
-fun hslToRGBArray(hue: Float, saturation: Float, lightness: Float, rgbIn: IntArray) {
+fun hslToRGB(hue: Float, saturation: Float, lightness: Float, rgbIn: IntArray) {
     colorIntToRGBArray(hslToColorInt(hue, saturation, lightness), rgbIn)
 }
 
@@ -534,12 +532,9 @@ fun hslToRGBArray(hue: Float, saturation: Float, lightness: Float, rgbIn: IntArr
  * hsl[1] is Saturation [0...1]
  * hsl[2] is Lightness [0...1]
  * ```
- *
- * ```
- * Red is [0 .. 255]
- * Green is [0...255]
- * Blue is [0...255]
- * ```
+ * @param red  Red component [0..255] of the color
+ * @param green  Green component [0..255] of the color
+ * @param blue Blue component [0..255] of the color
  */
 fun rgbToHSL(red: Int, green: Int, blue: Int): FloatArray {
     val outHsl = floatArrayOf(0f, 0f, 0f)
@@ -554,12 +549,10 @@ fun rgbToHSL(red: Int, green: Int, blue: Int): FloatArray {
  * hsl[1] is Saturation [0...1]
  * hsl[2] is Lightness [0...1]
  * ```
- *
- * ```
- * Red is [0 .. 255]
- * Green is [0...255]
- * Blue is [0...255]
- * ```
+ * @param red  Red component [0..255] of the color
+ * @param green  Green component [0..255] of the color
+ * @param blue Blue component [0..255] of the color
+ * @param hslIn 3 element array which holds the input HSL components.
  */
 fun rgbToHSL(red: Int, green: Int, blue: Int, hslIn: FloatArray) {
     ColorUtils.RGBToHSL(red, green, blue, hslIn)
@@ -568,6 +561,15 @@ fun rgbToHSL(red: Int, green: Int, blue: Int, hslIn: FloatArray) {
 /*
     ColorInt-RGB Conversions
  */
+/**
+ * Convert Color [Integer] into 3 element array of red, green, and blue
+ *```
+ * rgb[0] is Red [0 .. 255]
+ * rgb[1] is Green [0...255]
+ * rgb[2] is Blue [0...255]
+ * ```
+ * @return 3 element array which holds the input RGB components.
+ */
 fun colorIntToRGBArray(color: Int): IntArray {
     val red = android.graphics.Color.red(color)
     val green = android.graphics.Color.green(color)
@@ -575,6 +577,15 @@ fun colorIntToRGBArray(color: Int): IntArray {
     return intArrayOf(red, green, blue)
 }
 
+/**
+ * Convert Color [Integer] into 3 element array of red, green, and blue
+ *```
+ * rgb[0] is Red [0 .. 255]
+ * rgb[1] is Green [0...255]
+ * rgb[2] is Blue [0...255]
+ * ```
+ * @param rgbIn 3 element array which holds the input RGB components.
+ */
 fun colorIntToRGBArray(color: Int, rgbIn: IntArray) {
     val red = android.graphics.Color.red(color)
     val green = android.graphics.Color.green(color)
@@ -585,8 +596,137 @@ fun colorIntToRGBArray(color: Int, rgbIn: IntArray) {
     rgbIn[2] = blue
 }
 
+/**
+ * Convert Color [Integer] into 4 element array of alpha red, green, and blue
+ *```
+ * rgb[0] is Alpha [0 .. 255]
+ * rgb[1] is Red [0 .. 255]
+ * rgb[2] is Green [0...255]
+ * rgb[3] is Blue [0...255]
+ * ```
+ * @return 4 element array which holds the input ARGB components.
+ */
+fun colorIntToARGBArray(color: Int): IntArray {
+    val alpha = android.graphics.Color.alpha(color)
+    val red = android.graphics.Color.red(color)
+    val green = android.graphics.Color.green(color)
+    val blue = android.graphics.Color.blue(color)
+    return intArrayOf(alpha, red, green, blue)
+}
+
+/**
+ * Convert Color [Integer] into 4 element array of alpha red, green, and blue
+ *```
+ * rgb[0] is Alpha [0 .. 255]
+ * rgb[1] is Red [0 .. 255]
+ * rgb[2] is Green [0...255]
+ * rgb[3] is Blue [0...255]
+ * ```
+ * @param argbIn 4 element array which holds the input ARGB components.
+ */
+fun colorIntToARGBArray(color: Int, argbIn: IntArray) {
+    val alpha = android.graphics.Color.alpha(color)
+    val red = android.graphics.Color.red(color)
+    val green = android.graphics.Color.green(color)
+    val blue = android.graphics.Color.blue(color)
+
+    argbIn[0] = alpha
+    argbIn[1] = red
+    argbIn[2] = green
+    argbIn[3] = blue
+}
+
+/**
+ * Return a color-int from alpha, red, green, blue components.
+ * These component values should be [0..255], but there is no range check performed,
+ * so if they are out of range, the returned color is undefined.
+ */
 fun rgbToColorInt(red: Int, green: Int, blue: Int): Int {
     return android.graphics.Color.rgb(red, green, blue)
+}
+
+/**
+ * Return a color-int from alpha, red, green, blue components.
+ * These component values should be [0f..1f], but there is no range check performed,
+ * so if they are out of range, the returned color is undefined.
+ *
+ * @param red  Red component [0..255] of the color
+ * @param green  Green component [0..255] of the color
+ * @param blue Blue component [0..255] of the color
+ *
+ */
+fun rgbToColorInt(red: Float, green: Float, blue: Float): Int {
+    val redInt = red.fractionToRGBRange()
+    val greenInt = green.fractionToRGBRange()
+    val blueInt = blue.fractionToRGBRange()
+    return android.graphics.Color.rgb(redInt, greenInt, blueInt)
+}
+
+/**
+ * Return a color-int from alpha, red, green, blue components.
+ * These component values should be [0..255], but there is no range check performed,
+ * so if they are out of range, the returned color is undefined.
+ *
+ * @param alpha  Alpha component [0..255] of the color
+ * @param red  Red component [0..255] of the color
+ * @param green  Green component [0..255] of the color
+ * @param blue Blue component [0..255] of the color
+ */
+fun argbToColorInt(alpha: Int, red: Int, green: Int, blue: Int): Int {
+    return android.graphics.Color.argb(alpha, red, green, blue)
+}
+
+/**
+ * Return a color-int from alpha, red, green, blue components.
+ * These component values should be [0f..1f], but there is no range check performed,
+ * so if they are out of range, the returned color is undefined.
+ *
+ * @param alpha  Alpha component [0..255] of the color
+ * @param red  Red component [0..255] of the color
+ * @param green  Green component [0..255] of the color
+ * @param blue Blue component [0..255] of the color
+ */
+fun argbToColorInt(alpha: Float, red: Float, green: Float, blue: Float): Int {
+    val alphaInt = alpha.fractionToRGBRange()
+    val redInt = red.fractionToRGBRange()
+    val greenInt = green.fractionToRGBRange()
+    val blueInt = blue.fractionToRGBRange()
+    return android.graphics.Color.argb(alphaInt, redInt, greenInt, blueInt)
+}
+
+/*
+    COLOR-RGB Conversions
+ */
+
+/**
+ * Convert Jetpack [Color] into 3 element array of red, green, and blue
+ *```
+ * rgb[0] is Red [0 .. 255]
+ * rgb[1] is Green [0...255]
+ * rgb[2] is Blue [0...255]
+ * ```
+ * @param color Jetpack Compose [Color]
+ * @return 3 element array which holds the input RGB components.
+ */
+fun colorToARGBArray(color: Color): IntArray {
+    return colorIntToRGBArray(color.toArgb())
+}
+
+/**
+ * Convert Jetpack [Color] into 3 element array of red, green, and blue
+ *```
+ * rgb[0] is Red [0 .. 255]
+ * rgb[1] is Green [0...255]
+ * rgb[2] is Blue [0...255]
+ * ```
+ * @param color Jetpack Compose [Color]
+ * @param rgbIn 3 element array which holds the input RGB components.
+ */
+fun colorToRGBArray(color: Color, rgbIn: IntArray) {
+    val argbArray = colorIntToRGBArray(color.toArgb())
+    rgbIn[0] = argbArray[1]
+    rgbIn[1] = argbArray[2]
+    rgbIn[2] = argbArray[3]
 }
 
 /*
@@ -629,7 +769,7 @@ inline val Int.blue: Int
     get() = this and 0xFF
 
 /**
- * Convert red, green, blue components [0..255] range to Hex format String
+ * Convert red, green, blue components [0..255] range in [Integer] to Hex format String
  */
 fun rgbToHex(red: Int, green: Int, blue: Int): String {
     return "#${Integer.toHexString(red)}" +
@@ -652,9 +792,19 @@ fun rgbToHex(rgb: IntArray): String {
 }
 
 /**
+ * Convert red, green, blue components [0f..1f] range in [Float] to Hex format String
+ */
+fun rgbToHex(red: Float, green: Float, blue: Float): String {
+    return "#${Integer.toHexString(red.fractionToRGBRange())}" +
+            Integer.toHexString(green.fractionToRGBRange()) +
+            Integer.toHexString(blue.fractionToRGBRange())
+}
+
+/**
  * Convert alpha, red, green, blue components in [0..255] range argb to Hex format String
  *
  * ```
+ * Alpha is [0 .. 255]
  * Red is [0 .. 255]
  * Green is [0...255]
  * Blue is [0...255]
@@ -668,17 +818,77 @@ fun argbToHex(alpha: Int, red: Int, green: Int, blue: Int): String {
 }
 
 /**
- * Converts **RGB** colors in range of [0f-1f] to [0-255]
+ * Convert alpha, red, green, blue components in [0f..1f] range in [Float] argb to Hex format String
+ *
+ * ```
+ * Alpha is [0f .. 1f]
+ * Red is [0f .. 1f]
+ * Green is [0...1f]
+ * Blue is [0...1f]
+ * ```
  */
-fun Float.toColorInt() = (this * 255).toInt()
+fun argbToHex(alpha: Float, red: Float, green: Float, blue: Float): String {
+    return "#${Integer.toHexString(alpha.fractionToRGBRange())}" +
+            Integer.toHexString(red.fractionToRGBRange()) +
+            Integer.toHexString(green.fractionToRGBRange()) +
+            Integer.toHexString(blue.fractionToRGBRange())
+}
+
+/*
+    HEX-ColorInt Conversion
+ */
+fun hexToColorInt(colorString: String): Int {
+    return android.graphics.Color.parseColor(colorString)
+}
+
+/*
+    HEX-RGB Conversion
+ */
+fun hexToRGB(colorString: String): IntArray {
+    val colorInt = hexToColorInt(colorString)
+    return colorIntToRGBArray(colorInt)
+}
+
+fun hexToRGB(colorString: String, rgbIn: IntArray) {
+    val colorInt = hexToColorInt(colorString)
+    colorIntToRGBArray(colorInt, rgbIn)
+}
+
+fun hexToARGB(colorString: String): IntArray {
+    val colorInt = hexToColorInt(colorString)
+    return colorIntToARGBArray(colorInt)
+}
+
+fun hexToARGB(colorString: String, argbIn: IntArray) {
+    val colorInt = hexToColorInt(colorString)
+    colorIntToARGBArray(colorInt, argbIn)
+}
 
 /**
- * Converts **RGB** colors in range of [0f-1f] to [0-255] to String
+ * Converts alpha, red, green or blue values from range of [0f-1f] to [0-255].
  */
-fun Float.toColorString() = this.toColorInt().toString()
+fun Float.fractionToRGBRange() = (this * 255.0f).toInt()
 
 /**
- * Converts **HSV** or **HSL** colors that are in range of [0f-1f] to [0-100] int range to
- * display in a String
+ * Converts alpha, red, green or blue values from range of [0f-1f] to [0-255] and returns
+ * it as [String].
  */
-fun Float.toPercent() = (this * 100).toInt()
+fun Float.fractionToRGBString() = this.fractionToRGBRange().toString()
+
+/**
+ * Rounds this [Float] to another with 2 significant numbers
+ * 0.1234 is rounded to 0.12
+ * 0.129 is rounded to 0.12
+ */
+fun Float.roundToIntTwoDigits() = (this * 100.0f).toInt() / 100.0f
+
+/**
+ * Rounds this [Float] to closest int.
+ */
+fun Float.round() = this.roundToInt()
+
+/**
+ * Converts **HSV** or **HSL** colors that are in range of [0f-1f] to [0-100] range in [Integer]
+ */
+fun Float.fractionToPercent() = (this * 100.0f).toInt()
+

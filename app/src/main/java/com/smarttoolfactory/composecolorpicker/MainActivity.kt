@@ -82,7 +82,8 @@ private fun HomeContent() {
             1 -> SaturationSelectorDemo()
             2 -> GradientAngleDemo()
             3 -> HSVHSLGradientDemo()
-            else -> ColorfulSliderDemo()
+            4 -> ColorfulSliderDemo()
+            else -> ColorModeConversionDemo()
         }
     }
 }
@@ -93,5 +94,6 @@ internal val tabList =
         "Saturation Selector",
         "Gradient Angle",
         "HSV&HSL Gradients",
-        "Colorful Sliders"
+        "Colorful Sliders",
+        "Color Mode Conversions"
     )

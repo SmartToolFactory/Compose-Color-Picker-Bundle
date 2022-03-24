@@ -12,8 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.colorpicker.toColorString
-import com.smarttoolfactory.colorpicker.toPercent
+import com.smarttoolfactory.colorpicker.fractionToRGBString
+import com.smarttoolfactory.colorpicker.fractionToPercent
 
 /*
     HSV Slider Displays
@@ -52,7 +52,7 @@ fun SliderDisplaySaturationHSV(
     TitledSliderDisplay(
         modifier = modifier,
         title = "Saturation",
-        description = "${saturation.toPercent()}"
+        description = "${saturation.fractionToPercent()}"
     ) {
         SliderSaturationHSV(
             hue = hue,
@@ -73,7 +73,7 @@ fun SliderDisplayValueHSV(
     TitledSliderDisplay(
         modifier = modifier,
         title = "Value",
-        description = "${value.toPercent()}"
+        description = "${value.fractionToPercent()}"
     ) {
         SliderValueHSV(
             hue = hue,
@@ -93,7 +93,7 @@ fun SliderDisplayAlphaHSV(
     TitledSliderDisplay(
         modifier = modifier,
         title = "Alpha",
-        description = "${alpha.toPercent()}"
+        description = "${alpha.fractionToPercent()}"
     ) {
         SliderAlphaHSV(
             hue = hue,
@@ -141,7 +141,7 @@ fun SliderDisplaySaturationHSL(
     TitledSliderDisplay(
         modifier = modifier,
         title = "Saturation",
-        description = "${saturation.toPercent()}"
+        description = "${saturation.fractionToPercent()}"
     ) {
         SliderSaturationHSL(
             hue = hue,
@@ -163,7 +163,7 @@ fun SliderDisplayLightnessHSL(
     TitledSliderDisplay(
         modifier = modifier,
         title = "Lightness",
-        description = "${lightness.toPercent()}"
+        description = "${lightness.fractionToPercent()}"
     ) {
         SliderLightnessHSL(
             lightness = lightness,
@@ -182,7 +182,7 @@ fun SliderDisplayAlphaHSL(
     TitledSliderDisplay(
         modifier = modifier,
         title = "Alpha",
-        description = "${alpha.toPercent()}"
+        description = "${alpha.fractionToPercent()}"
     ) {
         SliderAlphaHSV(
             hue = hue,
@@ -205,7 +205,7 @@ fun SliderDisplayRedRGB(
         modifier = modifier,
         titleColor = Color.Red,
         title = "Red",
-        description = red.toColorString()
+        description = red.fractionToRGBString()
     ) {
         SliderRedRGB(
             red = red,
@@ -224,7 +224,7 @@ fun SliderDisplayGreenRGB(
         modifier = modifier,
         titleColor = Color.Green,
         title = "Green",
-        description = green.toColorString()
+        description = green.fractionToRGBString()
     ) {
         SliderGreenRGB(
             green = green,
@@ -243,7 +243,7 @@ fun SliderDisplayBlueRGB(
         modifier = modifier,
         titleColor = Color.Blue,
         title = "Blue",
-        description = blue.toColorString()
+        description = blue.fractionToRGBString()
     ) {
         SliderBlueRGB(
             blue = blue,
@@ -264,7 +264,7 @@ fun SliderDisplayAlphaRGB(
     TitledSliderDisplay(
         modifier = modifier,
         title = "Alpha",
-        description = "${alpha.toPercent()}"
+        description = "${alpha.fractionToPercent()}"
     ) {
         SliderAlphaRGB(
             red = red,
