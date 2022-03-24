@@ -204,11 +204,6 @@ fun SliderLightnessHSL(
     lightness: Float,
     onValueChange: (Float) -> Unit
 ) {
-
-//    val sliderLightnessGradient = if (gradientStops!=2)
-//        sliderLightnessGradient3Stops(hue)
-//        else sliderLightnessGradient(hue)
-
     val sliderLightnessGradient = sliderLightnessGradient(hue, saturation)
 
     CheckeredColorfulSlider(

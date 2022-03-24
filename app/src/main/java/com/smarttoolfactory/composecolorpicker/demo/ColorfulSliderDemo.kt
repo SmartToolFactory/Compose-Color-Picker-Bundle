@@ -61,8 +61,8 @@ fun ColorfulSliderDemo() {
         RGBASliderDisplayPanelExample(modifier, sliderModifier, boxModifier)
 
         // Sliders with Circle Color display on left
-        SliderCircleColorDisplayHSLExamples(modifier, sliderModifier, boxModifier)
-        SliderCircleColorDisplayHSVExamples(modifier, sliderModifier, boxModifier)
+        SliderCircleColorDisplayHSLExamples(modifier, sliderModifier)
+        SliderCircleColorDisplayHSVExamples(modifier, sliderModifier)
 
     }
 }
@@ -600,24 +600,18 @@ private fun RGBASliderDisplayPanelExample(
 @Composable
 private fun SliderCircleColorDisplayHSVExamples(
     modifier: Modifier,
-    sliderModifier: Modifier,
-    boxModifier: Modifier
+    sliderModifier: Modifier
 ) {
     val hue by remember { mutableStateOf(0f) }
     var saturation by remember { mutableStateOf(.5f) }
     var value by remember { mutableStateOf(.5f) }
     var alpha by remember { mutableStateOf(1f) }
 
-    val colorHSV = Color.hsv(hue = hue, saturation = saturation, value = value, alpha = alpha)
-
     Title(text = "HSV SliderCircleColorDisplays")
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Box(modifier = boxModifier.background(colorHSV))
-
         Title(text = "SliderCircleColorDisplay Saturation-Alpha")
         SliderCircleColorDisplaySaturationHSV(
             modifier = sliderModifier,
@@ -645,24 +639,18 @@ private fun SliderCircleColorDisplayHSVExamples(
 @Composable
 private fun SliderCircleColorDisplayHSLExamples(
     modifier: Modifier,
-    sliderModifier: Modifier,
-    boxModifier: Modifier
+    sliderModifier: Modifier
 ) {
     val hue by remember { mutableStateOf(0f) }
     var saturation by remember { mutableStateOf(.5f) }
     var lightness by remember { mutableStateOf(.5f) }
     var alpha by remember { mutableStateOf(1f) }
 
-    val colorHSL =
-        Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
-
     Title(text = "HSL SliderCircleColorDisplays")
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(modifier = boxModifier.background(colorHSL))
-
         Title(text = "SliderCircleColorDisplay Saturation-Alpha")
         SliderCircleColorDisplaySaturationHSL(
             modifier = sliderModifier,

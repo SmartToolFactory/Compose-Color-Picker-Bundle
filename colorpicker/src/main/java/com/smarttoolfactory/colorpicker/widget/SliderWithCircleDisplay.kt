@@ -9,8 +9,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.slider.ColorfulSlider
 
-
+/**
+ * Slider with Circle on left and 2 sliders on right side that display [saturation] and [alpha]
+ * for HSV color model. This composable requires minimum
+ * 100.dp height, giving a height lower than this might break its layout.
+ *
+ * @param hue in [0..1f]
+ * @param saturation in [0..1f]
+ * @param value in [0..1f]
+ * @param alpha in [0..1f]
+ * @param onSaturationChange callback that returns change in [saturation] when Slider is dragged
+ * @param onAlphaChange callback that returns change in [alpha] when Slider is dragged
+ */
 @Composable
 fun SliderCircleColorDisplaySaturationHSV(
     modifier: Modifier = Modifier,
@@ -21,43 +33,36 @@ fun SliderCircleColorDisplaySaturationHSV(
     onSaturationChange: (Float) -> Unit,
     onAlphaChange: (Float) -> Unit,
 ) {
-
-    Row(
-        modifier = modifier
-            .requiredHeightIn(min = 100.dp, max = 120.dp)
-            .padding(horizontal = 8.dp, vertical = 0.dp)
-            .padding(horizontal = 8.dp, vertical = 0.dp),
-        verticalAlignment = Alignment.CenterVertically
+    SliderWithCircleDisplay(
+        modifier = modifier,
+        color = Color.hsv(hue, saturation, value, alpha)
     ) {
-
-        Box(
-            modifier = Modifier
-                .padding(10.dp)
-                .clip(CircleShape)
-                .fillMaxHeight()
-                .aspectRatio(1f)
-                .drawChecker(CircleShape)
-                .background(Color.hsv(hue, saturation, value, alpha))
+        SliderSaturationHSV(
+            hue = hue,
+            saturation = saturation,
+            value = 1f,
+            onValueChange = onSaturationChange
         )
-
-        Column(
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-            SliderSaturationHSV(
-                hue = hue,
-                saturation = saturation,
-                value = 1f,
-                onValueChange = onSaturationChange
-            )
-            SliderAlphaHSV(
-                hue = hue,
-                alpha = alpha,
-                onValueChange = onAlphaChange
-            )
-        }
+        SliderAlphaHSV(
+            hue = hue,
+            alpha = alpha,
+            onValueChange = onAlphaChange
+        )
     }
 }
 
+/**
+ * Slider with Circle on left and 2 sliders on right side that display [value] and [alpha]
+ * for HSV color model. This composable requires minimum
+ * 100.dp height, giving a height lower than this might break its layout.
+ *
+ * @param hue in [0..1f]
+ * @param saturation in [0..1f]
+ * @param value in [0..1f]
+ * @param alpha in [0..1f]
+ * @param onValueChange callback that returns change in [value] when Slider is dragged
+ * @param onAlphaChange callback that returns change in [alpha] when Slider is dragged
+ */
 @Composable
 fun SliderCircleColorDisplayValueHSV(
     modifier: Modifier = Modifier,
@@ -68,40 +73,36 @@ fun SliderCircleColorDisplayValueHSV(
     onValueChange: (Float) -> Unit,
     onAlphaChange: (Float) -> Unit,
 ) {
-    Row(
-        modifier = modifier
-            .requiredHeightIn(min = 100.dp, max = 120.dp)
-            .padding(horizontal = 8.dp, vertical = 0.dp),
-        verticalAlignment = Alignment.CenterVertically
+
+    SliderWithCircleDisplay(
+        modifier = modifier,
+        color = Color.hsv(hue, saturation, value, alpha)
     ) {
-
-        Box(
-            modifier = Modifier
-                .padding(10.dp)
-                .clip(CircleShape)
-                .fillMaxHeight()
-                .aspectRatio(1f)
-                .drawChecker(CircleShape)
-                .background(Color.hsv(hue, saturation, value, alpha))
+        SliderValueHSV(
+            hue = hue,
+            value = value,
+            onValueChange = onValueChange
         )
-
-        Column(
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-            SliderValueHSV(
-                hue = hue,
-                value = value,
-                onValueChange = onValueChange
-            )
-            SliderAlphaHSV(
-                hue = hue,
-                alpha = alpha,
-                onValueChange = onAlphaChange
-            )
-        }
+        SliderAlphaHSV(
+            hue = hue,
+            alpha = alpha,
+            onValueChange = onAlphaChange
+        )
     }
 }
 
+/**
+ * Slider with Circle on left and 2 sliders on right side that display [saturation] and [alpha]
+ * for HSL color model. This composable requires minimum
+ * 100.dp height, giving a height lower than this might break its layout.
+ *
+ * @param hue in [0..1f]
+ * @param saturation in [0..1f]
+ * @param lightness in [0..1f]
+ * @param alpha in [0..1f]
+ * @param onSaturationChange callback that returns change in [saturation] when Slider is dragged
+ * @param onAlphaChange callback that returns change in [alpha] when Slider is dragged
+ */
 @Composable
 fun SliderCircleColorDisplaySaturationHSL(
     modifier: Modifier = Modifier,
@@ -112,40 +113,32 @@ fun SliderCircleColorDisplaySaturationHSL(
     onSaturationChange: (Float) -> Unit,
     onAlphaChange: (Float) -> Unit,
 ) {
-    Row(modifier = modifier) {
-
-        Row(
-            modifier = modifier
-                .requiredHeightIn(min = 100.dp, max = 120.dp)
-                .padding(horizontal = 8.dp, vertical = 0.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            Box(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .clip(CircleShape)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .drawChecker(CircleShape)
-                    .background(Color.hsl(hue, saturation, lightness, alpha))
-            )
-
-            Column(
-                verticalArrangement = Arrangement.SpaceAround
-            ) {
-                SliderSaturationHSL(
-                    hue = hue,
-                    saturation = saturation,
-                    lightness = lightness,
-                    onValueChange = onSaturationChange
-                )
-                SliderAlphaHSL(hue = hue, alpha = alpha, onValueChange = onAlphaChange)
-            }
-        }
+    SliderWithCircleDisplay(
+        modifier = modifier,
+        color = Color.hsl(hue, saturation, lightness, alpha)
+    ) {
+        SliderSaturationHSL(
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            onValueChange = onSaturationChange
+        )
+        SliderAlphaHSL(hue = hue, alpha = alpha, onValueChange = onAlphaChange)
     }
 }
 
+/**
+ * Slider with Circle on left and 2 sliders on right side that display [lightness] and [alpha]
+ * for HSL color model. This composable requires minimum
+ * 100.dp height, giving a height lower than this might break its layout.
+ *
+ * @param hue in [0..1f]
+ * @param saturation in [0..1f]
+ * @param lightness in [0..1f]
+ * @param alpha in [0..1f]
+ * @param onLightnessChange callback that returns change in [lightness] when Slider is dragged
+ * @param onAlphaChange callback that returns change in [alpha] when Slider is dragged
+ */
 @Composable
 fun SliderCircleColorDisplayLightnessHSL(
     modifier: Modifier = Modifier,
@@ -156,34 +149,71 @@ fun SliderCircleColorDisplayLightnessHSL(
     onLightnessChange: (Float) -> Unit,
     onAlphaChange: (Float) -> Unit,
 ) {
+    SliderWithCircleDisplay(
+        modifier = modifier,
+        color = Color.hsl(hue, saturation, lightness, alpha)
+    ) {
+        SliderLightnessHSL(
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            onValueChange = onLightnessChange
+        )
+        SliderAlphaHSL(hue = hue, alpha = alpha, onValueChange = onAlphaChange)
+    }
+}
+
+/**
+ * Slider with Circle on left and 2 sliders on right side. This composable requires minimum
+ * 100.dp height, giving a height lower than this might break its layout.
+ *
+ * * [ColorfulSlider] requires min height of 48.dp and with 2 sliders min height should be 96.dp
+ * * [CircleDisplay] has min height and width of 80 dp.
+ *
+ * @param circleModifier modifier for [CircleDisplay]
+ * @param color color of [CircleDisplay]
+ * @param content 2 sliders that either show Saturation or lightness for HSV and alpha, or
+ * Saturation or Value and alpha for HSV.
+ */
+@Composable
+fun SliderWithCircleDisplay(
+    modifier: Modifier = Modifier,
+    circleModifier: Modifier = Modifier,
+    color: Color,
+    content: @Composable () -> Unit
+) {
     Row(
-        modifier = modifier
-            .requiredHeightIn(min = 100.dp, max = 120.dp)
-            .padding(horizontal = 8.dp, vertical = 0.dp),
+        modifier = modifier.requiredHeightIn(min = 100.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
-        Box(
-            modifier = Modifier
-                .padding(10.dp)
-                .clip(CircleShape)
-                .fillMaxHeight()
-                .aspectRatio(1f)
-                .drawChecker(CircleShape)
-                .background(Color.hsl(hue, saturation, lightness, alpha))
+        CircleDisplay(
+            modifier = circleModifier
+                .widthIn(min = 80.dp)
+                .heightIn(min = 80.dp),
+            color = color
         )
-
+        Spacer(modifier = Modifier.width(10.dp))
         Column(
             verticalArrangement = Arrangement.SpaceAround
         ) {
-            SliderLightnessHSL(
-                hue = hue,
-                saturation = saturation,
-                lightness = lightness,
-                onValueChange = onLightnessChange
-            )
-            SliderAlphaHSL(hue = hue, alpha = alpha, onValueChange = onAlphaChange)
+            content()
         }
     }
+}
 
+/**
+ * [Box] with [CircleShape] displays [color] as background, and when alpha is lower than 1f
+ * checker pattern is displayed behind colored background.
+ */
+@Composable
+fun CircleDisplay(
+    modifier: Modifier = Modifier,
+    color: Color
+) {
+    Box(
+        modifier = modifier
+            .clip(CircleShape)
+            .drawChecker(CircleShape)
+            .background(color)
+    )
 }
