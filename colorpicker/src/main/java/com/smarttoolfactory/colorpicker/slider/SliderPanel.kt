@@ -1,13 +1,10 @@
-package com.smarttoolfactory.colorpicker.widget
+package com.smarttoolfactory.colorpicker.slider
 
+import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.smarttoolfactory.slider.ColorfulSlider
-
-/*
-    Slider Panels
- */
 
 /**
  * Composable that contains variant number of [ColorfulSlider],
@@ -20,10 +17,10 @@ import com.smarttoolfactory.slider.ColorfulSlider
  * Value Slider
  * Alpha Slider
  * ```
- * @param hue Hue of HSV
- * @param saturation Hue of HSV
- * @param value Hue of HSV
- * @param alpha Hue of HSV
+ * @param hue Hue of HSV in [0..360f]
+ * @param saturation Hue of HSV in [0..1f]
+ * @param value Hue of HSV in [0..1f]
+ * @param alpha Hue of HSV in [0..1f]
  * @param onHueChange lambda in which [hue] should be updated. when this lambda is not nul
  * [SliderHueHSV] is added to Column of sliders.
  * @param onSaturationChange lambda in which [saturation] should be updated. when this lambda is not nul
@@ -36,10 +33,10 @@ import com.smarttoolfactory.slider.ColorfulSlider
 @Composable
 fun SliderPanelHSV(
     modifier: Modifier,
-    hue: Float = 0f,
-    saturation: Float = .5f,
-    value: Float = .5f,
-    alpha: Float = 1f,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float = 0f,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float = .5f,
+    @FloatRange(from = 0.0, to = 1.0) value: Float = .5f,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float = 1f,
     onHueChange: ((Float) -> Unit)? = null,
     onSaturationChange: ((Float) -> Unit)? = null,
     onValueChange: ((Float) -> Unit)? = null,
@@ -98,10 +95,10 @@ fun SliderPanelHSV(
  * Lightness Slider
  * Alpha Slider
  * ```
- * @param hue Hue of HSL
- * @param saturation Hue of HSL
- * @param lightness Hue of HSL
- * @param alpha Hue of HSL
+ * @param hue Hue of HSL hue in [0..360f]
+ * @param saturation Hue of HSL  in [0..1f]
+ * @param lightness Hue of HSL in [0..1f]
+ * @param alpha Hue of HSL in [0..1f]
  * @param onHueChange lambda in which [hue] should be updated. when this lambda is not nul
  * [SliderHueHSL] is added to Column of sliders.
  * @param onSaturationChange lambda in which [saturation] should be updated. when this lambda is not nul
@@ -114,10 +111,10 @@ fun SliderPanelHSV(
 @Composable
 fun SliderPanelHSL(
     modifier: Modifier,
-    hue: Float = 0f,
-    saturation: Float = .5f,
-    lightness: Float = .5f,
-    alpha: Float = 1f,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float = 0f,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float = .5f,
+    @FloatRange(from = 0.0, to = 1.0) lightness: Float = .5f,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float = 1f,
     onHueChange: ((Float) -> Unit)? = null,
     onSaturationChange: ((Float) -> Unit)? = null,
     onLightnessChange: ((Float) -> Unit)? = null,
@@ -175,10 +172,10 @@ fun SliderPanelHSL(
  * Blue Slider
  * Alpha Slider
  * ```
- * @param red Red of RGBA
- * @param green Hue of RGBA
- * @param blue Hue of RGBA
- * @param alpha Hue of RGBA
+ * @param red Red of RGBA in [0..1f]
+ * @param green Hue of RGBA in [0..1f]
+ * @param blue Hue of RGBA in [0..1f]
+ * @param alpha Hue of RGBA in [0..1f]
  * @param onRedChange lambda in which [red] should be updated. when this lambda is not nul
  * [SliderRedRGB] is added to Column of sliders.
  * @param onGreenChange lambda in which [green] should be updated. when this lambda is not nul
@@ -191,10 +188,10 @@ fun SliderPanelHSL(
 @Composable
 fun SliderPanelRGBA(
     modifier: Modifier,
-    red: Float = 1f,
-    green: Float = 0f,
-    blue: Float = 0f,
-    alpha: Float = 1f,
+    @FloatRange(from = 0.0, to = 1.0) red: Float = 1f,
+    @FloatRange(from = 0.0, to = 1.0) green: Float = 0f,
+    @FloatRange(from = 0.0, to = 1.0) blue: Float = 0f,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float = 1f,
     onRedChange: ((Float) -> Unit)? = null,
     onGreenChange: ((Float) -> Unit)? = null,
     onBlueChange: ((Float) -> Unit)? = null,

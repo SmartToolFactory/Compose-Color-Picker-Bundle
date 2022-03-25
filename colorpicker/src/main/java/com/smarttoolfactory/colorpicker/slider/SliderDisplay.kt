@@ -1,5 +1,6 @@
-package com.smarttoolfactory.colorpicker.widget
+package com.smarttoolfactory.colorpicker.slider
 
+import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +22,7 @@ import com.smarttoolfactory.colorpicker.fractionToRGBString
 /**
  * Composable that shows a title as initial letter, title color and a Slider to select
  * [hue] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param value in [0..1f]
  * @param onValueChange callback that returns change in [hue] when Slider is dragged
@@ -29,9 +30,9 @@ import com.smarttoolfactory.colorpicker.fractionToRGBString
 @Composable
 fun SliderDisplayHueHSV(
     modifier: Modifier,
-    hue: Float,
-    saturation: Float,
-    value: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) value: Float,
     onValueChange: (Float) -> Unit
 ) {
 
@@ -52,7 +53,7 @@ fun SliderDisplayHueHSV(
 /**
  * Composable that shows a title as initial letter, title color and a Slider to select
  * [saturation] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param value in [0..1f]
  * @param onValueChange callback that returns change in [saturation] when Slider is dragged
@@ -60,9 +61,9 @@ fun SliderDisplayHueHSV(
 @Composable
 fun SliderDisplaySaturationHSV(
     modifier: Modifier,
-    hue: Float,
-    saturation: Float,
-    value: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) value: Float,
     onValueChange: (Float) -> Unit
 ) {
     TitledSliderDisplay(
@@ -82,15 +83,15 @@ fun SliderDisplaySaturationHSV(
 /**
  * Composable that shows a title as initial letter, title color and a Slider to select
  * [value] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param value in [0..1f]
  * @param onValueChange callback that returns change in [value] when Slider is dragged
  */
 @Composable
 fun SliderDisplayValueHSV(
     modifier: Modifier,
-    hue: Float,
-    value: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) value: Float,
     onValueChange: (Float) -> Unit
 ) {
     TitledSliderDisplay(
@@ -109,15 +110,15 @@ fun SliderDisplayValueHSV(
 /**
  * Composable that shows a title as initial letter, title color and a Slider to select
  * [alpha] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param alpha in [0..1f]
  * @param onValueChange callback that returns change in [alpha] when Slider is dragged
  */
 @Composable
 fun SliderDisplayAlphaHSV(
     modifier: Modifier,
-    hue: Float,
-    alpha: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float,
     onValueChange: (Float) -> Unit
 ) {
     TitledSliderDisplay(
@@ -139,7 +140,7 @@ fun SliderDisplayAlphaHSV(
 /**
  * Composable that shows a title as initial letter, title color and a Slider to select
  * [hue] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param lightness in [0..1f]
  * @param onValueChange callback that returns change in [hue] when Slider is dragged
@@ -147,9 +148,9 @@ fun SliderDisplayAlphaHSV(
 @Composable
 fun SliderDisplayHueHSL(
     modifier: Modifier,
-    hue: Float,
-    saturation: Float,
-    lightness: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) lightness: Float,
     onValueChange: (Float) -> Unit
 ) {
 
@@ -171,7 +172,7 @@ fun SliderDisplayHueHSL(
 /**
  * Composable that shows a title as initial letter, title color and a Slider to select
  * [saturation] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param lightness in [0..1f]
  * @param onValueChange callback that returns change in [saturation] when Slider is dragged
@@ -179,9 +180,9 @@ fun SliderDisplayHueHSL(
 @Composable
 fun SliderDisplaySaturationHSL(
     modifier: Modifier,
-    hue: Float,
-    saturation: Float,
-    lightness: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) lightness: Float,
     onValueChange: (Float) -> Unit
 ) {
     TitledSliderDisplay(
@@ -209,7 +210,7 @@ fun SliderDisplaySaturationHSL(
 @Composable
 fun SliderDisplayLightnessHSL(
     modifier: Modifier,
-    lightness: Float,
+    @FloatRange(from = 0.0, to = 1.0) lightness: Float,
     onValueChange: (Float) -> Unit
 ) {
     TitledSliderDisplay(
@@ -227,14 +228,14 @@ fun SliderDisplayLightnessHSL(
 /**
  * Composable that shows a title as initial letter, title color and a Slider to select
  * [alpha] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param onValueChange callback that returns change in [alpha] when Slider is dragged
  */
 @Composable
 fun SliderDisplayAlphaHSL(
     modifier: Modifier,
-    hue: Float,
-    alpha: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float,
     onValueChange: (Float) -> Unit
 ) {
     TitledSliderDisplay(
@@ -263,7 +264,7 @@ fun SliderDisplayAlphaHSL(
 @Composable
 fun SliderDisplayRedRGB(
     modifier: Modifier,
-    red: Float,
+    @FloatRange(from = 0.0, to = 1.0) red: Float,
     onValueChange: (Float) -> Unit
 ) {
     TitledSliderDisplay(
@@ -288,7 +289,7 @@ fun SliderDisplayRedRGB(
 @Composable
 fun SliderDisplayGreenRGB(
     modifier: Modifier,
-    green: Float,
+    @FloatRange(from = 0.0, to = 1.0) green: Float,
     onValueChange: (Float) -> Unit
 ) {
     TitledSliderDisplay(
@@ -313,7 +314,7 @@ fun SliderDisplayGreenRGB(
 @Composable
 fun SliderDisplayBlueRGB(
     modifier: Modifier,
-    blue: Float,
+    @FloatRange(from = 0.0, to = 1.0) blue: Float,
     onValueChange: (Float) -> Unit
 ) {
     TitledSliderDisplay(
@@ -328,6 +329,7 @@ fun SliderDisplayBlueRGB(
         )
     }
 }
+
 /**
  * Composable that shows a title as initial letter, title color and a Slider to select
  * [alpha] in [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
@@ -340,10 +342,10 @@ fun SliderDisplayBlueRGB(
 @Composable
 fun SliderDisplayAlphaRGB(
     modifier: Modifier,
-    red: Float,
-    green: Float,
-    blue: Float,
-    alpha: Float,
+    @FloatRange(from = 0.0, to = 1.0) red: Float,
+    @FloatRange(from = 0.0, to = 1.0) green: Float,
+    @FloatRange(from = 0.0, to = 1.0) blue: Float,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float,
     onValueChange: (Float) -> Unit
 ) {
     TitledSliderDisplay(

@@ -13,16 +13,20 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 
 /**
- * Composable tht
+ * [Box] that draws checker pattern behind its [content] using [Modifier.drawChecker]
+ * @param size size of the checker. If size is [DpSize.Unspecified] **10.dp** is used by
+ * default.
+ * @param shape shape of the checker.
+ * @param content  The content of the Box.
  */
 @Composable
-private fun Checker(
+private fun CheckeredBox(
     modifier: Modifier,
     shape: Shape,
     size: DpSize = DpSize.Unspecified,
     content: @Composable () -> Unit
 ) {
-    Box(modifier.drawChecker(shape)) {
+    Box(modifier.drawChecker(shape, size)) {
         content()
     }
 }
@@ -31,8 +35,8 @@ private fun Checker(
  * Modify element to add checker with appearance specified with a [shape], and [size]
  * and clip it.
  * @param size size of the checker. If size is [DpSize.Unspecified] **10.dp** is used by
- * default
- * @param shape shape of the checker
+ * default.
+ * @param shape shape of the checker.
  */
 fun Modifier.drawChecker(shape: Shape, size: DpSize = DpSize.Unspecified) = this
     .clip(shape)
@@ -43,14 +47,12 @@ fun Modifier.drawChecker(shape: Shape, size: DpSize = DpSize.Unspecified) = this
                 val height = this.size.height
 
                 val checkerWidth =
-                    (if (size != DpSize.Unspecified) size.width.toPx() else 10.dp.toPx()).coerceAtMost(
-                        width / 2
-                    )
+                    (if (size != DpSize.Unspecified) size.width.toPx() else 10.dp.toPx())
+                        .coerceAtMost(width / 2)
 
                 val checkerHeight =
-                    (if (size != DpSize.Unspecified) size.height.toPx() else 10.dp.toPx()).coerceAtMost(
-                        height / 2
-                    )
+                    (if (size != DpSize.Unspecified) size.height.toPx() else 10.dp.toPx())
+                        .coerceAtMost(height / 2)
 
                 val horizontalSteps = (width / checkerWidth).toInt()
                 val verticalSteps = (height / checkerHeight).toInt()

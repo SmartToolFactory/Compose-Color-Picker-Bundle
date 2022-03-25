@@ -1,5 +1,6 @@
-package com.smarttoolfactory.colorpicker.widget
+package com.smarttoolfactory.colorpicker.slider
 
+import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.height
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.ui.brush.*
+import com.smarttoolfactory.colorpicker.widget.drawChecker
 import com.smarttoolfactory.slider.ColorBrush
 import com.smarttoolfactory.slider.ColorfulSlider
 import com.smarttoolfactory.slider.MaterialSliderDefaults
@@ -22,7 +24,7 @@ import com.smarttoolfactory.slider.MaterialSliderDefaults
 /**
  * [CheckeredColorfulSlider] is a slider to select
  * [hue] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param value in [0..1f]
  * @param onValueChange callback that returns change in [hue] when Slider is dragged
@@ -30,9 +32,9 @@ import com.smarttoolfactory.slider.MaterialSliderDefaults
 @Composable
 fun SliderHueHSV(
     modifier: Modifier = Modifier,
-    hue: Float,
-    saturation: Float,
-    value: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) value: Float,
     onValueChange: (Float) -> Unit
 ) {
     val sliderHueSelectionHSLGradient = sliderHueHSVGradient(
@@ -52,7 +54,7 @@ fun SliderHueHSV(
 /**
  * [CheckeredColorfulSlider] is a slider to select
  * [saturation] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param value in [0..1f]
  * @param onValueChange callback that returns change in [saturation] when Slider is dragged
@@ -60,9 +62,9 @@ fun SliderHueHSV(
 @Composable
 fun SliderSaturationHSV(
     modifier: Modifier = Modifier,
-    hue: Float,
-    saturation: Float,
-    value: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) value: Float,
     onValueChange: (Float) -> Unit
 ) {
     val sliderHueSelectionHSLGradient = sliderSaturationHSVGradient(
@@ -80,15 +82,15 @@ fun SliderSaturationHSV(
 /**
  * [CheckeredColorfulSlider] is a slider to select
  * [value] in [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param value in [0..1f]
  * @param onValueChange callback that returns change in [value] when Slider is dragged
  */
 @Composable
 fun SliderValueHSV(
     modifier: Modifier = Modifier,
-    hue: Float,
-    value: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) value: Float,
     onValueChange: (Float) -> Unit
 ) {
 
@@ -105,12 +107,14 @@ fun SliderValueHSV(
 /**
  * [CheckeredColorfulSlider] that displays [alpha] change in
  * [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
+ * @param hue in [0..360f]
+ * @param alpha in [0..1f]
  */
 @Composable
 fun SliderAlphaHSV(
     modifier: Modifier = Modifier,
-    hue: Float,
-    alpha: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float,
     onValueChange: (Float) -> Unit
 ) {
     val sliderAlphaHSLGradient = sliderAlphaHSVGradient(hue = hue)
@@ -130,7 +134,7 @@ fun SliderAlphaHSV(
 /**
  * [CheckeredColorfulSlider] is a slider to select
  * [hue] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param lightness in [0..1f]
  * @param onValueChange callback that returns change in [hue] when Slider is dragged
@@ -138,9 +142,9 @@ fun SliderAlphaHSV(
 @Composable
 fun SliderHueHSL(
     modifier: Modifier = Modifier,
-    hue: Float,
-    saturation: Float,
-    lightness: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) lightness: Float,
     onValueChange: (Float) -> Unit
 ) {
 
@@ -161,7 +165,7 @@ fun SliderHueHSL(
 /**
  * [CheckeredColorfulSlider] is a slider to select
  * [saturation] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param lightness in [0..1f]
  * @param onValueChange callback that returns change in [saturation] when Slider is dragged
@@ -169,9 +173,9 @@ fun SliderHueHSL(
 @Composable
 fun SliderSaturationHSL(
     modifier: Modifier = Modifier,
-    hue: Float,
-    saturation: Float,
-    lightness: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) lightness: Float,
     onValueChange: (Float) -> Unit
 ) {
 
@@ -190,18 +194,18 @@ fun SliderSaturationHSL(
 /**
  * [CheckeredColorfulSlider] is a slider to select
  * [lightness] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param lightness in [0..1f]
- * @param gradientStops number of stops for gradient of this slider. 2 stops return
+ * @param saturation in [0..1f]
  * white-black in hsl, others transition from hue with lightness.
  * @param onValueChange callback that returns change in [lightness] when Slider is dragged
  */
 @Composable
 fun SliderLightnessHSL(
     modifier: Modifier = Modifier,
-    hue: Float = 0f,
-    saturation: Float = 0f,
-    lightness: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float = 0f,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float = 0f,
+    @FloatRange(from = 0.0, to = 1.0) lightness: Float,
     onValueChange: (Float) -> Unit
 ) {
     val sliderLightnessGradient = sliderLightnessGradient(hue, saturation)
@@ -217,14 +221,15 @@ fun SliderLightnessHSL(
 /**
  * [CheckeredColorfulSlider] is a slider to select
  * [alpha] in [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model.
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
+ * @param alpha in [0..1f]
  * @param onValueChange callback that returns change in [alpha] when Slider is dragged
  */
 @Composable
 fun SliderAlphaHSL(
     modifier: Modifier = Modifier,
-    hue: Float,
-    alpha: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float,
     onValueChange: (Float) -> Unit
 ) {
     val sliderAlphaHSLGradient = sliderAlphaHSLGradient(hue = hue)
@@ -250,7 +255,7 @@ fun SliderAlphaHSL(
 @Composable
 fun SliderRedRGB(
     modifier: Modifier = Modifier,
-    red: Float,
+    @FloatRange(from = 0.0, to = 1.0) red: Float,
     onValueChange: (Float) -> Unit
 ) {
     val sliderRedGradient = sliderRedGradient()
@@ -271,7 +276,7 @@ fun SliderRedRGB(
 @Composable
 fun SliderGreenRGB(
     modifier: Modifier = Modifier,
-    green: Float,
+    @FloatRange(from = 0.0, to = 1.0) green: Float,
     onValueChange: (Float) -> Unit
 ) {
     val sliderGreenGradient = sliderGreenGradient()
@@ -292,7 +297,7 @@ fun SliderGreenRGB(
 @Composable
 fun SliderBlueRGB(
     modifier: Modifier = Modifier,
-    blue: Float,
+    @FloatRange(from = 0.0, to = 1.0) blue: Float,
     onValueChange: (Float) -> Unit
 ) {
     val sliderBlueGradient = sliderBlueGradient()
@@ -316,10 +321,10 @@ fun SliderBlueRGB(
 @Composable
 fun SliderAlphaRGB(
     modifier: Modifier = Modifier,
-    red: Float,
-    green: Float,
-    blue: Float,
-    alpha: Float,
+    @FloatRange(from = 0.0, to = 1.0) red: Float,
+    @FloatRange(from = 0.0, to = 1.0) green: Float,
+    @FloatRange(from = 0.0, to = 1.0) blue: Float,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float,
     onValueChange: (Float) -> Unit
 ) {
     val sliderAlphaRGBGradient = sliderAlphaRGBGradient(red, green, blue)

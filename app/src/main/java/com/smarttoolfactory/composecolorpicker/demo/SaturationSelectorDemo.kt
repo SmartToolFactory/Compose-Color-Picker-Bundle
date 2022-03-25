@@ -14,10 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.selector.SLSelectorFromHSLDiamond
 import com.smarttoolfactory.colorpicker.selector.SVSelectorFromHSVRectangle
+import com.smarttoolfactory.colorpicker.slider.*
 import com.smarttoolfactory.colorpicker.ui.Blue400
-import com.smarttoolfactory.colorpicker.ui.brush.sliderSaturationHSVGradient
-import com.smarttoolfactory.colorpicker.ui.brush.sliderValueGradient
-import com.smarttoolfactory.colorpicker.widget.*
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 
 @Composable

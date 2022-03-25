@@ -6,17 +6,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.colorpicker.argbToHex
+import com.smarttoolfactory.colorpicker.model.ColorHSL
+import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
 import com.smarttoolfactory.colorpicker.selector.SLSelectorFromHSLDiamond
-import com.smarttoolfactory.colorpicker.ui.Blue400
-import com.smarttoolfactory.colorpicker.widget.SliderDisplayPanelHSL
+import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.widget.drawChecker
 
 @Composable
@@ -28,96 +30,147 @@ fun ColorPickerDemo() {
             .padding(8.dp)
             .verticalScroll(rememberScrollState())
     ) {
+        val initialColor = Color(0xffccaa12)
 
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        val showColorDialog by remember { mutableStateOf(false) }
+        ColorPickerHSL(initialColor = initialColor)
+    }
+}
 
-            var hue by remember { mutableStateOf(0f) }
-            var saturation by remember { mutableStateOf(.5f) }
-            var lightness by remember { mutableStateOf(.5f) }
-            var alpha by remember { mutableStateOf(1f) }
+@Composable
+private fun ColorPickerHSL(initialColor: Color) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-            val color =
-                Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
 
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = "Color",
-                color = Blue400,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 12.dp)
+        var hue by remember { mutableStateOf(0f) }
+        var saturation by remember { mutableStateOf(.5f) }
+        var lightness by remember { mutableStateOf(.5f) }
+        var alpha by remember { mutableStateOf(1f) }
+
+        val currentColor =
+            Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
+
+        var hexString by remember {
+            mutableStateOf(
+                argbToHex(
+                    currentColor.alpha,
+                    currentColor.red,
+                    currentColor.green,
+                    currentColor.blue
+                )
             )
+        }
 
-            // Initial and Current Colors
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 50.dp, vertical = 20.dp)
-            ) {
+        var inputColorModel by remember { mutableStateOf(ColorModel.HSL) }
 
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(40.dp)
-                        .background(
-                            Color.Black,
-                            shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
-                        )
-                )
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(40.dp)
-                        .drawChecker(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp))
-                        .background(
-                            color,
-                            shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp)
-                        )
+        Spacer(modifier = Modifier.height(10.dp))
 
-                )
-            }
+        // Initial and Current Colors
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 50.dp, vertical = 10.dp)
+        ) {
 
-            // ColorWheel for hue selection
-            // SaturationDiamond for saturation and lightness selections
             Box(
-                modifier = Modifier,
-                contentAlignment = Alignment.Center
-            ) {
+                modifier = Modifier
+                    .weight(1f)
+                    .height(40.dp)
+                    .background(
+                        initialColor,
+                        shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
+                    )
+            )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(40.dp)
+                    .drawChecker(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp))
+                    .background(
+                        currentColor,
+                        shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp)
+                    )
+            )
+        }
 
-                HueSelectorRing(
-                    modifier = Modifier
-                        .width(350.dp)
-                        .aspectRatio(1f),
-                    selectionRadius = 8.dp
-                ) { hueChange ->
-                    hue = hueChange.toFloat()
-                }
+        // ColorWheel for hue selection
+        // SaturationDiamond for saturation and lightness selections
+        Box(
+            modifier = Modifier,
+            contentAlignment = Alignment.Center
+        ) {
 
-                Column {
-                    SLSelectorFromHSLDiamond(
-                        modifier = Modifier.size(200.dp),
-                        hue = hue,
-                        saturation = saturation,
-                        lightness = lightness,
-                        selectionRadius = 8.dp
-                    ) { s, l ->
-                        saturation = s
-                        lightness = l
-                    }
-                }
+            HueSelectorRing(
+                modifier = Modifier
+                    .width(350.dp)
+                    .aspectRatio(1f),
+                selectionRadius = 8.dp
+            ) { hueChange ->
+                hue = hueChange.toFloat()
             }
 
-            SliderDisplayPanelHSL(
-                modifier = Modifier.width(340.dp),
+            Column {
+                SLSelectorFromHSLDiamond(
+                    modifier = Modifier.size(200.dp),
+                    hue = hue,
+                    saturation = saturation,
+                    lightness = lightness,
+                    selectionRadius = 8.dp
+                ) { s, l ->
+                    saturation = s
+                    lightness = l
+                }
+            }
+        }
+
+        Row(modifier = Modifier.width(350.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+            TextButton(
+                onClick = { inputColorModel = ColorModel.HSL },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = "HSL", fontWeight = FontWeight.Bold)
+            }
+            TextButton(
+                onClick = { inputColorModel = ColorModel.HSV },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = "HSV", fontWeight = FontWeight.Bold)
+            }
+
+            TextButton(
+                onClick = { inputColorModel = ColorModel.RGB },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = "RGB", fontWeight = FontWeight.Bold)
+            }
+        }
+
+
+        CompositeSliderPanel(
+            modifier = Modifier.widthIn(340.dp),
+            compositeColor = ColorHSL(
                 hue = hue,
                 saturation = saturation,
                 lightness = lightness,
-                alpha = alpha,
-                onHueChange = { hue = it },
-                onSaturationChange = { saturation = it },
-                onLightnessChange = { lightness = it },
-                onAlphaChange = { alpha = it },
-            )
-        }
+                alpha = alpha
+            ),
+            onColorChange = {
+                (it as? ColorHSL)?.let { color ->
+                    println("COLOR: $color")
+                    hue = color.hue
+                    saturation = color.saturation
+                    lightness = color.lightness
+                    alpha = color.alpha
+                    hexString = color.argbHexString
+                }
+
+            },
+            showAlphaSlider = true,
+            inputColorModel = inputColorModel,
+            outputColorModel = ColorModel.HSL
+        )
+
+        Text(text =hexString)
+
     }
 }

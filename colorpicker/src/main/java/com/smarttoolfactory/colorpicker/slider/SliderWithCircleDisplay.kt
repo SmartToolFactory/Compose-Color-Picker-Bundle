@@ -1,5 +1,6 @@
-package com.smarttoolfactory.colorpicker.widget
+package com.smarttoolfactory.colorpicker.slider
 
+import androidx.annotation.FloatRange
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -9,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.colorpicker.widget.drawChecker
 import com.smarttoolfactory.slider.ColorfulSlider
 
 /**
@@ -16,7 +18,7 @@ import com.smarttoolfactory.slider.ColorfulSlider
  * for HSV color model. This composable requires minimum
  * 100.dp height, giving a height lower than this might break its layout.
  *
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param value in [0..1f]
  * @param alpha in [0..1f]
@@ -26,10 +28,10 @@ import com.smarttoolfactory.slider.ColorfulSlider
 @Composable
 fun SliderCircleColorDisplaySaturationHSV(
     modifier: Modifier = Modifier,
-    hue: Float,
-    saturation: Float,
-    value: Float,
-    alpha: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) value: Float,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float,
     onSaturationChange: (Float) -> Unit,
     onAlphaChange: (Float) -> Unit,
 ) {
@@ -56,7 +58,7 @@ fun SliderCircleColorDisplaySaturationHSV(
  * for HSV color model. This composable requires minimum
  * 100.dp height, giving a height lower than this might break its layout.
  *
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param value in [0..1f]
  * @param alpha in [0..1f]
@@ -66,10 +68,10 @@ fun SliderCircleColorDisplaySaturationHSV(
 @Composable
 fun SliderCircleColorDisplayValueHSV(
     modifier: Modifier = Modifier,
-    hue: Float,
-    saturation: Float,
-    value: Float,
-    alpha: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) value: Float,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float,
     onValueChange: (Float) -> Unit,
     onAlphaChange: (Float) -> Unit,
 ) {
@@ -96,7 +98,7 @@ fun SliderCircleColorDisplayValueHSV(
  * for HSL color model. This composable requires minimum
  * 100.dp height, giving a height lower than this might break its layout.
  *
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param lightness in [0..1f]
  * @param alpha in [0..1f]
@@ -106,10 +108,10 @@ fun SliderCircleColorDisplayValueHSV(
 @Composable
 fun SliderCircleColorDisplaySaturationHSL(
     modifier: Modifier = Modifier,
-    hue: Float,
-    saturation: Float,
-    lightness: Float,
-    alpha: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) lightness: Float,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float,
     onSaturationChange: (Float) -> Unit,
     onAlphaChange: (Float) -> Unit,
 ) {
@@ -132,7 +134,7 @@ fun SliderCircleColorDisplaySaturationHSL(
  * for HSL color model. This composable requires minimum
  * 100.dp height, giving a height lower than this might break its layout.
  *
- * @param hue in [0..1f]
+ * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param lightness in [0..1f]
  * @param alpha in [0..1f]
@@ -142,9 +144,9 @@ fun SliderCircleColorDisplaySaturationHSL(
 @Composable
 fun SliderCircleColorDisplayLightnessHSL(
     modifier: Modifier = Modifier,
-    hue: Float,
-    saturation: Float,
-    lightness: Float,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) lightness: Float,
     alpha: Float,
     onLightnessChange: (Float) -> Unit,
     onAlphaChange: (Float) -> Unit,

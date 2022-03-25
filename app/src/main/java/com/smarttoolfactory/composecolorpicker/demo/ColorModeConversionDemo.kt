@@ -18,9 +18,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.*
 import com.smarttoolfactory.colorpicker.ui.Orange400
-import com.smarttoolfactory.colorpicker.widget.SliderDisplayPanelHSL
-import com.smarttoolfactory.colorpicker.widget.SliderDisplayPanelHSV
+import com.smarttoolfactory.colorpicker.slider.SliderDisplayPanelHSL
+import com.smarttoolfactory.colorpicker.slider.SliderDisplayPanelHSV
+import com.smarttoolfactory.colorpicker.slider.SliderDisplayPanelRGBA
 import com.smarttoolfactory.colorpicker.widget.drawChecker
+import kotlin.math.roundToInt
 
 /**
  * Converting from HSV or HSL to RGB and then from RGB to HSV or HSL doesn't bear correct
@@ -59,7 +61,6 @@ fun ColorModeConversionDemo() {
         HSLSliderDisplayPanelExample(modifier, sliderModifier, boxModifier)
     }
 }
-
 
 @Composable
 private fun HSVSliderDisplayPanelExample(
@@ -422,3 +423,175 @@ private fun CheckColorConversionDetailsFromHSL(
         color = if (!areHSLColorsSame) Color.Red else Color.LightGray
     )
 }
+
+
+
+@Composable
+fun SliderDisplayPanelColorFromHSV(
+    modifier: Modifier,
+    color: Color,
+    onColorChange: (Color) -> Unit,
+    showAlpha: Boolean
+) {
+    val red = color.red
+    val green = color.green
+    val blue = color.blue
+    val alpha = color.alpha
+
+    val hsvArray =
+        rgbToHSV(red.fractionToRGBRange(), green.fractionToRGBRange(), blue.fractionToRGBRange())
+
+    val hue = hsvArray[0]
+    val saturation = hsvArray[1]
+    val value = hsvArray[2]
+
+    val alphaLambda: ((Float) -> Unit)? = if (showAlpha) { alphaChange ->
+        onColorChange(
+            Color.hsv(hue, saturation, value, alphaChange)
+        )
+
+    } else null
+
+    SliderDisplayPanelHSV(
+        modifier = modifier,
+        hue = hue,
+        saturation = saturation,
+        value = value,
+        alpha = alpha,
+        onHueChange = { hueChange ->
+            onColorChange(
+                Color.hsv(hueChange, saturation, value, alpha)
+            )
+        },
+        onSaturationChange = { saturationChange ->
+            onColorChange(
+                Color.hsv(hue, saturationChange, value, alpha)
+            )
+
+        },
+        onValueChange = { valueChange ->
+            onColorChange(
+                Color.hsv(hue, saturation, valueChange, alpha)
+            )
+
+        },
+        onAlphaChange = alphaLambda,
+    )
+}
+
+
+@Composable
+fun SliderDisplayPanelColorFromHSL(
+    modifier: Modifier,
+    color: Color,
+    onColorChange: (Color) -> Unit,
+    showAlpha: Boolean
+) {
+    val red = color.red
+    val green = color.green
+    val blue = color.blue
+    val alpha = color.alpha
+
+
+    val hslArray =
+        rgbToHSL(red.fractionToRGBRange(), green.fractionToRGBRange(), blue.fractionToRGBRange())
+
+    val hue = hslArray[0]
+    val saturation = (hslArray[1] * 100).roundToInt() / 100f
+    val lightness = (hslArray[2] * 100).roundToInt() / 100f
+
+//    println("🔥 SliderDisplayPanelColorFromHSL red: $red, green: $green, blue: $blue")
+    println("🔥 SliderDisplayPanelColorFromHSL red: $red, green: $green, blue: $blue, hue: $hue, saturation: $saturation, lightness: $lightness")
+//    println("🔥 SliderDisplayPanelColorFromHSL2 hue: ${hslArray2[0]}, saturation: ${hslArray2[1]}, lightness: ${hslArray2[2]}")
+
+
+    val alphaLambda: ((Float) -> Unit)? = if (showAlpha) { alphaChange ->
+        onColorChange(
+            Color.hsl(hue, saturation, lightness, alphaChange)
+        )
+
+    } else null
+
+    SliderDisplayPanelHSL(
+        modifier = modifier,
+        hue = hue,
+        saturation = saturation,
+        lightness = lightness,
+        alpha = alpha,
+        onHueChange = { hueChange ->
+            onColorChange(
+                Color.hsl(hueChange, saturation, lightness, alpha)
+            )
+        },
+        onSaturationChange = { saturationChange ->
+            onColorChange(
+                Color.hsl(hue, saturationChange, lightness, alpha)
+            )
+
+        },
+        onLightnessChange = { lightnessChange ->
+
+            val newLightness = ((lightnessChange * 100).roundToInt()) / 100f
+            val newSaturation = ((saturation * 100).roundToInt()) / 100f
+            val lightnessColor = Color.hsl(hue, newSaturation, newLightness, alpha)
+            println("😱SliderDisplayPanelColorFromHSL hue: $hue, saturation: $saturation, newSaturation: $newSaturation, lightnessChange: $lightnessChange, newLightness: $newLightness")
+//            val hslArrayNew = colorToHSL(lightnessColor)
+//
+//            println("😱😱SliderDisplayPanelColorFromHSL NEW hue: ${hslArrayNew[0]}, sat: ${hslArrayNew[1]}, light: ${hslArrayNew[2]}")
+            onColorChange(
+                lightnessColor
+            )
+
+        },
+        onAlphaChange = alphaLambda,
+    )
+}
+
+@Composable
+fun SliderDisplayPanelColorFromRGBA(
+    modifier: Modifier,
+    color: Color,
+    onColorChange: (Color) -> Unit,
+    showAlpha: Boolean
+) {
+    val red = color.red
+    val green = color.green
+    val blue = color.blue
+    val alpha = color.alpha
+
+    println("🔥 SliderDisplayPanelColorFromRGBA red: $red, green: $green, blue: $blue")
+
+    val alphaLambda: ((Float) -> Unit)? = if (showAlpha) { alphaChange ->
+        onColorChange(
+            Color(red, green, blue, alpha)
+        )
+
+    } else null
+
+    SliderDisplayPanelRGBA(
+        modifier = modifier,
+        red = red,
+        green = green,
+        blue = blue,
+        alpha = alpha,
+        onRedChange = { redChange ->
+            onColorChange(
+                Color(redChange, green, blue, alpha)
+            )
+        },
+        onGreenChange = { greenChange ->
+            onColorChange(
+                Color(red, greenChange, blue, alpha)
+            )
+
+        },
+        onBlueChange = { blueChange ->
+            onColorChange(
+                Color(red, green, blueChange, alpha)
+            )
+
+        },
+        onAlphaChange = alphaLambda,
+    )
+}
+
