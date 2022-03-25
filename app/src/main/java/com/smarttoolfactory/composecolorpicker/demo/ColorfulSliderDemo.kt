@@ -331,7 +331,6 @@ private fun HSLSliderDisplayExamples(
             saturation = saturation,
             lightness = lightness,
             onValueChange = {
-                println("🔥 HUE $hue")
                 hue = it
             }
         )

@@ -23,38 +23,56 @@ import com.smarttoolfactory.gesture.pointerMotionEvents
 /**
  * Hue selector Ring that selects hue based on rotation of circle selector.
  *
+ * @param hue
+ * @param outerRadiusRatio
+ * @param innerRadiusRatio
+ * @param borderStroke
+ * @param borderStrokeWidth
+ * @param backgroundColor
  * @param selectionRadius radius of selection circle that moves based on touch position
  */
 @Composable
 fun HueSelectorRing(
     modifier: Modifier = Modifier,
-    selectionRadius: Dp = (-1).dp,
+    hue: Float,
+    outerRadiusRatio: Float = .9f,
+    innerRadiusRatio: Float = .6f,
+    borderStroke: Color = Color.Black,
+    borderStrokeWidth: Dp = 2.dp,
+    backgroundColor: Color = Color.Black,
+    selectionRadius: Dp = Dp.Unspecified,
     onChange: (Int) -> Unit
 ) {
 
     BoxWithConstraints(modifier) {
+
+        require(maxWidth == maxHeight)
+
+        // Angle from center is required to get Hue which is between 0-360
+        var angle by remember { mutableStateOf(hue.toInt()) }
+        angle = hue.toInt()
 
         val density = LocalDensity.current.density
 
         // Check if user touches between the valid area of circle
         var isTouched by remember { mutableStateOf(false) }
 
-        // Angle from center is required to get Hue which is between 0-360
-        var angle by remember { mutableStateOf(0) }
+        val width = constraints.maxWidth.toFloat()
+        val radius = width / 2
 
         // Center position of color picker
-        var center by remember { mutableStateOf(Offset.Zero) }
+        val center = Offset(radius, radius)
 
-        var radiusOuter by remember { mutableStateOf(0f) }
-        var radiusInner by remember { mutableStateOf(0f) }
+        val radiusInner: Float = (radius * innerRadiusRatio).coerceAtLeast(0f)
+        val radiusOuter: Float = (radius * outerRadiusRatio).coerceAtLeast(radiusInner)
 
         /**
          * Circle selector radius for setting [angle] which sets hue
          */
         val selectorRadius =
-            (if (selectionRadius > 0.dp) selectionRadius.value * density
-            else radiusInner * 2 * .04f)
-                .coerceAtMost(radiusOuter - radiusInner)
+            if (selectionRadius == Dp.Unspecified)
+                (radiusInner * 2 * .04f).coerceAtMost(radiusOuter - radiusInner)
+            else selectionRadius.value * density
 
         val colorPickerModifier = modifier
             .clipToBounds()
@@ -94,17 +112,6 @@ fun HueSelectorRing(
 
         Canvas(modifier = colorPickerModifier) {
 
-            val canvasWidth = this.size.width
-            val canvasHeight = this.size.height
-
-            val cX = canvasWidth / 2
-            val cY = canvasHeight / 2
-            val canvasRadius = canvasWidth.coerceAtMost(canvasHeight) / 2f
-            center = Offset(cX, cY)
-
-            radiusOuter = canvasRadius * .9f
-            radiusInner = canvasRadius * .65f
-
             val strokeWidth = (radiusOuter - radiusInner)
 
             drawCircle(
@@ -115,6 +122,9 @@ fun HueSelectorRing(
                     width = strokeWidth
                 )
             )
+
+            // This is background color from center to inner radius
+            drawCircle(color = backgroundColor, radius = radiusInner)
 
             // Stroke draws half in and half out of the current radius.
             // with 200 radius 20 stroke width starts from 190 and ends at 210

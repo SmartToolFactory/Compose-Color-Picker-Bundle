@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.argbToHex
 import com.smarttoolfactory.colorpicker.model.ColorHSL
 import com.smarttoolfactory.colorpicker.model.ColorModel
@@ -104,6 +105,7 @@ private fun ColorPickerHSL(initialColor: Color) {
                 modifier = Modifier
                     .width(350.dp)
                     .aspectRatio(1f),
+                hue = hue,
                 selectionRadius = 8.dp
             ) { hueChange ->
                 hue = hueChange.toFloat()
@@ -156,7 +158,6 @@ private fun ColorPickerHSL(initialColor: Color) {
             ),
             onColorChange = {
                 (it as? ColorHSL)?.let { color ->
-                    println("COLOR: $color")
                     hue = color.hue
                     saturation = color.saturation
                     lightness = color.lightness
@@ -170,7 +171,12 @@ private fun ColorPickerHSL(initialColor: Color) {
             outputColorModel = ColorModel.HSL
         )
 
-        Text(text =hexString)
+        Text(
+            text = hexString,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            color = currentColor
+        )
 
     }
 }
