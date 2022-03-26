@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.slider.*
 import com.smarttoolfactory.colorpicker.ui.Blue400
-import com.smarttoolfactory.colorpicker.widget.*
+import com.smarttoolfactory.colorpicker.widget.drawChecker
 
 @Composable
 fun ColorfulSliderDemo() {

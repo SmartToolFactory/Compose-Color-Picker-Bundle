@@ -252,9 +252,9 @@ fun hsvToColor(
  */
 fun colorToHSV(color: Color, hslIn: FloatArray) {
     val rgbArray: IntArray = colorIntToRGBArray(color.toArgb())
-    val red = rgbArray[1]
-    val green = rgbArray[2]
-    val blue = rgbArray[3]
+    val red = rgbArray[0]
+    val green = rgbArray[1]
+    val blue = rgbArray[2]
     rgbToHSV(red, green, blue, hslIn)
 }
 
@@ -268,9 +268,9 @@ fun colorToHSV(color: Color, hslIn: FloatArray) {
  */
 fun colorToHSV(color: Color): FloatArray {
     val rgbArray: IntArray = colorIntToRGBArray(color.toArgb())
-    val red = rgbArray[1]
-    val green = rgbArray[2]
-    val blue = rgbArray[3]
+    val red = rgbArray[0]
+    val green = rgbArray[1]
+    val blue = rgbArray[2]
     return rgbToHSV(red, green, blue)
 }
 
@@ -285,9 +285,9 @@ fun colorToHSV(color: Color): FloatArray {
  */
 fun colorToHSL(color: Color, hslIn: FloatArray) {
     val rgbArray: IntArray = colorIntToRGBArray(color.toArgb())
-    val red = rgbArray[1]
-    val green = rgbArray[2]
-    val blue = rgbArray[3]
+    val red = rgbArray[0]
+    val green = rgbArray[1]
+    val blue = rgbArray[2]
     rgbToHSL(red, green, blue, hslIn)
 }
 
@@ -301,9 +301,9 @@ fun colorToHSL(color: Color, hslIn: FloatArray) {
  */
 fun colorToHSL(color: Color): FloatArray {
     val rgbArray: IntArray = colorIntToRGBArray(color.toArgb())
-    val red = rgbArray[1]
-    val green = rgbArray[2]
-    val blue = rgbArray[3]
+    val red = rgbArray[0]
+    val green = rgbArray[1]
+    val blue = rgbArray[2]
     return rgbToHSL(red, green, blue)
 }
 
@@ -947,9 +947,9 @@ fun colorToARGBArray(color: Color): IntArray {
  */
 fun colorToRGBArray(color: Color, rgbIn: IntArray) {
     val argbArray = colorIntToRGBArray(color.toArgb())
-    rgbIn[0] = argbArray[1]
-    rgbIn[1] = argbArray[2]
-    rgbIn[2] = argbArray[3]
+    rgbIn[0] = argbArray[0]
+    rgbIn[1] = argbArray[1]
+    rgbIn[2] = argbArray[2]
 }
 
 /*

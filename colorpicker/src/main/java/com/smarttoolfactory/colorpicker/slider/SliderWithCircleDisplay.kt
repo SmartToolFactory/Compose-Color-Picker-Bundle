@@ -14,6 +14,44 @@ import com.smarttoolfactory.colorpicker.widget.drawChecker
 import com.smarttoolfactory.slider.ColorfulSlider
 
 /**
+ * Slider with Circle on left and 2 sliders on right side that display [hue] and [alpha]
+ * for HSV color model. This composable requires minimum
+ * 100.dp height, giving a height lower than this might break its layout.
+ *
+ * @param hue in [0..360f]
+ * @param saturation in [0..1f]
+ * @param value in [0..1f]
+ * @param alpha in [0..1f]
+ * @param onHueChange callback that returns change in [hue] when Slider is dragged
+ * @param onAlphaChange callback that returns change in [alpha] when Slider is dragged
+ */
+@Composable
+fun SliderCircleColorDisplayHueHSV(
+    modifier: Modifier = Modifier,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) value: Float,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float,
+    onHueChange: (Float) -> Unit,
+    onAlphaChange: (Float) -> Unit,
+) {
+    SliderWithCircleDisplay(
+        modifier = modifier,
+        color = Color.hsv(hue, saturation, value, alpha)
+    ) {
+
+        SliderHueHSV(
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            onValueChange = onHueChange
+        )
+
+        SliderAlphaHSL(hue = hue, alpha = alpha, onValueChange = onAlphaChange)
+    }
+}
+
+/**
  * Slider with Circle on left and 2 sliders on right side that display [saturation] and [alpha]
  * for HSV color model. This composable requires minimum
  * 100.dp height, giving a height lower than this might break its layout.
@@ -90,6 +128,45 @@ fun SliderCircleColorDisplayValueHSV(
             alpha = alpha,
             onValueChange = onAlphaChange
         )
+    }
+}
+
+
+/**
+ * Slider with Circle on left and 2 sliders on right side that display [hue] and [alpha]
+ * for HSL color model. This composable requires minimum
+ * 100.dp height, giving a height lower than this might break its layout.
+ *
+ * @param hue in [0..360f]
+ * @param saturation in [0..1f]
+ * @param lightness in [0..1f]
+ * @param alpha in [0..1f]
+ * @param onHueChange callback that returns change in [hue] when Slider is dragged
+ * @param onAlphaChange callback that returns change in [alpha] when Slider is dragged
+ */
+@Composable
+fun SliderCircleColorDisplayHueHSL(
+    modifier: Modifier = Modifier,
+    @FloatRange(from = 0.0, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float,
+    @FloatRange(from = 0.0, to = 1.0) lightness: Float,
+    @FloatRange(from = 0.0, to = 1.0) alpha: Float,
+    onHueChange: (Float) -> Unit,
+    onAlphaChange: (Float) -> Unit,
+) {
+    SliderWithCircleDisplay(
+        modifier = modifier,
+        color = Color.hsl(hue, saturation, lightness, alpha)
+    ) {
+
+        SliderHueHSL(
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            onValueChange = onHueChange
+        )
+
+        SliderAlphaHSL(hue = hue, alpha = alpha, onValueChange = onAlphaChange)
     }
 }
 

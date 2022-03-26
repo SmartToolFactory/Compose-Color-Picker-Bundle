@@ -1,5 +1,6 @@
 package com.smarttoolfactory.colorpicker.selector
 
+import androidx.annotation.FloatRange
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.size
@@ -18,7 +19,6 @@ import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.drawIntoLayer
 import com.smarttoolfactory.colorpicker.ui.GradientAngle
 import com.smarttoolfactory.colorpicker.ui.GradientOffset
@@ -28,10 +28,10 @@ import com.smarttoolfactory.gesture.pointerMotionEvents
 @Composable
 fun SaturationPickerDiamondHSV(
     modifier: Modifier = Modifier,
-    hue: Float,
-    saturation: Float = 0.5f,
-    value: Float = 0.5f,
-    selectionRadius: Dp = (-1).dp,
+    @FloatRange(from = 0.1, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float = 0.5f,
+    @FloatRange(from = 0.0, to = 1.0) value: Float = 0.5f,
+    selectionRadius: Dp = Dp.Unspecified,
     onChange: (Float, Float) -> Unit
 ) {
 
@@ -52,18 +52,29 @@ fun SaturationPickerDiamondHSV(
  *  * Since **lightness* should be on top but position system of **Canvas** starts from top-left
  *  corner(0,0) we need to reverse **lightness**.
  *
+ *  @param hue is in [0f..360f] of HSL color
+ *  @param saturation is in [0f..1f] of HSL color
+ *  @param lightness is in [0f..1f] of HSL color
+ *  @param selectionRadius radius of hue selection circle
+ *  @param onChange callback that returns [hue] and [lightness]
+ *  when position of touch in this selector has changed.
+ *
  */
 @Composable
 fun SLSelectorFromHSLDiamond(
     modifier: Modifier = Modifier,
-    hue: Float,
-    saturation: Float = .5f,
-    lightness: Float = .5f,
-    selectionRadius: Dp = (-1).dp,
+    @FloatRange(from = 0.1, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float = 0.5f,
+    @FloatRange(from = 0.0, to = 1.0) lightness: Float = 0.5f,
+    selectionRadius: Dp = Dp.Unspecified,
     onChange: (Float, Float) -> Unit
 ) {
 
     BoxWithConstraints(modifier) {
+
+        require(maxWidth == maxHeight) {
+            "Hue selector should have equal width and height"
+        }
 
         val density = LocalDensity.current.density
 
@@ -77,7 +88,10 @@ fun SLSelectorFromHSLDiamond(
          * Circle selector radius for setting [saturation] and [lightness] by gesture
          */
         val selectorRadius =
-            if (selectionRadius > 0.dp) selectionRadius.value * density else length * .04f
+            if (selectionRadius != Dp.Unspecified) selectionRadius.value * density
+            else length * .04f
+
+        val center = length / 2f
 
         /**
          *  Current position is initially set by [saturation] and [lightness] that is bound
@@ -86,11 +100,12 @@ fun SLSelectorFromHSLDiamond(
          *  When user touches anywhere in diamond current position is updaed and
          *  this composable is recomposed
          */
-        var currentPosition by remember(saturation, lightness) {
-            mutableStateOf(
-                setSelectorPositionFromColorParams(saturation, lightness, length)
-            )
+        var currentPosition by remember {
+            mutableStateOf(Offset(center, center))
         }
+
+        // Convert from user values to offset
+        currentPosition = setSelectorPositionFromColorParams(saturation, lightness, length)
 
         /**
          * Check if first pointer that touched this compsable inside bounds of diamond
@@ -190,11 +205,9 @@ fun SLSelectorFromHSLDiamond(
             }
 
             // Saturation and Value or Lightness selector
-            drawCircle(
-                Color.White,
-                radius = selectorRadius,
+            drawHueSelectionCircle(
                 center = currentPosition,
-                style = Stroke(width = selectorRadius / 2)
+                radius = selectorRadius
             )
         }
     }

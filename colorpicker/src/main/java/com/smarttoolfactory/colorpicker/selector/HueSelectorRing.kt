@@ -1,5 +1,6 @@
 package com.smarttoolfactory.colorpicker.selector
 
+import androidx.annotation.FloatRange
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.runtime.*
@@ -23,34 +24,38 @@ import com.smarttoolfactory.gesture.pointerMotionEvents
 /**
  * Hue selector Ring that selects hue based on rotation of circle selector.
  *
- * @param hue
- * @param outerRadiusRatio
- * @param innerRadiusRatio
- * @param borderStroke
- * @param borderStrokeWidth
- * @param backgroundColor
+ * @param hue is in [0f..360f] of HSL color. Touching any point in ring returns angle between
+ * touch point and center
+ * @param outerRadiusRatio radius ratio of outer radius of ring in percent
+ * @param innerRadiusRatio radius ratio of inner radius of ring in percent
+ * @param borderStrokeColor color for drawing border outer and inner positions of ring
+ * @param borderStrokeWidth width of stroke for drawing border inner and outer positions of ring
+ * @param backgroundColor is the color of circle drawn from center to inner radius
  * @param selectionRadius radius of selection circle that moves based on touch position
+ * @param onChange callback that returns [hue] on user touch
  */
 @Composable
 fun HueSelectorRing(
     modifier: Modifier = Modifier,
-    hue: Float,
-    outerRadiusRatio: Float = .9f,
-    innerRadiusRatio: Float = .6f,
-    borderStroke: Color = Color.Black,
-    borderStrokeWidth: Dp = 2.dp,
+    @FloatRange(from = 0.1, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) outerRadiusRatio: Float = .9f,
+    @FloatRange(from = 0.0, to = 1.0) innerRadiusRatio: Float = .6f,
+    borderStrokeColor: Color = Color.Black,
+    borderStrokeWidth: Dp = 4.dp,
     backgroundColor: Color = Color.Black,
     selectionRadius: Dp = Dp.Unspecified,
-    onChange: (Int) -> Unit
+    onChange: (Float) -> Unit
 ) {
 
     BoxWithConstraints(modifier) {
 
-        require(maxWidth == maxHeight)
+        require(maxWidth == maxHeight) {
+            "Hue selector should have equal width and height"
+        }
 
         // Angle from center is required to get Hue which is between 0-360
-        var angle by remember { mutableStateOf(hue.toInt()) }
-        angle = hue.toInt()
+        // only changes with touch, hue is used for drawing, this is for recomposition after touch
+        var angle by remember { mutableStateOf(hue) }
 
         val density = LocalDensity.current.density
 
@@ -60,11 +65,17 @@ fun HueSelectorRing(
         val width = constraints.maxWidth.toFloat()
         val radius = width / 2
 
-        // Center position of color picker
+        // Center Offset of selector
         val center = Offset(radius, radius)
 
         val radiusInner: Float = (radius * innerRadiusRatio).coerceAtLeast(0f)
         val radiusOuter: Float = (radius * outerRadiusRatio).coerceAtLeast(radiusInner)
+
+        // Border stroke width for inner and outer radius positions
+        val borderStrokeWidthPx =
+            (borderStrokeWidth.value * density).coerceAtMost(radiusInner * .2f)
+
+        val coerced = hue.coerceIn(0f, 360f)
 
         /**
          * Circle selector radius for setting [angle] which sets hue
@@ -114,35 +125,41 @@ fun HueSelectorRing(
 
             val strokeWidth = (radiusOuter - radiusInner)
 
+            // Draw hue selection circle with sweep gradient
             drawCircle(
                 brush = Brush.sweepGradient(colors = gradientColorScaleRGB, center = center),
                 radius = radiusInner + strokeWidth / 2,
-
                 style = Stroke(
                     width = strokeWidth
                 )
             )
 
-            // This is background color from center to inner radius
+            // draw background with background color from center to inner radius
             drawCircle(color = backgroundColor, radius = radiusInner)
 
             // Stroke draws half in and half out of the current radius.
             // with 200 radius 20 stroke width starts from 190 and ends at 210
-            drawCircle(Color.Black, radiusInner - 7f, style = Stroke(width = 14f))
-            drawCircle(Color.Black, radiusOuter + 7f, style = Stroke(width = 14f))
+            drawCircle(
+                color = borderStrokeColor,
+                radius = radiusInner - borderStrokeWidthPx / 2,
+                style = Stroke(width = borderStrokeWidthPx)
+            )
+            drawCircle(
+                color = borderStrokeColor,
+                radius = radiusOuter + borderStrokeWidthPx / 2,
+                style = Stroke(width = borderStrokeWidthPx)
+            )
 
             // rotate selection circle based on hue value
             withTransform(
                 {
-                    rotate(degrees = -angle.toFloat())
+                    rotate(degrees = -coerced)
                 }
             ) {
                 // draw hue selection circle
-                drawCircle(
-                    Color.White,
-                    radius = selectorRadius,
+                drawHueSelectionCircle(
                     center = Offset(center.x + radiusInner + strokeWidth / 2f, center.y),
-                    style = Stroke(width = selectorRadius / 2)
+                    radius = selectorRadius
                 )
             }
         }

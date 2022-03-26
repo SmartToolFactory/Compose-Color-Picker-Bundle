@@ -5,15 +5,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.colorpicker.selector.SLSelectorFromHSLDiamond
-import com.smarttoolfactory.colorpicker.selector.SVSelectorFromHSVRectangle
+import com.smarttoolfactory.colorpicker.selector.*
 import com.smarttoolfactory.colorpicker.slider.*
 import com.smarttoolfactory.colorpicker.ui.Blue400
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
@@ -28,138 +30,330 @@ fun SaturationSelectorDemo() {
             .padding(8.dp)
             .verticalScroll(rememberScrollState())
     ) {
-
-        var hue by remember { mutableStateOf(0f) }
-        var saturationHSL by remember { mutableStateOf(.5f) }
-        var saturationHSV by remember { mutableStateOf(.5f) }
-        var lightness by remember { mutableStateOf(.5f) }
-        var value by remember { mutableStateOf(.5f) }
-
-//        val color = Color.hsl(hue = hue, saturation = saturation, lightness = lightness)
-        val colorHSL = Color.hsl(hue = hue, saturation = saturationHSL, lightness = lightness)
-        val colorHSV = Color.hsv(hue = hue, saturation = saturationHSV, value = value)
-
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            val selectorModifier = Modifier
+                .size(300.dp)
+                .padding(20.dp)
+            val cardModifier = Modifier
+                .padding(8.dp)
+                .shadow(1.dp, RoundedCornerShape(2.dp))
+                .background(Color.White)
 
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // Initial and Current Colors
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 50.dp, vertical = 20.dp)
-            ) {
-
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(40.dp)
-                        .background(
-                            colorHSL,
-                            shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
-                        )
-                )
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(40.dp)
-                        .background(
-                            colorHSV,
-                            shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp)
-                        )
-                )
-            }
-
-            // ColorWheel for hue selection
-            // SaturationDiamond for saturation and lightness selections
-            Box(
-                modifier = Modifier.padding(8.dp),
-                contentAlignment = Alignment.Center
-            ) {
-
-                Column {
-                    SLSelectorFromHSLDiamond(
-                        modifier = Modifier.size(200.dp),
-                        hue = hue,
-                        saturation = saturationHSL,
-                        lightness = lightness,
-                        selectionRadius = 8.dp
-                    ) { s, l ->
-                        saturationHSL = s
-                        lightness = l
-                    }
-
-
-                    Spacer(modifier = Modifier.height(20.dp))
-                    SVSelectorFromHSVRectangle(
-                        modifier = Modifier.size(200.dp),
-                        hue = hue,
-                        saturation = saturationHSV,
-                        value = value,
-                        selectionRadius = 8.dp
-                    ) { s, v ->
-                        saturationHSV = s
-                        value = v
-                    }
-                }
-            }
-
-            /*
-                Sliders
-             */
-
-            SliderHueHSL(
-                modifier = Modifier.width(300.dp),
-                hue = hue,
-                saturation = saturationHSL,
-                lightness = lightness,
-                onValueChange = {result ->
-                    hue = result
-                }
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text("HSL Sliders", fontSize = 16.sp, color = Blue400)
-
-            SliderSaturationHSL(
-                modifier = Modifier.width(300.dp),
-                hue = hue,
-                saturation = saturationHSL,
-                lightness = lightness,
-                onValueChange = { result ->
-                    saturationHSL = result
-                }
-            )
-
-            SliderLightnessHSL(
-                modifier = Modifier.width(300.dp),
-                lightness = lightness,
-                onValueChange = { result ->
-                    lightness = result
-                }
-            )
-
-            Text("HSV Sliders", fontSize = 16.sp, color = Blue400)
-            SliderSaturationHSV(
-                modifier = Modifier.width(300.dp),
-                hue = hue,
-                saturation = saturationHSV,
-                value = value,
-                onValueChange = { result ->
-                    saturationHSV = result
-                }
-            )
-
-            SliderValueHSV(
-                modifier = Modifier.width(300.dp),
-                hue = hue,
-                value = value,
-                onValueChange = { result ->
-                    value = result
-                }
-            )
-            Spacer(modifier = Modifier.height(4.dp))
+            SLWithHSLDiamondExample(cardModifier, selectorModifier)
+            Spacer(modifier = Modifier.height(20.dp))
+            SVSelectorWithHSVRectangleExample(cardModifier, selectorModifier)
+            Spacer(modifier = Modifier.height(20.dp))
+            HSSelectorHSVCircleExample(cardModifier, selectorModifier)
+            Spacer(modifier = Modifier.height(20.dp))
+            HSSelectorWithHSVRectangleExample(cardModifier, selectorModifier)
+            Spacer(modifier = Modifier.height(20.dp))
+            HVSelectorWithHSVRectangleExample(cardModifier, selectorModifier)
+            Spacer(modifier = Modifier.height(20.dp))
+            HSSelectorWithHSLRectangleExample(cardModifier, selectorModifier)
+            Spacer(modifier = Modifier.height(20.dp))
+            HLSelectorWithHSLRectangleExample(cardModifier, selectorModifier)
         }
     }
+}
+
+@Composable
+fun SLWithHSLDiamondExample(modifier: Modifier, selectorModifier: Modifier) {
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var lightness by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    Title(text = "Saturation-Lightness Selector Diamond HSL")
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        SLSelectorFromHSLDiamond(
+            modifier = selectorModifier,
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            selectionRadius = 8.dp
+        ) { s, l ->
+            saturation = s
+            lightness = l
+        }
+
+        SliderCircleColorDisplayHueHSL(
+            modifier = Modifier.padding(8.dp),
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            alpha = alpha,
+            onHueChange = {
+                hue = it
+            },
+            onAlphaChange = {
+                alpha = it
+            }
+        )
+    }
+
+}
+
+@Composable
+private fun SVSelectorWithHSVRectangleExample(modifier: Modifier, selectorModifier: Modifier) {
+
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var value by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    Title(text = "Saturation-Value Selector Rect HSV")
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        SVSelectorFromHSVRectangle(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            selectionRadius = 8.dp
+        ) { s, v ->
+            saturation = s
+            value = v
+        }
+
+        SliderCircleColorDisplayHueHSV(
+            modifier = Modifier.padding(8.dp),
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            alpha = alpha,
+            onHueChange = {
+                hue = it
+            },
+            onAlphaChange = {
+                alpha = it
+            }
+        )
+    }
+}
+
+@Composable
+private fun HSSelectorHSVCircleExample(modifier: Modifier, selectorModifier: Modifier) {
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var value by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    Title(text = "Hue-Saturation Selector Circle HSV")
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HueSaturationSelectorCircle(
+            modifier = selectorModifier,
+            hue = hue,
+            saturation = saturation,
+            selectionRadius = 8.dp
+        ) { h, s ->
+            hue = h
+            saturation = s
+
+        }
+
+        SliderCircleColorDisplayValueHSV(
+            modifier = Modifier.padding(8.dp),
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            alpha = alpha,
+            onValueChange = {
+                value = it
+            },
+            onAlphaChange = {
+                alpha = it
+            }
+        )
+    }
+}
+
+@Composable
+private fun HSSelectorWithHSVRectangleExample(modifier: Modifier, selectorModifier: Modifier) {
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var value by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    Title(text = "Hue-Saturation Selector Rect HSV")
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HueSaturationSelectorRectHSV(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
+            hue = hue,
+            saturation = saturation,
+            onChange = { h, s ->
+                hue = h
+                saturation = s
+            },
+            selectionRadius = 8.dp
+        )
+        Divider()
+        SliderCircleColorDisplayValueHSV(
+            modifier = Modifier.padding(8.dp),
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            alpha = alpha,
+            onValueChange = {
+                value = it
+            },
+            onAlphaChange = {
+                alpha = it
+            }
+        )
+    }
+}
+
+@Composable
+private fun HVSelectorWithHSVRectangleExample(modifier: Modifier, selectorModifier: Modifier) {
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var value by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    Title(text = "Hue-Value Selector Rect HSV")
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HueValueSelectorRectHSV(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
+            hue = hue,
+            value = value,
+            onChange = { h, v ->
+                hue = h
+                value = v
+            },
+            selectionRadius = 8.dp
+        )
+        Divider()
+        SliderCircleColorDisplaySaturationHSV(
+            modifier = Modifier.padding(8.dp),
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            alpha = alpha,
+            onSaturationChange = {
+                saturation = it
+            },
+            onAlphaChange = {
+                alpha = it
+            }
+        )
+    }
+}
+
+@Composable
+private fun HSSelectorWithHSLRectangleExample(modifier: Modifier, selectorModifier: Modifier) {
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var lightness by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    Title(text = "Hue-Saturation Selector Rect HSL")
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HueSaturationSelectorRectHSL(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
+            hue = hue,
+            saturation = saturation,
+            onChange = { h, s ->
+                hue = h
+                saturation = s
+            },
+            selectionRadius = 8.dp
+        )
+        Divider()
+        SliderCircleColorDisplayLightnessHSL(
+            modifier = Modifier.padding(8.dp),
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            alpha = alpha,
+            onLightnessChange = {
+                lightness = it
+            },
+            onAlphaChange = {
+                alpha = it
+            }
+        )
+    }
+}
+
+@Composable
+private fun HLSelectorWithHSLRectangleExample(modifier: Modifier, selectorModifier: Modifier) {
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var lightness by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    Title(text = "Hue-Lightness Selector Rect HSL")
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HueLightnessSelectorRectHSL(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
+            hue = hue,
+            lightness = lightness,
+            onChange = { h, l ->
+                hue = h
+                lightness = l
+            },
+            selectionRadius = 8.dp
+        )
+        Divider()
+        SliderCircleColorDisplaySaturationHSL(
+            modifier = Modifier.padding(8.dp),
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            alpha = alpha,
+            onSaturationChange = {
+                saturation = it
+            },
+            onAlphaChange = {
+                alpha = it
+            }
+        )
+    }
+}
+@Composable
+private fun Title(text: String) {
+    Text(
+        text,
+        color = Blue400,
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp,
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
 }

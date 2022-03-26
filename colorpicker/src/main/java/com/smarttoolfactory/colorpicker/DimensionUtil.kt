@@ -1,10 +1,7 @@
 package com.smarttoolfactory.colorpicker
 
 import androidx.compose.ui.geometry.Offset
-import kotlin.math.PI
-import kotlin.math.atan2
-import kotlin.math.roundToInt
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * [Linear Interpolation](https://en.wikipedia.org/wiki/Linear_interpolation) function that moves
@@ -63,23 +60,46 @@ fun calculateDistanceFromCenter(center: Offset, position: Offset): Float {
  * Local coordinates of touch are equal to Composable position when in bounds, when
  * touch position is above this composable it returns minus in y axis.
  */
-fun calculateAngleFomLocalCoordinates(center: Offset, position: Offset): Int {
-    if (center == Offset.Unspecified || position == Offset.Unspecified) return -1
+fun calculateAngleFomLocalCoordinates(center: Offset, position: Offset): Float {
+    if (center == Offset.Unspecified || position == Offset.Unspecified) return -1f
 
     val dy = center.y - position.y
     val dx = position.x - center.x
-    return ((360 + ((atan2(dy, dx) * 180 / PI))) % 360).roundToInt()
+    return (((360 + ((atan2(dy, dx) * 180 / PI))) % 360).toFloat())
 
+}
+
+/**
+ * Calculate touch position based on distance to center and angle relative
+ * to center counter-clockwise.
+ *
+ * @param center center of Composable
+ * @param distance from center
+ * @param angle in degrees
+ */
+fun calculatePositionFromAngleAndDistance(
+    center: Offset,
+    distance: Float,
+    angle: Float
+): Offset {
+
+    val centerX = center.x
+    val centerY = center.y
+
+    val angleInRadian: Float = ((angle * Math.PI) / 180f).toFloat()
+    val x = centerX + distance * cos(angleInRadian)
+    val y = centerY - distance * sin(angleInRadian)
+    return Offset(x, y)
 }
 
 /**
  * Get angle between 0 and 360 degrees using coordinates of the root composable. Root composable
  * needs to cover whole screen to return correct results.
  */
-fun calculateAngleFromRootCoordinates(center: Offset, position: Offset): Int {
-    if (center == Offset.Unspecified || position == Offset.Unspecified) return -1
+fun calculateAngleFromRootCoordinates(center: Offset, position: Offset): Float {
+    if (center == Offset.Unspecified || position == Offset.Unspecified) return -1f
 
     val dy = (position.y - center.y)
     val dx = (center.x - position.x)
-    return ((360 + ((atan2(dy, dx) * 180 / PI))) % 360).roundToInt()
+    return ((360 + ((atan2(dy, dx) * 180 / PI))) % 360).toFloat()
 }
