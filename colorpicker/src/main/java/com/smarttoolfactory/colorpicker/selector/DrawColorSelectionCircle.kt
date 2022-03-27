@@ -20,13 +20,13 @@ fun DrawScope.drawHueSelectionCircle(
         Color.White,
         radius = radius,
         center = center,
-        style = Stroke(width = radius / 2)
+        style = Stroke(width = radius / 4)
     )
 
     drawCircle(
         Color.Black,
-        radius = radius + radius / 4,
+        radius = radius + radius / 8,
         center = center,
-        style = Stroke(width = radius / 4)
+        style = Stroke(width = radius / 8)
     )
 }

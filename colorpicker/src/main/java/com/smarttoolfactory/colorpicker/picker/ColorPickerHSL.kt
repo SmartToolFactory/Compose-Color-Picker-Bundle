@@ -17,7 +17,7 @@ import com.smarttoolfactory.colorpicker.colorToHSL
 import com.smarttoolfactory.colorpicker.model.ColorHSL
 import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
-import com.smarttoolfactory.colorpicker.selector.SLSelectorFromHSLDiamond
+import com.smarttoolfactory.colorpicker.selector.SLSelectorDiamondHSL
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.widget.drawChecker
 
@@ -86,9 +86,7 @@ fun ColorPickerHSL(modifier: Modifier = Modifier, initialColor: Color) {
         ) {
 
             HueSelectorRing(
-                modifier = Modifier
-                    .width(350.dp)
-                    .aspectRatio(1f),
+                modifier = Modifier.size(350.dp),
                 hue = hue,
                 selectionRadius = 8.dp
             ) { hueChange ->
@@ -96,18 +94,17 @@ fun ColorPickerHSL(modifier: Modifier = Modifier, initialColor: Color) {
 
             }
 
-            Column {
-                SLSelectorFromHSLDiamond(
-                    modifier = Modifier.size(200.dp),
-                    hue = hue,
-                    saturation = saturation,
-                    lightness = lightness,
-                    selectionRadius = 8.dp
-                ) { s, l ->
-                    saturation = s
-                    lightness = l
-                }
+            SLSelectorDiamondHSL(
+                modifier = Modifier.size(200.dp),
+                hue = hue,
+                saturation = saturation,
+                lightness = lightness,
+                selectionRadius = 8.dp
+            ) { s, l ->
+                saturation = s
+                lightness = l
             }
+
         }
 
         Row(

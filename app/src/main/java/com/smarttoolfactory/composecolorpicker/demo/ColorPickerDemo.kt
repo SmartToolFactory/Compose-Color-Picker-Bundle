@@ -18,7 +18,6 @@ import com.smarttoolfactory.colorpicker.picker.ColorPickerHSL
 fun ColorPickerDemo() {
     Column(
         modifier = Modifier
-//            .background(Color.White)
             .fillMaxSize()
             .padding(8.dp)
             .verticalScroll(rememberScrollState())

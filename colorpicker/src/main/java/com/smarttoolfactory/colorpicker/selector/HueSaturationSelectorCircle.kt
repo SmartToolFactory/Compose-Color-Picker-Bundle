@@ -1,8 +1,8 @@
 package com.smarttoolfactory.colorpicker.selector
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import com.smarttoolfactory.colorpicker.calculateAngleFomLocalCoordinates
@@ -29,14 +30,14 @@ import com.smarttoolfactory.gesture.pointerMotionEvents
  *  when position of touch in this selector has changed.
  */
 @Composable
-fun HueSaturationSelectorCircle(
+fun HueSaturationSelectorCircleHSV(
     modifier: Modifier = Modifier,
     hue: Float,
     saturation: Float,
     selectionRadius: Dp = Dp.Unspecified,
     onChange: (Float, Float) -> Unit
 ) {
-    BoxWithConstraints(modifier.background(Color.Red)) {
+    BoxWithConstraints(modifier) {
 
         require(maxWidth == maxHeight) {
             "Hue selector should have equal width and height"
@@ -67,15 +68,8 @@ fun HueSaturationSelectorCircle(
             if (selectionRadius != Dp.Unspecified) selectionRadius.value * density
             else width * .04f
 
-        val colorScaleHSVSweep = remember { Brush.sweepGradient(gradientColorScaleHSVReversed) }
-        val whiteToTransparentRadial = remember {
-            Brush.radialGradient(
-                colors = listOf(Color.White, Color(0x00FFFFFF))
-            )
-        }
 
-        val colorPickerModifier = modifier
-            .background(Color.Yellow)
+        val canvasModifier = Modifier
             .pointerMotionEvents(
                 onDown = {
                     val position = it.position
@@ -119,11 +113,33 @@ fun HueSaturationSelectorCircle(
                 delayAfterDownInMillis = 20
             )
 
-        Canvas(modifier = colorPickerModifier) {
-            // Draw hue selection circle with sweep gradient
-            drawCircle(colorScaleHSVSweep)
-            drawCircle(whiteToTransparentRadial)
-            drawHueSelectionCircle(center = currentPosition, radius = selectorRadius)
-        }
+        CircleSelectorImpl(
+            modifier = canvasModifier,
+            selectorPosition = currentPosition,
+            selectorRadius = selectorRadius
+        )
+    }
+}
+
+@Composable
+private fun CircleSelectorImpl(
+    modifier: Modifier,
+    selectorPosition: Offset,
+    selectorRadius: Float
+) {
+    val colorScaleHSVSweep = remember { Brush.sweepGradient(gradientColorScaleHSVReversed) }
+    val whiteToTransparentRadial = remember {
+        Brush.radialGradient(
+            colors = listOf(Color.White, Color(0x00FFFFFF))
+        )
+    }
+    Canvas(
+        modifier = modifier.aspectRatio(1f)
+
+    ) {
+        // Draw hue selection circle with sweep gradient
+        drawCircle(colorScaleHSVSweep)
+        drawCircle(whiteToTransparentRadial)
+        drawHueSelectionCircle(center = selectorPosition, radius = selectorRadius)
     }
 }

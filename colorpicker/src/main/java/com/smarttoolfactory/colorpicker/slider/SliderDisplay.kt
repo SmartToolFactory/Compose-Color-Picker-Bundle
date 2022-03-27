@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.fractionToPercent
 import com.smarttoolfactory.colorpicker.fractionToRGBString
+import com.smarttoolfactory.colorpicker.ui.Gray
+import com.smarttoolfactory.colorpicker.ui.Grey400
 
 /*
     HSV Slider Displays
@@ -375,7 +377,7 @@ fun SliderDisplayAlphaRGB(
 fun TitledSliderDisplay(
     modifier: Modifier,
     title: String,
-    titleColor: Color = Color.LightGray,
+    titleColor: Color = Grey400,
     description: String,
     slider: @Composable () -> Unit
 ) {
@@ -395,7 +397,7 @@ fun TitledSliderDisplay(
         Text(
             text = description,
             fontSize = 12.sp,
-            color = Color.LightGray,
+            color = Grey400,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.width(30.dp)
         )

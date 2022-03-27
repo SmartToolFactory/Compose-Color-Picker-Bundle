@@ -1,11 +1,14 @@
 package com.smarttoolfactory.colorpicker.selector
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
@@ -224,8 +227,7 @@ private fun SelectorRectangle(
             if (selectionRadius != Dp.Unspecified) selectionRadius.value * density
             else width.coerceAtMost(height) * .04f
 
-
-        val colorPickerModifier = modifier
+        val canvasModifier = Modifier
             .pointerMotionEvents(
                 onDown = {
                     val position = it.position
@@ -253,17 +255,36 @@ private fun SelectorRectangle(
                 delayAfterDownInMillis = 20
             )
 
-        Canvas(modifier = colorPickerModifier) {
+        SelectorRectImpl(
+            modifier = canvasModifier,
+            selectorPosition = currentPosition,
+            brushHue = brushHue,
+            brushProperty = brushProperty,
+            selectorRadius = selectorRadius
+        )
 
-            // Draw hue and saturation selection gradients
-            drawRect(brush = brushHue)
-            drawRect(brush = brushProperty)
+    }
+}
 
-            drawHueSelectionCircle(
-                center = currentPosition,
-                radius = selectorRadius
-            )
-        }
+@Composable
+private fun SelectorRectImpl(
+    modifier: Modifier,
+    selectorPosition: Offset,
+    brushHue: Brush,
+    brushProperty: Brush,
+    selectorRadius: Float
+) {
+    Canvas(
+        modifier = modifier.fillMaxSize()
+    ) {
+        // Draw hue and saturation selection gradients
+        drawRect(brush = brushHue)
+        drawRect(brush = brushProperty)
+
+        drawHueSelectionCircle(
+            center = selectorPosition,
+            radius = selectorRadius
+        )
     }
 }
 

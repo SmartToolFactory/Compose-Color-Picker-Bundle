@@ -2,6 +2,7 @@ package com.smarttoolfactory.colorpicker.selector
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -23,7 +24,7 @@ import com.smarttoolfactory.gesture.pointerMotionEvents
  * @param onChange
  */
 @Composable
-fun SVSelectorFromHSVRectangle(
+fun SVSelectorRectHSV(
     modifier: Modifier = Modifier,
     hue: Float,
     saturation: Float = 0.5f,
@@ -35,8 +36,6 @@ fun SVSelectorFromHSVRectangle(
     BoxWithConstraints(modifier) {
 
         val density = LocalDensity.current.density
-
-
         val width = constraints.maxWidth.toFloat()
         val height = constraints.maxHeight.toFloat()
 
@@ -66,7 +65,8 @@ fun SVSelectorFromHSVRectangle(
         currentPosition = Offset(posX, posY)
 
 
-        val colorPickerModifier = modifier
+        val canvasModifier = Modifier
+            .fillMaxSize()
             .pointerMotionEvents(
                 onDown = {
                     val position = it.position
@@ -86,17 +86,31 @@ fun SVSelectorFromHSVRectangle(
                 delayAfterDownInMillis = 20
             )
 
-        val valueGradient = valueGradient(hue)
-        val hueSaturation = saturationHSVGradient(hue)
-
-        Canvas(modifier = colorPickerModifier) {
-            drawBlendingRectGradient(dst = valueGradient, src = hueSaturation)
-            // Saturation and Value/Lightness or value selector
-            drawHueSelectionCircle(
-                center = currentPosition,
-                radius = selectorRadius
-            )
-        }
+        SelectorRectImpl(
+            modifier = canvasModifier,
+            hue = hue,
+            selectorPosition = currentPosition,
+            selectorRadius = selectorRadius
+        )
     }
 }
 
+@Composable
+private fun SelectorRectImpl(
+    modifier: Modifier,
+    hue: Float,
+    selectorPosition: Offset,
+    selectorRadius: Float
+) {
+    val valueGradient = valueGradient(hue)
+    val hueSaturation = saturationHSVGradient(hue)
+
+    Canvas(modifier = modifier) {
+        drawBlendingRectGradient(dst = valueGradient, src = hueSaturation)
+        // Saturation and Value/Lightness or value selector
+        drawHueSelectionCircle(
+            center = selectorPosition,
+            radius = selectorRadius
+        )
+    }
+}

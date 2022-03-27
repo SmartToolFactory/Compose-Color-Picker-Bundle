@@ -2,10 +2,9 @@ package com.smarttoolfactory.colorpicker.selector
 
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -13,6 +12,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -49,10 +49,6 @@ fun HueSelectorRing(
 
     BoxWithConstraints(modifier) {
 
-        require(maxWidth == maxHeight) {
-            "Hue selector should have equal width and height"
-        }
-
         // Angle from center is required to get Hue which is between 0-360
         // only changes with touch, hue is used for drawing, this is for recomposition after touch
         var angle by remember { mutableStateOf(hue) }
@@ -85,8 +81,7 @@ fun HueSelectorRing(
                 (radiusInner * 2 * .04f).coerceAtMost(radiusOuter - radiusInner)
             else selectionRadius.value * density
 
-        val colorPickerModifier = modifier
-            .clipToBounds()
+        val canvasModifier = Modifier
             .pointerMotionEvents(
                 onDown = {
                     val position = it.position
@@ -121,47 +116,72 @@ fun HueSelectorRing(
                 delayAfterDownInMillis = 20
             )
 
-        Canvas(modifier = colorPickerModifier) {
+        HueSelectorRingImpl(
+            modifier = canvasModifier,
+            radiusOuter = radiusOuter,
+            radiusInner = radiusInner,
+            backgroundColor = backgroundColor,
+            borderStrokeColor = borderStrokeColor,
+            borderStrokeWidth = borderStrokeWidthPx,
+            selectorRadius = selectorRadius,
+            degrees = coerced
+        )
+    }
+}
 
-            val strokeWidth = (radiusOuter - radiusInner)
+@Composable
+private fun HueSelectorRingImpl(
+    modifier: Modifier,
+    radiusOuter: Float,
+    radiusInner: Float,
+    backgroundColor: Color,
+    borderStrokeColor: Color,
+    borderStrokeWidth: Float,
+    selectorRadius: Float,
+    degrees: Float
+) {
+    Canvas(
+        modifier = modifier.aspectRatio(1f)
+    ) {
 
-            // Draw hue selection circle with sweep gradient
-            drawCircle(
-                brush = Brush.sweepGradient(colors = gradientColorScaleRGB, center = center),
-                radius = radiusInner + strokeWidth / 2,
-                style = Stroke(
-                    width = strokeWidth
-                )
+        val strokeWidth = (radiusOuter - radiusInner)
+
+        // Draw hue selection circle with sweep gradient
+        drawCircle(
+            brush = Brush.sweepGradient(colors = gradientColorScaleRGB, center = center),
+            radius = radiusInner + strokeWidth / 2,
+            style = Stroke(
+                width = strokeWidth
             )
+        )
 
-            // draw background with background color from center to inner radius
-            drawCircle(color = backgroundColor, radius = radiusInner)
+        // draw background with background color from center to inner radius
+        drawCircle(color = backgroundColor, radius = radiusInner)
 
-            // Stroke draws half in and half out of the current radius.
-            // with 200 radius 20 stroke width starts from 190 and ends at 210
-            drawCircle(
-                color = borderStrokeColor,
-                radius = radiusInner - borderStrokeWidthPx / 2,
-                style = Stroke(width = borderStrokeWidthPx)
-            )
-            drawCircle(
-                color = borderStrokeColor,
-                radius = radiusOuter + borderStrokeWidthPx / 2,
-                style = Stroke(width = borderStrokeWidthPx)
-            )
+        // Stroke draws half in and half out of the current radius.
+        // with 200 radius 20 stroke width starts from 190 and ends at 210
+        drawCircle(
+            color = borderStrokeColor,
+            radius = radiusInner - borderStrokeWidth / 2,
+            style = Stroke(width = borderStrokeWidth)
+        )
+        drawCircle(
+            color = borderStrokeColor,
+            radius = radiusOuter + borderStrokeWidth / 2,
+            style = Stroke(width = borderStrokeWidth)
+        )
 
-            // rotate selection circle based on hue value
-            withTransform(
-                {
-                    rotate(degrees = -coerced)
-                }
-            ) {
-                // draw hue selection circle
-                drawHueSelectionCircle(
-                    center = Offset(center.x + radiusInner + strokeWidth / 2f, center.y),
-                    radius = selectorRadius
-                )
+        // rotate selection circle based on hue value
+        withTransform(
+            {
+                rotate(degrees = -degrees)
             }
+        ) {
+            // draw hue selection circle
+            drawHueSelectionCircle(
+                center = Offset(center.x + radiusInner + strokeWidth / 2f, center.y),
+                radius = selectorRadius
+            )
         }
     }
 }

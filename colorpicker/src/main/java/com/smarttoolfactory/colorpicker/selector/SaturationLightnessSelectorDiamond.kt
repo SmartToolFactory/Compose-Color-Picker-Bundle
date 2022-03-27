@@ -3,7 +3,7 @@ package com.smarttoolfactory.colorpicker.selector
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
@@ -26,7 +25,7 @@ import com.smarttoolfactory.gesture.pointerMotionEvents
 
 
 @Composable
-fun SaturationPickerDiamondHSV(
+fun SVSelectorDiamondHSV(
     modifier: Modifier = Modifier,
     @FloatRange(from = 0.1, to = 360.0) hue: Float,
     @FloatRange(from = 0.0, to = 1.0) saturation: Float = 0.5f,
@@ -61,7 +60,7 @@ fun SaturationPickerDiamondHSV(
  *
  */
 @Composable
-fun SLSelectorFromHSLDiamond(
+fun SLSelectorDiamondHSL(
     modifier: Modifier = Modifier,
     @FloatRange(from = 0.1, to = 360.0) hue: Float,
     @FloatRange(from = 0.0, to = 1.0) saturation: Float = 0.5f,
@@ -113,7 +112,6 @@ fun SLSelectorFromHSLDiamond(
         var isTouched by remember { mutableStateOf(false) }
 
         val canvasModifier = Modifier
-            .size(maxWidth)
             .pointerMotionEvents(
                 onDown = {
                     val position = it.position
@@ -166,50 +164,69 @@ fun SLSelectorFromHSLDiamond(
                 }
             )
 
-        val diamondPath = remember { diamondPath(Size(length, length)) }
+        SelectorDiamondImpl(
+            modifier = canvasModifier,
+            hue = hue,
+            length = length,
+            selectorPosition = currentPosition,
+            selectorRadius = selectorRadius
+        )
+    }
+}
 
-        val lightnessGradient = remember {
-            Brush.verticalGradient(
-                colors = listOf(
-                    Color.hsl(hue = hue, saturation = .5f, lightness = 1f),
-                    Color.hsl(hue = hue, saturation = .5f, lightness = 0f)
-                )
+@Composable
+private fun SelectorDiamondImpl(
+    modifier: Modifier,
+    hue: Float,
+    length: Float,
+    selectorPosition: Offset,
+    selectorRadius: Float
+) {
+
+    val diamondPath = remember { diamondPath(Size(length, length)) }
+
+    val lightnessGradient = remember {
+        Brush.verticalGradient(
+            colors = listOf(
+                Color.hsl(hue = hue, saturation = .5f, lightness = 1f),
+                Color.hsl(hue = hue, saturation = .5f, lightness = 0f)
+            )
+        )
+    }
+
+    val saturationHSLGradient = remember(hue) {
+        val gradientOffset = GradientOffset(GradientAngle.CW0)
+
+        Brush.linearGradient(
+            colors = listOf(
+                Color.hsl(hue, 0f, .5f),
+                Color.hsl(hue, 1f, .5f)
+            ),
+            start = gradientOffset.start,
+            end = gradientOffset.end
+        )
+    }
+
+
+    Canvas(modifier = modifier.aspectRatio(1f)) {
+
+        drawIntoLayer {
+            drawPath(
+                path = diamondPath,
+                lightnessGradient,
+            )
+            drawPath(
+                path = diamondPath,
+                saturationHSLGradient,
+                blendMode = BlendMode.Overlay
             )
         }
 
-        val saturationHSLGradient = remember(hue) {
-            val gradientOffset = GradientOffset(GradientAngle.CW0)
-
-            Brush.linearGradient(
-                colors = listOf(
-                    Color.hsl(hue, 0f, .5f),
-                    Color.hsl(hue, 1f, .5f)
-                ),
-                start = gradientOffset.start,
-                end = gradientOffset.end
-            )
-        }
-
-        Canvas(modifier = canvasModifier) {
-
-            drawIntoLayer {
-                drawPath(
-                    path = diamondPath,
-                    lightnessGradient,
-                )
-                drawPath(
-                    path = diamondPath,
-                    saturationHSLGradient,
-                    blendMode = BlendMode.Overlay
-                )
-            }
-
-            // Saturation and Value or Lightness selector
-            drawHueSelectionCircle(
-                center = currentPosition,
-                radius = selectorRadius
-            )
-        }
+        // Saturation and Value or Lightness selector
+        drawHueSelectionCircle(
+            center = selectorPosition,
+            radius = selectorRadius
+        )
     }
 }
 
