@@ -18,11 +18,12 @@ fun DrawScope.drawBlendingRectGradient(
     src: Brush,
     srcTopLeft: Offset = Offset.Zero,
     srcSize: Size = this.size,
+    blendMode: BlendMode = BlendMode.Multiply
 ) {
     with(drawContext.canvas.nativeCanvas) {
         val checkPoint = saveLayer(null, null)
         drawRect(dst, dstTopLeft, dstSize)
-        drawRect(src, srcTopLeft, srcSize, blendMode = BlendMode.Multiply)
+        drawRect(src, srcTopLeft, srcSize, blendMode = blendMode)
         restoreToCount(checkPoint)
     }
 }

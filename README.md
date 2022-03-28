@@ -21,11 +21,11 @@ Colorful Sliders to get familiar with.
 - [x] Add gradient rotation demo
 - [x] Add checker Composable/Modifier that draws checker pattern behind to display alpha
 - [x] Add console with interoperability between HSV, HSL and RGB(Conversion between color models)
+- [x] Add Rectangle Hue+Saturation/Value/Lightness HSV/HSL Selectors
+- [x] Add Circle Hue Saturation Selector
 
 ### TODOs:
 
-- [ ] Add Rectangle Hue+Saturation/Value/Lightness HSV/HSL Selectors
-- [ ] Add Circle Hue Saturation Selector
 - [ ] Add option to display colors in a dialog
 - [ ] Add and display colors selected previously
 - [ ] Add gradient color selection with percentage stops, linear, radial and sweep options

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.slider.*
 import com.smarttoolfactory.colorpicker.ui.Blue400
 import com.smarttoolfactory.colorpicker.widget.drawChecker
+import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 
 @Composable
 fun ColorfulSliderDemo() {
@@ -26,7 +27,7 @@ fun ColorfulSliderDemo() {
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .fillMaxSize()
-            .background(Color.LightGray)
+            .background(backgroundColor)
             .padding(vertical = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -64,7 +65,6 @@ fun ColorfulSliderDemo() {
         // Sliders with Circle Color display on left
         SliderCircleColorDisplayHSLExamples(modifier, sliderModifier)
         SliderCircleColorDisplayHSVExamples(modifier, sliderModifier)
-
     }
 }
 

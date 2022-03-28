@@ -22,6 +22,7 @@ import com.smarttoolfactory.colorpicker.slider.SliderDisplayPanelHSL
 import com.smarttoolfactory.colorpicker.slider.SliderDisplayPanelHSV
 import com.smarttoolfactory.colorpicker.slider.SliderDisplayPanelRGBA
 import com.smarttoolfactory.colorpicker.widget.drawChecker
+import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 import kotlin.math.roundToInt
 
 /**
@@ -35,7 +36,7 @@ fun ColorModeConversionDemo() {
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .fillMaxSize()
-            .background(Color.LightGray)
+            .background(backgroundColor)
             .padding(vertical = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

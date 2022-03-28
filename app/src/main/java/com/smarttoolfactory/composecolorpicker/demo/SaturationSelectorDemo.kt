@@ -43,6 +43,8 @@ fun SaturationSelectorDemo() {
             Spacer(modifier = Modifier.height(20.dp))
             SVSelectorWithHSVRectangleExample(cardModifier, selectorModifier)
             Spacer(modifier = Modifier.height(20.dp))
+            SLSelectorWithHSLRectangleExample(cardModifier, selectorModifier)
+            Spacer(modifier = Modifier.height(20.dp))
             HSSelectorHSVCircleExample(cardModifier, selectorModifier)
             Spacer(modifier = Modifier.height(20.dp))
             HSSelectorWithHSVRectangleExample(cardModifier, selectorModifier)
@@ -114,7 +116,7 @@ private fun SVSelectorWithHSVRectangleExample(modifier: Modifier, selectorModifi
         SVSelectorRectHSV(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(4/3f),
+                .aspectRatio(4 / 3f),
             hue = hue,
             saturation = saturation,
             value = value,
@@ -128,6 +130,48 @@ private fun SVSelectorWithHSVRectangleExample(modifier: Modifier, selectorModifi
             hue = hue,
             saturation = saturation,
             value = value,
+            alpha = alpha,
+            onHueChange = {
+                hue = it
+            },
+            onAlphaChange = {
+                alpha = it
+            }
+        )
+    }
+}
+
+@Composable
+private fun SLSelectorWithHSLRectangleExample(modifier: Modifier, selectorModifier: Modifier) {
+
+    var hue by remember { mutableStateOf(0f) }
+    var saturation by remember { mutableStateOf(.5f) }
+    var lightness by remember { mutableStateOf(.5f) }
+    var alpha by remember { mutableStateOf(1f) }
+
+    Title(text = "Saturation-Lightness Selector Rect HSL")
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        SLSelectorRectHSL(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(4 / 3f),
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            selectionRadius = 8.dp
+        ) { s, l ->
+            saturation = s
+            lightness = l
+        }
+
+        SliderCircleColorDisplayHueHSL(
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
             alpha = alpha,
             onHueChange = {
                 hue = it
@@ -195,7 +239,7 @@ private fun HSSelectorWithHSVRectangleExample(modifier: Modifier, selectorModifi
         HueSaturationSelectorRectHSV(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(4/3f),
+                .aspectRatio(4 / 3f),
             hue = hue,
             saturation = saturation,
             onChange = { h, s ->
@@ -237,7 +281,7 @@ private fun HVSelectorWithHSVRectangleExample(modifier: Modifier, selectorModifi
         HueValueSelectorRectHSV(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(4/3f),
+                .aspectRatio(4 / 3f),
             hue = hue,
             value = value,
             onChange = { h, v ->
@@ -279,7 +323,7 @@ private fun HSSelectorWithHSLRectangleExample(modifier: Modifier, selectorModifi
         HueSaturationSelectorRectHSL(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(4/3f),
+                .aspectRatio(4 / 3f),
             hue = hue,
             saturation = saturation,
             onChange = { h, s ->
@@ -321,7 +365,7 @@ private fun HLSelectorWithHSLRectangleExample(modifier: Modifier, selectorModifi
         HueLightnessSelectorRectHSL(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(4/3f),
+                .aspectRatio(4 / 3f),
             hue = hue,
             lightness = lightness,
             onChange = { h, l ->

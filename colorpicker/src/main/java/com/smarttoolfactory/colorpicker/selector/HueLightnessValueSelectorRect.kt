@@ -1,14 +1,12 @@
 package com.smarttoolfactory.colorpicker.selector
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
@@ -41,12 +39,16 @@ fun HueValueSelectorRectHSV(
     val selectorType = SelectorType.HVWithHSV
 
     //  Red, Magenta, Blue, Cyan, Green, Yellow, Red
-    val colorScaleHSLGradient = Brush.linearGradient(
-        colors = gradientColorScaleHSV,
-        start = Offset.Zero,
-        end = Offset(Float.POSITIVE_INFINITY, 0f)
-    )
-    val transparentToBlackGradient = transparentToBlackVerticalGradient()
+    val colorScaleHSLGradient = remember {
+        Brush.linearGradient(
+            colors = gradientColorScaleHSV,
+            start = Offset.Zero,
+            end = Offset(Float.POSITIVE_INFINITY, 0f)
+        )
+    }
+    val transparentToBlackGradient = remember {
+        transparentToBlackVerticalGradient()
+    }
 
     SelectorRectangle(
         modifier = modifier,
@@ -80,12 +82,16 @@ fun HueSaturationSelectorRectHSV(
     val selectorType = SelectorType.HSWithHSV
 
     //  Red, Magenta, Blue, Cyan, Green, Yellow, Red
-    val colorScaleHSLGradient = Brush.linearGradient(
-        colors = gradientColorScaleHSV,
-        start = Offset.Zero,
-        end = Offset(Float.POSITIVE_INFINITY, 0f)
-    )
-    val transparentToWhiteGradient = transparentToWhiteVerticalGradient()
+    val colorScaleHSLGradient = remember {
+        Brush.linearGradient(
+            colors = gradientColorScaleHSV,
+            start = Offset.Zero,
+            end = Offset(Float.POSITIVE_INFINITY, 0f)
+        )
+    }
+    val transparentToWhiteGradient = remember {
+        transparentToWhiteVerticalGradient()
+    }
 
     SelectorRectangle(
         modifier = modifier,
@@ -121,12 +127,16 @@ fun HueSaturationSelectorRectHSL(
     val selectorType = SelectorType.HSWithHSL
 
     //  Red, Magenta, Blue, Cyan, Green, Yellow, Red
-    val colorScaleHSLGradient = Brush.linearGradient(
-        colors = gradientColorScaleHSL,
-        start = Offset.Zero,
-        end = Offset(Float.POSITIVE_INFINITY, 0f)
-    )
-    val transparentToGrayGradient = transparentToGrayVerticalGradient()
+    val colorScaleHSLGradient = remember {
+        Brush.linearGradient(
+            colors = gradientColorScaleHSL,
+            start = Offset.Zero,
+            end = Offset(Float.POSITIVE_INFINITY, 0f)
+        )
+    }
+    val transparentToGrayGradient = remember {
+        transparentToGrayVerticalGradient()
+    }
 
     SelectorRectangle(
         modifier = modifier,
@@ -160,12 +170,16 @@ fun HueLightnessSelectorRectHSL(
     val selectorType = SelectorType.HLWithHSL
 
     //  Red, Magenta, Blue, Cyan, Green, Yellow, Red
-    val colorScaleHSLGradient = Brush.linearGradient(
-        colors = gradientColorScaleHSL,
-        start = Offset.Zero,
-        end = Offset(Float.POSITIVE_INFINITY, 0f)
-    )
-    val transitionGradient = whiteToTransparentToBlackVerticalGradient()
+    val colorScaleHSLGradient = remember {
+        Brush.linearGradient(
+            colors = gradientColorScaleHSL,
+            start = Offset.Zero,
+            end = Offset(Float.POSITIVE_INFINITY, 0f)
+        )
+    }
+    val transitionGradient = remember {
+        whiteToTransparentToBlackVerticalGradient()
+    }
 
     SelectorRectangle(
         modifier = modifier,

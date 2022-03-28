@@ -136,8 +136,6 @@ private fun HuePickerHSVGradientExample(
     ) {
         drawSaturationPointsInDiamond(sampleRate = 30, hsv = true)
     }
-
-
 }
 
 @Composable
