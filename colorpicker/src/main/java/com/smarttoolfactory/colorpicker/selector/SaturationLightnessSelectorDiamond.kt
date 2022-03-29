@@ -2,10 +2,12 @@ package com.smarttoolfactory.colorpicker.selector
 
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -18,28 +20,16 @@ import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
-import com.smarttoolfactory.colorpicker.drawIntoLayer
+import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.ui.GradientAngle
 import com.smarttoolfactory.colorpicker.ui.GradientOffset
+import com.smarttoolfactory.colorpicker.util.drawIntoLayer
 import com.smarttoolfactory.gesture.pointerMotionEvents
 
 
-@Composable
-fun SVSelectorDiamondHSV(
-    modifier: Modifier = Modifier,
-    @FloatRange(from = 0.1, to = 360.0) hue: Float,
-    @FloatRange(from = 0.0, to = 1.0) saturation: Float = 0.5f,
-    @FloatRange(from = 0.0, to = 1.0) value: Float = 0.5f,
-    selectionRadius: Dp = Dp.Unspecified,
-    onChange: (Float, Float) -> Unit
-) {
-
-}
-
 /**
- * [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV)
- *
- * Saturation and Lightness selector in shape of *diamond*
+ * Saturation and Lightness selector in shape of *diamond* for
+ * [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model
  *
  *  * Since this is not a rectangle, initially current position of selector is
  *  set by [setSelectorPositionFromColorParams] which limits position of saturation to a range
@@ -60,7 +50,7 @@ fun SVSelectorDiamondHSV(
  *
  */
 @Composable
-fun SLSelectorDiamondHSL(
+fun SaturationLightnessSelectorDiamondHSL(
     modifier: Modifier = Modifier,
     @FloatRange(from = 0.1, to = 360.0) hue: Float,
     @FloatRange(from = 0.0, to = 1.0) saturation: Float = 0.5f,
@@ -69,123 +59,7 @@ fun SLSelectorDiamondHSL(
     onChange: (Float, Float) -> Unit
 ) {
 
-    BoxWithConstraints(modifier) {
-
-        require(maxWidth == maxHeight) {
-            "Hue selector should have equal width and height"
-        }
-
-        val density = LocalDensity.current.density
-
-        /**
-         * Width and height of the diamond is geometrically equal so it's sufficient to
-         * use either width or height to have a length parameter
-         */
-        val length = maxWidth.value * density
-
-        /**
-         * Circle selector radius for setting [saturation] and [lightness] by gesture
-         */
-        val selectorRadius =
-            if (selectionRadius != Dp.Unspecified) selectionRadius.value * density
-            else length * .04f
-
-        val center = length / 2f
-
-        /**
-         *  Current position is initially set by [saturation] and [lightness] that is bound
-         *  in diamond since (1,1) points to bottom left corner of a rectangle but it's bounded
-         *  in diamond by [setSelectorPositionFromColorParams].
-         *  When user touches anywhere in diamond current position is updaed and
-         *  this composable is recomposed
-         */
-        var currentPosition by remember {
-            mutableStateOf(Offset(center, center))
-        }
-
-        // Convert from user values to offset
-        currentPosition = setSelectorPositionFromColorParams(saturation, lightness, length)
-
-        /**
-         * Check if first pointer that touched this compsable inside bounds of diamond
-         */
-        var isTouched by remember { mutableStateOf(false) }
-
-        val canvasModifier = Modifier
-            .pointerMotionEvents(
-                onDown = {
-                    val position = it.position
-                    val posX = position.x
-                    val posY = position.y
-
-                    // Horizontal range for keeping x position in diamond bounds
-                    val range = getRangeForPositionInDiamond(length, posY)
-                    val start = range.start - selectorRadius
-                    val end = range.endInclusive + selectorRadius
-
-                    isTouched = posX in start..end
-                    if (isTouched) {
-
-                        val posXInPercent = (posX / length).coerceIn(0f, 1f)
-                        val posYInPercent = (posY / length).coerceIn(0f, 1f)
-
-                        // Send x position as saturation and reverse of y position as lightness
-                        // lightness increases while going up but android drawing system is opposite
-                        onChange(posXInPercent, 1 - posYInPercent)
-                        currentPosition = Offset(posX, posY)
-                    }
-                    it.consumeDownChange()
-
-                },
-                onMove = {
-                    if (isTouched) {
-
-                        val position = it.position
-                        val posX = position.x.coerceIn(0f, length)
-                        val posY = position.y.coerceIn(0f, length)
-
-                        // Horizontal range for keeping x position in diamond bounds
-                        val range = getRangeForPositionInDiamond(length, posY)
-
-                        val posXInPercent = (posX / length).coerceIn(0f, 1f)
-                        val posYInPercent = (posY / length).coerceIn(0f, 1f)
-
-                        // Send x position as saturation and reverse of y position as lightness
-                        // lightness increases while going up but android drawing system is opposite
-                        onChange(posXInPercent, 1 - posYInPercent)
-
-                        currentPosition = Offset(posX.coerceIn(range), posY)
-                    }
-                    it.consumePositionChange()
-                },
-                onUp = {
-                    isTouched = false
-                    it.consumeDownChange()
-                }
-            )
-
-        SelectorDiamondImpl(
-            modifier = canvasModifier,
-            hue = hue,
-            length = length,
-            selectorPosition = currentPosition,
-            selectorRadius = selectorRadius
-        )
-    }
-}
-
-@Composable
-private fun SelectorDiamondImpl(
-    modifier: Modifier,
-    hue: Float,
-    length: Float,
-    selectorPosition: Offset,
-    selectorRadius: Float
-) {
-
-    val diamondPath = remember { diamondPath(Size(length, length)) }
-
-    val lightnessGradient = remember {
+    val lightnessGradient = remember(hue) {
         Brush.verticalGradient(
             colors = listOf(
                 Color.hsl(hue = hue, saturation = .5f, lightness = 1f),
@@ -207,18 +81,236 @@ private fun SelectorDiamondImpl(
         )
     }
 
+    BoxWithConstraints(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+
+
+        val density = LocalDensity.current.density
+
+        /**
+         * Width and height of the diamond is geometrically equal so it's sufficient to
+         * use either width or height to have a length parameter
+         */
+        val length = maxWidth.value * density
+
+        /**
+         * Circle selector radius for setting [saturation] and [lightness] by gesture
+         */
+        val selectorRadius =
+            if (selectionRadius != Dp.Unspecified) selectionRadius.value * density
+            else length * .04f
+
+        SelectorDiamond(
+            saturation = saturation,
+            property = lightness,
+            length = length,
+            selectionRadius = selectorRadius,
+            onChange = onChange,
+            brushDest = lightnessGradient,
+            brushSrc = saturationHSLGradient,
+            colorModel = ColorModel.HSL
+        )
+    }
+}
+
+@Composable
+fun SaturationValueSelectorDiamondHSV(
+    modifier: Modifier = Modifier,
+    @FloatRange(from = 0.1, to = 360.0) hue: Float,
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float = 0.5f,
+    @FloatRange(from = 0.0, to = 1.0) value: Float = 0.5f,
+    selectionRadius: Dp = Dp.Unspecified,
+    onChange: (Float, Float) -> Unit
+) {
+
+    TODO(
+        "Need to rotate from center and linear interpolate into length range from sqrt(length)" +
+                "to display HSV colors in a diamond"
+    )
+//    BoxWithConstraints(
+//        modifier = modifier,
+//        contentAlignment = Alignment.Center
+//    ) {
+//
+//        require(maxWidth == maxHeight) {
+//            "Hue selector should have equal width and height"
+//        }
+//
+//        val density = LocalDensity.current.density
+//
+//        /**
+//         * Width and height of the diamond is geometrically equal so it's sufficient to
+//         * use either width or height to have a length parameter
+//         */
+//        val length = maxWidth.value * density
+//
+//        /**
+//         * Circle selector radius for setting [saturation] and [value] by gesture
+//         */
+//        val selectorRadius =
+//            if (selectionRadius != Dp.Unspecified) selectionRadius.value * density
+//            else length * .04f
+//
+//        // HSV Gradients
+//        // Gradient is rotated 45 degrees clockwise
+//        val saturationHSVGradient = remember(hue) {
+//            saturationHSVGradient(
+//                hue = hue,
+//                start = Offset(length / 2, 0f),
+//                end = Offset(length, length / 2)
+//            )
+//        }
+//        val valueGradientHSV = remember {
+//            valueGradient(
+//                hue = 0f,
+//                start = Offset(length / 2, 0f),
+//                end = Offset(0f, length / 2)
+//            )
+//        }
+//
+//        SelectorDiamond(
+//            saturation = saturation,
+//            property = value,
+//            length = length,
+//            selectionRadius = selectorRadius,
+//            onChange = onChange,
+//            brushDest = valueGradientHSV,
+//            brushSrc = saturationHSVGradient,
+//            colorMode = ColorMode.HSV
+//        )
+//    }
+}
+
+@Composable
+private fun SelectorDiamond(
+    @FloatRange(from = 0.0, to = 1.0) saturation: Float = 0.5f,
+    @FloatRange(from = 0.0, to = 1.0) property: Float = 0.5f,
+    length: Float,
+    selectionRadius: Float,
+    onChange: (Float, Float) -> Unit,
+    brushSrc: Brush,
+    brushDest: Brush,
+    colorModel: ColorModel
+) {
+    Box {
+        val center = length / 2f
+
+        /**
+         *  Current position is initially set by [saturation] and [property] that is bound
+         *  in diamond since (1,1) points to bottom left corner of a rectangle but it's bounded
+         *  in diamond by [setSelectorPositionFromColorParams].
+         *  When user touches anywhere in diamond current position is updaed and
+         *  this composable is recomposed
+         */
+        /**
+         *  Current position is initially set by [saturation] and [property] that is bound
+         *  in diamond since (1,1) points to bottom left corner of a rectangle but it's bounded
+         *  in diamond by [setSelectorPositionFromColorParams].
+         *  When user touches anywhere in diamond current position is updaed and
+         *  this composable is recomposed
+         */
+        var currentPosition by remember {
+            mutableStateOf(Offset(center, center))
+        }
+
+        // Convert from user values to offset
+        currentPosition =
+            setSelectorPositionFromColorParams(saturation, property, length, colorModel)
+
+        /**
+         * Check if first pointer that touched this compsable inside bounds of diamond
+         */
+        /**
+         * Check if first pointer that touched this compsable inside bounds of diamond
+         */
+        var isTouched by remember { mutableStateOf(false) }
+
+        val canvasModifier = Modifier
+            .pointerMotionEvents(
+                onDown = {
+                    val position = it.position
+                    val posX = position.x
+                    val posY = position.y
+
+                    // Horizontal range for keeping x position in diamond bounds
+                    val range = getRangeForPositionInDiamond(length, posY)
+                    val start = range.start - selectionRadius
+                    val end = range.endInclusive + selectionRadius
+
+                    isTouched = posX in start..end
+                    if (isTouched) {
+
+                        val posXInPercent = (posX / length).coerceIn(0f, 1f)
+                        val posYInPercent = (posY / length).coerceIn(0f, 1f)
+
+                        // Send x position as saturation and reverse of y position as lightness
+                        // lightness increases while going up but android drawing system is opposite
+                        onChange(posXInPercent, 1 - posYInPercent)
+                    }
+                    it.consumeDownChange()
+
+                },
+                onMove = {
+                    if (isTouched) {
+
+                        val position = it.position
+                        val posX = position.x.coerceIn(0f, length)
+                        val posY = position.y.coerceIn(0f, length)
+
+                        val posXInPercent = (posX / length).coerceIn(0f, 1f)
+                        val posYInPercent = (posY / length).coerceIn(0f, 1f)
+
+                        // Send x position as saturation and reverse of y position as lightness
+                        // lightness increases while going up but android drawing system is opposite
+                        onChange(posXInPercent, 1 - posYInPercent)
+                    }
+                    it.consumePositionChange()
+                },
+                onUp = {
+                    isTouched = false
+                    it.consumeDownChange()
+                }
+            )
+
+        SelectorDiamondImpl(
+            modifier = canvasModifier,
+            length = length,
+            selectorPosition = currentPosition,
+            selectorRadius = selectionRadius,
+            brushSrc = brushSrc,
+            brushDest = brushDest,
+            colorModel = colorModel
+        )
+    }
+}
+
+@Composable
+private fun SelectorDiamondImpl(
+    modifier: Modifier,
+    length: Float,
+    selectorPosition: Offset,
+    selectorRadius: Float,
+    brushSrc: Brush,
+    brushDest: Brush,
+    colorModel: ColorModel
+) {
+
+    val diamondPath = remember { diamondPath(Size(length, length)) }
 
     Canvas(modifier = modifier.aspectRatio(1f)) {
 
         drawIntoLayer {
             drawPath(
                 path = diamondPath,
-                lightnessGradient,
+                brushDest,
             )
             drawPath(
                 path = diamondPath,
-                saturationHSLGradient,
-                blendMode = BlendMode.Overlay
+                brushSrc,
+                blendMode = if (colorModel == ColorModel.HSV) BlendMode.Multiply
+                else BlendMode.Overlay
             )
         }
 
@@ -242,7 +334,8 @@ private fun SelectorDiamondImpl(
 fun setSelectorPositionFromColorParams(
     saturation: Float,
     lightness: Float,
-    length: Float
+    length: Float,
+    colorModel: ColorModel
 ): Offset {
     // Get possible horizontal range for the current position of lightness on diamond
     val range = getRangeForPositionInDiamond(length, lightness * length)

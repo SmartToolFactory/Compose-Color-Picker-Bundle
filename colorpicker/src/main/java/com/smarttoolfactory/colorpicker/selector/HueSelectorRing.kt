@@ -16,8 +16,8 @@ import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.colorpicker.calculateAngleFomLocalCoordinates
-import com.smarttoolfactory.colorpicker.calculateDistanceFromCenter
+import com.smarttoolfactory.colorpicker.util.calculateAngleFomLocalCoordinates
+import com.smarttoolfactory.colorpicker.util.calculateDistanceFromCenter
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleRGB
 import com.smarttoolfactory.gesture.pointerMotionEvents
 
@@ -26,8 +26,8 @@ import com.smarttoolfactory.gesture.pointerMotionEvents
  *
  * @param hue is in [0f..360f] of HSL color. Touching any point in ring returns angle between
  * touch point and center
- * @param outerRadiusRatio radius ratio of outer radius of ring in percent
- * @param innerRadiusRatio radius ratio of inner radius of ring in percent
+ * @param outerRadiusFraction radius ratio of outer radius of ring in percent
+ * @param innerRadiusFraction radius ratio of inner radius of ring in percent
  * @param borderStrokeColor color for drawing border outer and inner positions of ring
  * @param borderStrokeWidth width of stroke for drawing border inner and outer positions of ring
  * @param backgroundColor is the color of circle drawn from center to inner radius
@@ -38,8 +38,8 @@ import com.smarttoolfactory.gesture.pointerMotionEvents
 fun HueSelectorRing(
     modifier: Modifier = Modifier,
     @FloatRange(from = 0.1, to = 360.0) hue: Float,
-    @FloatRange(from = 0.0, to = 1.0) outerRadiusRatio: Float = .9f,
-    @FloatRange(from = 0.0, to = 1.0) innerRadiusRatio: Float = .6f,
+    @FloatRange(from = 0.0, to = 1.0) outerRadiusFraction: Float = .9f,
+    @FloatRange(from = 0.0, to = 1.0) innerRadiusFraction: Float = .6f,
     borderStrokeColor: Color = Color.Black,
     borderStrokeWidth: Dp = 4.dp,
     backgroundColor: Color = Color.Black,
@@ -64,8 +64,8 @@ fun HueSelectorRing(
         // Center Offset of selector
         val center = Offset(radius, radius)
 
-        val radiusInner: Float = (radius * innerRadiusRatio).coerceAtLeast(0f)
-        val radiusOuter: Float = (radius * outerRadiusRatio).coerceAtLeast(radiusInner)
+        val radiusInner: Float = (radius * innerRadiusFraction).coerceAtLeast(0f)
+        val radiusOuter: Float = (radius * outerRadiusFraction).coerceAtLeast(radiusInner)
 
         // Border stroke width for inner and outer radius positions
         val borderStrokeWidthPx =

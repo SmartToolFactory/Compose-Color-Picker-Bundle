@@ -20,9 +20,10 @@ import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSV
 import com.smarttoolfactory.gesture.pointerMotionEvents
 
 /**
- * Rectangle Hue and Value selector for HSV color model
- * @param hue is in [0f..360f] of HSL color
- * @param value is in [0f..1f] of HSL color
+ * Rectangle Hue and Value selector for
+ * [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model
+ * @param hue is in [0f..360f] of HSV color
+ * @param value is in [0f..1f] of HSV color
  * @param selectionRadius radius of selection circle that moves based on touch position
  * @param onChange callback that returns [hue] and [value]
  *  when position of touch in this selector has changed.
@@ -63,9 +64,10 @@ fun HueValueSelectorRectHSV(
 }
 
 /**
- * Rectangle Hue and Saturation selector for HSV color model
- * @param hue is in [0f..360f] of HSL color
- * @param saturation is in [0f..1f] of HSL color
+ * Rectangle Hue and Saturation selector for
+ * [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model
+ * @param hue is in [0f..360f] of HSV color
+ * @param saturation is in [0f..1f] of HSV color
  * @param selectionRadius radius of selection circle that moves based on touch position
  * @param onChange callback that returns [hue] and [saturation]
  *  when position of touch in this selector has changed.
@@ -108,7 +110,8 @@ fun HueSaturationSelectorRectHSV(
 }
 
 /**
- * Rectangle Hue and Saturation selector for HSL color model
+ * Rectangle Hue and Saturation selector for
+ * [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model
  * @param hue is in [0f..360f] of HSL color
  * @param saturation is in [0f..1f] of HSL color
  * @param selectionRadius radius of selection circle that moves based on touch position
@@ -151,7 +154,8 @@ fun HueSaturationSelectorRectHSL(
 }
 
 /**
- * Rectangle Hue and Lightness selector for HSL color model
+ * Rectangle Hue and Lightness selector for
+ * [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model
  * @param hue is in [0f..360f] of HSL color
  * @param lightness is in [0f..1f] of HSL color
  * @param selectionRadius radius of selection circle that moves based on touch position

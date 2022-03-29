@@ -10,21 +10,20 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import com.smarttoolfactory.colorpicker.calculateAngleFomLocalCoordinates
-import com.smarttoolfactory.colorpicker.calculateDistanceFromCenter
-import com.smarttoolfactory.colorpicker.calculatePositionFromAngleAndDistance
+import com.smarttoolfactory.colorpicker.util.calculateAngleFomLocalCoordinates
+import com.smarttoolfactory.colorpicker.util.calculateDistanceFromCenter
+import com.smarttoolfactory.colorpicker.util.calculatePositionFromAngleAndDistance
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSVReversed
 import com.smarttoolfactory.gesture.pointerMotionEvents
 
 /**
- * Circle Hue and Saturation picker. Angle is between touch point and center of this
- * selector is returned as [hue]
- * and distance from center as [saturation].
- * @param hue is in [0f..360f] of HSL color
- * @param saturation is in [0f..1f] of HSL color
+ * Circle Hue and Saturation picker for
+ * [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model. Angle is between touch point
+ * and center of this selector is returned as [hue], distance from center as [saturation].
+ * @param hue is in [0f..360f] of HSV color
+ * @param saturation is in [0f..1f] of HSV color
  * @param selectionRadius radius of selection circle that moves based on touch position
  * @param onChange callback that returns [hue] and [saturation]
  *  when position of touch in this selector has changed.
@@ -38,10 +37,6 @@ fun HueSaturationSelectorCircleHSV(
     onChange: (Float, Float) -> Unit
 ) {
     BoxWithConstraints(modifier) {
-
-        require(maxWidth == maxHeight) {
-            "Hue selector should have equal width and height"
-        }
 
         val density = LocalDensity.current.density
 

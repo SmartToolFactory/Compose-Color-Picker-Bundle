@@ -12,18 +12,25 @@ import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import com.smarttoolfactory.colorpicker.drawBlendingRectGradient
+import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.ui.brush.lightnessGradient
 import com.smarttoolfactory.colorpicker.ui.brush.saturationHSLGradient
 import com.smarttoolfactory.colorpicker.ui.brush.saturationHSVGradient
 import com.smarttoolfactory.colorpicker.ui.brush.valueGradient
+import com.smarttoolfactory.colorpicker.util.drawBlendingRectGradient
 import com.smarttoolfactory.gesture.pointerMotionEvents
 
 /**
- *
+ * Rectangle Saturation and Lightness selector for
+ * [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model
+ * @param hue is in [0f..360f] of HSL color
+ * @param lightness is in [0f..1f] of HSL color
+ * @param selectionRadius radius of selection circle that moves based on touch position
+ * @param onChange callback that returns [hue] and [lightness]
+ *  when position of touch in this selector has changed.
  */
 @Composable
-fun SLSelectorRectHSL(
+fun SaturationLightnessSelectorRectHSL(
     modifier: Modifier = Modifier,
     hue: Float,
     saturation: Float = 0.5f,
@@ -42,19 +49,21 @@ fun SLSelectorRectHSL(
         brushDst = lightnessGradient,
         selectionRadius = selectionRadius,
         onChange = onChange,
-        isHSV = false
+        colorModel = ColorModel.HSL
     )
 }
 
 /**
- * @param hue
- * @param saturation
- * @param value
- * @param selectionRadius
- * @param onChange
+ * Rectangle Saturation and Vale selector for
+ * [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV) color model
+ * @param hue is in [0f..360f] of HSL color
+ * @param value is in [0f..1f] of HSL color
+ * @param selectionRadius radius of selection circle that moves based on touch position
+ * @param onChange callback that returns [hue] and [value]
+ *  when position of touch in this selector has changed.
  */
 @Composable
-fun SVSelectorRectHSV(
+fun SaturationValueSelectorRectHSV(
     modifier: Modifier = Modifier,
     hue: Float,
     saturation: Float = 0.5f,
@@ -74,10 +83,9 @@ fun SVSelectorRectHSV(
         brushDst = valueGradient,
         selectionRadius = selectionRadius,
         onChange = onChange,
-        isHSV = true
+        colorModel = ColorModel.HSV
     )
 }
-
 
 @Composable
 private fun SelectorRect(
@@ -88,7 +96,7 @@ private fun SelectorRect(
     brushDst: Brush,
     selectionRadius: Dp = Dp.Unspecified,
     onChange: (Float, Float) -> Unit,
-    isHSV: Boolean
+    colorModel: ColorModel
 ) {
 
     BoxWithConstraints(modifier) {
@@ -150,7 +158,7 @@ private fun SelectorRect(
             brushDst = brushDst,
             selectorPosition = currentPosition,
             selectorRadius = selectorRadius,
-            isHSV = isHSV
+            colorModel = colorModel
         )
     }
 }
@@ -162,14 +170,14 @@ private fun SelectorRectImpl(
     brushDst: Brush,
     selectorPosition: Offset,
     selectorRadius: Float,
-    isHSV: Boolean,
+    colorModel: ColorModel
 ) {
 
     Canvas(modifier = modifier) {
         drawBlendingRectGradient(
             dst = brushDst,
             src = brushSrc,
-            blendMode = if (isHSV) BlendMode.Multiply else BlendMode.Overlay
+            blendMode = if (colorModel == ColorModel.HSV) BlendMode.Multiply else BlendMode.Overlay
         )
         // Saturation and Value/Lightness or value selector
         drawHueSelectionCircle(

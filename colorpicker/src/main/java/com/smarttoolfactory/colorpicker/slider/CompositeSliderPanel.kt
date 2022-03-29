@@ -2,8 +2,8 @@ package com.smarttoolfactory.colorpicker.slider
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.smarttoolfactory.colorpicker.*
 import com.smarttoolfactory.colorpicker.model.*
+import com.smarttoolfactory.colorpicker.util.*
 
 /**
  *
@@ -27,7 +27,7 @@ import com.smarttoolfactory.colorpicker.model.*
  */
 @Composable
 fun CompositeSliderPanel(
-    modifier: Modifier,
+    modifier: Modifier=Modifier,
     compositeColor: CompositeColor,
     onColorChange: (CompositeColor) -> Unit,
     inputColorModel: ColorModel,
