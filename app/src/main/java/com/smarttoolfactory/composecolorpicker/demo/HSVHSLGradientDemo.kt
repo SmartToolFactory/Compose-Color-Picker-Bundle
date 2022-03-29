@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.colorpicker.drawIntoLayer
+import com.smarttoolfactory.colorpicker.util.drawIntoLayer
 import com.smarttoolfactory.colorpicker.selector.diamondPath
 import com.smarttoolfactory.colorpicker.ui.*
 import com.smarttoolfactory.colorpicker.ui.brush.*
@@ -102,39 +102,48 @@ private fun HuePickerHSVGradientExample(
     }
 
     CanvasWithTitle(
-        modifier = modifier.background(Color.LightGray),
+        modifier = modifier,
         text = "HSV Diamond"
     ) {
+
         val length = size.width
+
+        // HSV Gradients
+        val saturationHSVGradient = saturationHSVGradient(
+            0f,
+            start = Offset(
+                length / 2, 0f
+            ),
+            end = Offset(
+                length, length / 2
+
+            )
+        )
+        val valueGradientHSV = valueGradient(
+            0f,
+            start = Offset(
+                length / 2, 0f
+
+            ),
+            end = Offset(
+                0f, length / 2
+            )
+        )
+
+
         val diamondPath = diamondPath(Size(length, length))
 
         drawIntoLayer {
             drawPath(
                 path = diamondPath,
-                valueGradient,
+                valueGradientHSV,
             )
             drawPath(
                 path = diamondPath,
-                saturationGradient,
+                saturationHSVGradient,
                 blendMode = BlendMode.Multiply
             )
         }
-    }
-
-    CanvasWithTitle(
-        modifier = modifier,
-        text = "HSV Diamond positions\n" +
-                "50 samples"
-    ) {
-        drawSaturationPointsInDiamond(sampleRate = 60, hsv = true)
-    }
-
-    CanvasWithTitle(
-        modifier = modifier,
-        text = "HSV Diamond positions\n" +
-                "10 samples"
-    ) {
-        drawSaturationPointsInDiamond(sampleRate = 30, hsv = true)
     }
 }
 
@@ -196,7 +205,7 @@ private fun HuePickerHSLGradientExample(
         text = "HSL Diamond positions\n" +
                 "50 samples"
     ) {
-        drawSaturationPointsInDiamond(sampleRate = 60, hsv = false)
+        drawSaturationPointsInDiamond(sampleRate = 60)
     }
 
     CanvasWithTitle(
@@ -204,7 +213,7 @@ private fun HuePickerHSLGradientExample(
         text = "HSL Diamond positions\n" +
                 "10 samples"
     ) {
-        drawSaturationPointsInDiamond(sampleRate = 30, hsv = false)
+        drawSaturationPointsInDiamond(sampleRate = 30)
     }
 }
 
@@ -324,8 +333,7 @@ private fun DrawScope.drawSaturationWithSampling(sampleRate: Int, hsv: Boolean) 
  * creating points to draw like gradient effect for HSL color
  */
 private fun DrawScope.drawSaturationPointsInDiamond(
-    sampleRate: Int,
-    hsv: Boolean
+    sampleRate: Int
 ) {
     val width = size.width
     val samplingRate = (width / sampleRate).toInt()
@@ -337,13 +345,8 @@ private fun DrawScope.drawSaturationPointsInDiamond(
             val saturation = xPos / width
             val value = 1 - (yPos / width)
 
-            val colors = if (hsv) {
-                Color.hsv(0f, saturation, value)
-            } else {
-                Color.hsl(0f, saturation, value)
-            }
             drawRect(
-                color = colors,
+                color =  Color.hsl(0f, saturation, value),
                 size = Size(samplingRate.toFloat(), samplingRate.toFloat()),
                 topLeft = Offset(xPos.toFloat(), yPos.toFloat())
             )

@@ -618,7 +618,7 @@ private fun SliderCircleColorDisplayHSVExamples(
             hue = hue,
             saturation = saturation,
             value = value,
-            alpha,
+            alpha = alpha,
             onSaturationChange = { saturation = it },
             onAlphaChange = { alpha = it }
         )
@@ -629,7 +629,7 @@ private fun SliderCircleColorDisplayHSVExamples(
             hue = hue,
             saturation = saturation,
             value = value,
-            alpha,
+            alpha = alpha,
             onValueChange = { value = it },
             onAlphaChange = { alpha = it }
         )

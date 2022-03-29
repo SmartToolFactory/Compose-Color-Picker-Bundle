@@ -16,11 +16,11 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.colorpicker.*
-import com.smarttoolfactory.colorpicker.ui.Orange400
 import com.smarttoolfactory.colorpicker.slider.SliderDisplayPanelHSL
 import com.smarttoolfactory.colorpicker.slider.SliderDisplayPanelHSV
 import com.smarttoolfactory.colorpicker.slider.SliderDisplayPanelRGBA
+import com.smarttoolfactory.colorpicker.ui.Orange400
+import com.smarttoolfactory.colorpicker.util.*
 import com.smarttoolfactory.colorpicker.widget.drawChecker
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 import kotlin.math.roundToInt
@@ -424,7 +424,6 @@ private fun CheckColorConversionDetailsFromHSL(
         color = if (!areHSLColorsSame) Color.Red else Color.LightGray
     )
 }
-
 
 
 @Composable
