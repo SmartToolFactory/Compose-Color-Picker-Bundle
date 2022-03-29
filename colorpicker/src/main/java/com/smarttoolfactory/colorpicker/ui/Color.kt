@@ -13,14 +13,7 @@ val Brown400 = Color(0xff8D6E63)
 val BlueGrey400 = Color(0xff78909C)
 val Grey400 = Color(0xffBDBDBD)
 
-val ThumbColor = Color(0xffffffff)
-val DisabledThumbColor = Color(0xfff0f0f0)
-
-val ActiveTrackColor = Color(0xff489cef)
-val DisabledActiveTrackColor = Color(0xff489cef)
-val InactiveTrackColor = Color(0xffcccccc)
-val DisabledInactiveTrackColor = Color(0xffcccccc)
-val TickColor = Color(0xffcccccc)
+val Grey600 = Color(0xff757575)
 
 val Gray = Color(0xff808080)
 val WhiteTransparent = Color(0x00ffffff)

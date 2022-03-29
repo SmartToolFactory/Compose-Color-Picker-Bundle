@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.smarttoolfactory.colorpicker.picker.ColorPickerRingDiamondHSL
+import com.smarttoolfactory.colorpicker.picker.ColorPickerRingRectHSV
 import com.smarttoolfactory.colorpicker.ui.Blue400
 
 @Composable
@@ -52,5 +53,41 @@ fun ColorPickerRingDiamondHSLDialog(initialColor: Color, onDismiss: (Color) -> U
         }
     }
 }
+
+@Composable
+fun ColorPickerRingRectHSVDialog(initialColor: Color, onDismiss: (Color) -> Unit) {
+
+    var color by remember { mutableStateOf(initialColor.copy()) }
+    Dialog(
+        onDismissRequest = {
+            onDismiss(color)
+        }
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            ColorPickerRingRectHSV(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(Color(0xcc212121), shape = RoundedCornerShape(5.dp))
+                    .padding(horizontal = 10.dp, vertical = 2.dp),
+                initialColor = initialColor
+            ) {
+                color = it
+            }
+
+            FloatingActionButton(
+                onClick = { onDismiss(color) },
+                backgroundColor = Color.Black
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = null,
+                    tint = Blue400
+                )
+            }
+        }
+    }
+}
+
 
 
