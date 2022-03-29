@@ -2,8 +2,8 @@ package com.smarttoolfactory.colorpicker.model
 
 import androidx.annotation.FloatRange
 import androidx.compose.ui.graphics.Color
-import com.smarttoolfactory.colorpicker.argbToHex
-import com.smarttoolfactory.colorpicker.rgbToHex
+import com.smarttoolfactory.colorpicker.util.argbToHex
+import com.smarttoolfactory.colorpicker.util.rgbToHex
 
 /**
  * Color in HSV color model

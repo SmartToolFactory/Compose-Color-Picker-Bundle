@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.ui.brush.*
+import com.smarttoolfactory.colorpicker.util.roundToTwoDigits
 import com.smarttoolfactory.colorpicker.widget.drawChecker
 import com.smarttoolfactory.slider.ColorBrush
 import com.smarttoolfactory.slider.ColorfulSlider
@@ -372,7 +373,9 @@ fun CheckeredColorfulSlider(
             modifier = Modifier,
             thumbRadius = 12.dp,
             trackHeight = 12.dp,
-            onValueChange = onValueChange,
+            onValueChange = { value ->
+                onValueChange(value.roundToTwoDigits())
+            },
             valueRange = valueRange,
             coerceThumbInTrack = true,
             colors = MaterialSliderDefaults.materialColors(

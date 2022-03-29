@@ -13,9 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.colorpicker.fractionToPercent
-import com.smarttoolfactory.colorpicker.fractionToRGBString
-import com.smarttoolfactory.colorpicker.ui.Gray
+import com.smarttoolfactory.colorpicker.util.fractionToPercent
+import com.smarttoolfactory.colorpicker.util.fractionToRGBString
 import com.smarttoolfactory.colorpicker.ui.Grey400
 
 /*

@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker
+package com.smarttoolfactory.colorpicker.util
 
 import androidx.compose.ui.geometry.Offset
 import kotlin.math.*

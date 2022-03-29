@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker
+package com.smarttoolfactory.colorpicker.util
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -1104,32 +1104,4 @@ fun hexToARGB(colorString: String, argbIn: IntArray) {
     val colorInt = hexToColorInt(colorString)
     colorIntToARGBArray(colorInt, argbIn)
 }
-
-/**
- * Converts alpha, red, green or blue values from range of [0f-1f] to [0-255].
- */
-fun Float.fractionToRGBRange() = (this * 255.0f).toInt()
-
-/**
- * Converts alpha, red, green or blue values from range of [0f-1f] to [0-255] and returns
- * it as [String].
- */
-fun Float.fractionToRGBString() = this.fractionToRGBRange().toString()
-
-/**
- * Rounds this [Float] to another with 2 significant numbers
- * 0.1234 is rounded to 0.12
- * 0.129 is rounded to 0.12
- */
-fun Float.roundToIntTwoDigits() = (this * 100.0f).toInt() / 100.0f
-
-/**
- * Rounds this [Float] to closest int.
- */
-fun Float.round() = this.roundToInt()
-
-/**
- * Converts **HSV** or **HSL** colors that are in range of [0f-1f] to [0-100] range in [Integer]
- */
-fun Float.fractionToPercent() = (this * 100.0f).toInt()
 

@@ -18,6 +18,8 @@ import com.smarttoolfactory.slider.ColorfulSlider
  * for HSV color model. This composable requires minimum
  * 100.dp height, giving a height lower than this might break its layout.
  *
+ * @param modifier [Modifier] for whole Composable
+ * @param circleModifier [Modifier] for Circle shaped box
  * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param value in [0..1f]
@@ -28,6 +30,7 @@ import com.smarttoolfactory.slider.ColorfulSlider
 @Composable
 fun SliderCircleColorDisplayHueHSV(
     modifier: Modifier = Modifier,
+    circleModifier: Modifier = Modifier,
     @FloatRange(from = 0.0, to = 360.0) hue: Float,
     @FloatRange(from = 0.0, to = 1.0) saturation: Float,
     @FloatRange(from = 0.0, to = 1.0) value: Float,
@@ -37,6 +40,7 @@ fun SliderCircleColorDisplayHueHSV(
 ) {
     SliderWithCircleDisplay(
         modifier = modifier,
+        circleModifier = circleModifier,
         color = Color.hsv(hue, saturation, value, alpha)
     ) {
 
@@ -56,6 +60,8 @@ fun SliderCircleColorDisplayHueHSV(
  * for HSV color model. This composable requires minimum
  * 100.dp height, giving a height lower than this might break its layout.
  *
+ * @param modifier [Modifier] for whole Composable
+ * @param circleModifier [Modifier] for Circle shaped box
  * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param value in [0..1f]
@@ -66,6 +72,7 @@ fun SliderCircleColorDisplayHueHSV(
 @Composable
 fun SliderCircleColorDisplaySaturationHSV(
     modifier: Modifier = Modifier,
+    circleModifier: Modifier = Modifier,
     @FloatRange(from = 0.0, to = 360.0) hue: Float,
     @FloatRange(from = 0.0, to = 1.0) saturation: Float,
     @FloatRange(from = 0.0, to = 1.0) value: Float,
@@ -75,6 +82,7 @@ fun SliderCircleColorDisplaySaturationHSV(
 ) {
     SliderWithCircleDisplay(
         modifier = modifier,
+        circleModifier = circleModifier,
         color = Color.hsv(hue, saturation, value, alpha)
     ) {
         SliderSaturationHSV(
@@ -96,6 +104,8 @@ fun SliderCircleColorDisplaySaturationHSV(
  * for HSV color model. This composable requires minimum
  * 100.dp height, giving a height lower than this might break its layout.
  *
+ * @param modifier [Modifier] for whole Composable
+ * @param circleModifier [Modifier] for Circle shaped box
  * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param value in [0..1f]
@@ -106,6 +116,7 @@ fun SliderCircleColorDisplaySaturationHSV(
 @Composable
 fun SliderCircleColorDisplayValueHSV(
     modifier: Modifier = Modifier,
+    circleModifier: Modifier = Modifier,
     @FloatRange(from = 0.0, to = 360.0) hue: Float,
     @FloatRange(from = 0.0, to = 1.0) saturation: Float,
     @FloatRange(from = 0.0, to = 1.0) value: Float,
@@ -116,6 +127,7 @@ fun SliderCircleColorDisplayValueHSV(
 
     SliderWithCircleDisplay(
         modifier = modifier,
+        circleModifier = circleModifier,
         color = Color.hsv(hue, saturation, value, alpha)
     ) {
         SliderValueHSV(
@@ -137,6 +149,8 @@ fun SliderCircleColorDisplayValueHSV(
  * for HSL color model. This composable requires minimum
  * 100.dp height, giving a height lower than this might break its layout.
  *
+ * @param modifier [Modifier] for whole Composable
+ * @param circleModifier [Modifier] for Circle shaped box
  * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param lightness in [0..1f]
@@ -147,6 +161,7 @@ fun SliderCircleColorDisplayValueHSV(
 @Composable
 fun SliderCircleColorDisplayHueHSL(
     modifier: Modifier = Modifier,
+    circleModifier: Modifier = Modifier,
     @FloatRange(from = 0.0, to = 360.0) hue: Float,
     @FloatRange(from = 0.0, to = 1.0) saturation: Float,
     @FloatRange(from = 0.0, to = 1.0) lightness: Float,
@@ -156,6 +171,7 @@ fun SliderCircleColorDisplayHueHSL(
 ) {
     SliderWithCircleDisplay(
         modifier = modifier,
+        circleModifier = circleModifier,
         color = Color.hsl(hue, saturation, lightness, alpha)
     ) {
 
@@ -175,6 +191,8 @@ fun SliderCircleColorDisplayHueHSL(
  * for HSL color model. This composable requires minimum
  * 100.dp height, giving a height lower than this might break its layout.
  *
+ * @param modifier [Modifier] for whole Composable
+ * @param circleModifier [Modifier] for Circle shaped box
  * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param lightness in [0..1f]
@@ -185,6 +203,7 @@ fun SliderCircleColorDisplayHueHSL(
 @Composable
 fun SliderCircleColorDisplaySaturationHSL(
     modifier: Modifier = Modifier,
+    circleModifier: Modifier = Modifier,
     @FloatRange(from = 0.0, to = 360.0) hue: Float,
     @FloatRange(from = 0.0, to = 1.0) saturation: Float,
     @FloatRange(from = 0.0, to = 1.0) lightness: Float,
@@ -194,6 +213,7 @@ fun SliderCircleColorDisplaySaturationHSL(
 ) {
     SliderWithCircleDisplay(
         modifier = modifier,
+        circleModifier = circleModifier,
         color = Color.hsl(hue, saturation, lightness, alpha)
     ) {
         SliderSaturationHSL(
@@ -211,6 +231,8 @@ fun SliderCircleColorDisplaySaturationHSL(
  * for HSL color model. This composable requires minimum
  * 100.dp height, giving a height lower than this might break its layout.
  *
+ * @param modifier [Modifier] for whole Composable
+ * @param circleModifier [Modifier] for Circle shaped box
  * @param hue in [0..360f]
  * @param saturation in [0..1f]
  * @param lightness in [0..1f]
@@ -221,6 +243,7 @@ fun SliderCircleColorDisplaySaturationHSL(
 @Composable
 fun SliderCircleColorDisplayLightnessHSL(
     modifier: Modifier = Modifier,
+    circleModifier: Modifier = Modifier,
     @FloatRange(from = 0.0, to = 360.0) hue: Float,
     @FloatRange(from = 0.0, to = 1.0) saturation: Float,
     @FloatRange(from = 0.0, to = 1.0) lightness: Float,
@@ -230,6 +253,7 @@ fun SliderCircleColorDisplayLightnessHSL(
 ) {
     SliderWithCircleDisplay(
         modifier = modifier,
+        circleModifier = circleModifier,
         color = Color.hsl(hue, saturation, lightness, alpha)
     ) {
         SliderLightnessHSL(
