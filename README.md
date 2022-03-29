@@ -3,10 +3,25 @@
 Bundle of Stylish customizable Color pickers, selectors, colorful sliders written with Jetpack
 Compose enables users to choose from HSL, HSV or RGB color modes to pick Solid colors or gradients.
 
-Check out gradient, slider demos for rotating gradients, creating HSV, HSL gradients, and check out
-Colorful Sliders to get familiar with.
-
 <img src="/./screenshots/intro.gif" align="right" width="32%"/>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+### Demos
+
+* `SaturationSelectorDemo`  different type of Hue/Saturation/Value/Lightness Selectors
+* `GradientAngleDeme` gradient rotation with `GradientOffset` objects.
+* `HSVHSLGradientDemo` various types of gradients for creating pickers
+* `ColorfulSliderDemo` Sliders that can be used with different type of options with different
+  Selectors and Pickers
+
+| Selectors      | Gradient Angle   | HSV/HSL Gradients| Colorful Sliders |
+| ----------|-----------| -----------| -----------|
+| <img src="./screenshots/saturation.gif"/> | <img src="./screenshots/gradient_angle.gif"/> | <img src="./screenshots/hsv_hsl_gradient.gif"/> | <img src="./screenshots/colorful_sliders.gif"/> |
 
 ### Completed:
 
@@ -23,10 +38,14 @@ Colorful Sliders to get familiar with.
 - [x] Add console with interoperability between HSV, HSL and RGB(Conversion between color models)
 - [x] Add Rectangle Hue+Saturation/Value/Lightness HSV/HSL Selectors
 - [x] Add Circle Hue Saturation Selector
+- [x] Add Composable to display colors in HEX and change color using TextField
+- [x] Add option to display colors in a dialog
 
 ### TODOs:
 
-- [ ] Add option to display colors in a dialog
 - [ ] Add and display colors selected previously
 - [ ] Add gradient color selection with percentage stops, linear, radial and sweep options
-- [ ] Add option to select colors from Image, Screen or Camera
+- [ ] Add option to select colors from Image
+- [ ] Add option to select colors from Screen
+- [ ] Add option to select colors from Camera
+  
