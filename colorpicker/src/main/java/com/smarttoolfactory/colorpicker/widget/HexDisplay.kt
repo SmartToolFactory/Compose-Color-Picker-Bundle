@@ -18,7 +18,6 @@ import com.smarttoolfactory.colorpicker.util.*
 @Composable
 fun HexDisplay(compositeColor: CompositeColor, colorModel: ColorModel) {
 
-
     val options = listOf("HEX", "HSV", "HSL")
     var index by remember { mutableStateOf(0) }
     Row(
@@ -35,67 +34,104 @@ fun HexDisplay(compositeColor: CompositeColor, colorModel: ColorModel) {
             }
         )
     }
-
 }
-
 
 @Composable
 fun HexDisplay(color: Color, colorModel: ColorModel, onColorModelChange: (ColorModel) -> Unit) {
 
     val options = listOf("HEX", "HSV", "HSL")
-    var index by remember { mutableStateOf(0) }
+
+    var selectedIndex by remember {
+        mutableStateOf(
+            when (colorModel) {
+                ColorModel.HSL -> 0
+                ColorModel.HSV -> 1
+                ColorModel.RGB -> 2
+            }
+        )
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
+            .background(Color.White)
             .fillMaxWidth()
             .padding(2.dp)
     ) {
         ExposedSelectionMenu(
-            index = index,
+            modifier = Modifier.width(100.dp),
+            index = selectedIndex,
             options = options,
             onSelected = {
-                index = it
-                onColorModelChange(ColorModel.values()[index])
+                selectedIndex = it
+                onColorModelChange(ColorModel.values()[selectedIndex])
             }
         )
 
         Row(
             modifier = Modifier
-                .weight(1f)
-                .background(Color.White),
+                .weight(1f),
             horizontalArrangement = Arrangement.Start
         ) {
 
             when (colorModel) {
                 ColorModel.RGB -> {
-                    ColorText(title = "R", value = color.red.fractionToRGBString())
-                    Spacer(modifier = Modifier.width(20.dp))
-                    ColorText(title = "G", value = color.green.fractionToRGBString())
-                    Spacer(modifier = Modifier.width(20.dp))
-                    ColorText(title = "B", value = color.blue.fractionToRGBString())
-                    Spacer(modifier = Modifier.width(20.dp))
-                    ColorText(title = "A", value = "${color.alpha.fractionToPercent()}%")
+                    ColorText(
+                        title = "R",
+                        value = color.red.fractionToRGBString(),
+                        modifier = Modifier.weight(1f)
+                    )
+                    ColorText(
+                        title = "G", value = color.green.fractionToRGBString(),
+                        modifier = Modifier.weight(1f)
+                    )
+                    ColorText(
+                        title = "B", value = color.blue.fractionToRGBString(),
+                        modifier = Modifier.weight(1f)
+                    )
+                    ColorText(
+                        title = "A", value = "${color.alpha.fractionToPercent()}%",
+                        modifier = Modifier.weight(1f)
+                    )
                 }
                 ColorModel.HSV -> {
                     val hsvArray = colorToHSV(color)
-                    ColorText(title = "H", value = "${hsvArray[0].round()}")
-                    Spacer(modifier = Modifier.width(20.dp))
-                    ColorText(title = "S", "${hsvArray[1].fractionToPercent()}")
-                    Spacer(modifier = Modifier.width(20.dp))
-                    ColorText(title = "V", "${hsvArray[2].fractionToPercent()}")
-                    Spacer(modifier = Modifier.width(20.dp))
-                    ColorText(title = "A", value = "${color.alpha.fractionToPercent()}%")
+                    ColorText(
+                        title = "H", value = "${hsvArray[0].round()}°",
+                        modifier = Modifier.weight(1f)
+                    )
+                    ColorText(
+                        title = "S", value = "${hsvArray[1].fractionToPercent()}%",
+                        modifier = Modifier.weight(1f)
+                    )
+                    ColorText(
+                        title = "V", value = "${hsvArray[2].fractionToPercent()}%",
+                        modifier = Modifier.weight(1f)
+                    )
+                    ColorText(
+                        title = "A", value = "${color.alpha.fractionToPercent()}%",
+                        modifier = Modifier.weight(1f)
+                    )
                 }
 
                 ColorModel.HSL -> {
                     val hslArray = colorToHSL(color)
-                    ColorText(title = "H", value = "${hslArray[0].round()}")
-                    Spacer(modifier = Modifier.width(20.dp))
-                    ColorText(title = "S", "${hslArray[1].fractionToPercent()}")
-                    Spacer(modifier = Modifier.width(20.dp))
-                    ColorText(title = "L", "${hslArray[2].fractionToPercent()}")
-                    Spacer(modifier = Modifier.width(20.dp))
-                    ColorText(title = "A", value = "${color.alpha.fractionToPercent()}%")
+                    ColorText(
+                        title = "H", value = "${hslArray[0].round()}°",
+                        modifier = Modifier.weight(1f)
+                    )
+                    ColorText(
+                        title = "S", value = "${hslArray[1].fractionToPercent()}%",
+                        modifier = Modifier.weight(1f)
+                    )
+                    ColorText(
+                        title = "L", value = "${hslArray[2].fractionToPercent()}%",
+                        modifier = Modifier.weight(1f)
+                    )
+                    ColorText(
+                        title = "A", value = "${color.alpha.fractionToPercent()}%",
+                        modifier = Modifier.weight(1f)
+                    )
                 }
             }
         }
@@ -103,16 +139,19 @@ fun HexDisplay(color: Color, colorModel: ColorModel, onColorModelChange: (ColorM
 }
 
 @Composable
-private fun ColorText(title: String, value: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+private fun ColorText(modifier: Modifier = Modifier, title: String, value: String) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             text = title.substring(0, 1),
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp
+            fontSize = 16.sp
 
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(text = value, fontSize = 16.sp)
+        Text(text = value, fontSize = 14.sp)
     }
 }
 
@@ -129,7 +168,7 @@ private fun ExposedSelectionMenu(
     var selectedOptionText by remember { mutableStateOf(options[index]) }
 
     ExposedDropdownMenuBox(
-        modifier = Modifier.width(120.dp),
+        modifier = modifier,
         expanded = expanded,
         onExpandedChange = {
             expanded = !expanded
@@ -153,7 +192,7 @@ private fun ExposedSelectionMenu(
             ),
             textStyle = TextStyle(
                 fontWeight = FontWeight.W600,
-                fontSize = 18.sp
+                fontSize = 14.sp
             )
         )
         ExposedDropdownMenu(

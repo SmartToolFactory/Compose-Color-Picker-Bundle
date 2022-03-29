@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.ColorHSV
 import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
-import com.smarttoolfactory.colorpicker.selector.SaturationLightnessSelectorDiamondHSL
 import com.smarttoolfactory.colorpicker.selector.SaturationValueSelectorRectHSV
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.util.colorToHSV
@@ -31,6 +30,7 @@ import com.smarttoolfactory.colorpicker.widget.ColorModelChangeTabRow
  * @param ringBackgroundColor background from center to inner radius of [HueSelectorRing].
  * @param ringBorderStrokeColor stroke color for drawing borders around inner or outer radius.
  * @param ringBorderStrokeWidth stroke width of borders.
+ * @param selectionRadius radius of white and black circle selector.
  * @param onColorChange callback that is triggered when [Color] is changed using [HueSelectorRing],
  * [SaturationValueSelectorRectHSV] or [CompositeSliderPanel]
  */
@@ -40,9 +40,10 @@ fun ColorPickerRingRectHSV(
     initialColor: Color,
     ringOuterRadiusFraction: Float = .9f,
     ringInnerRadiusFraction: Float = .6f,
-    ringBackgroundColor:Color=Color.Transparent,
+    ringBackgroundColor: Color = Color.Transparent,
     ringBorderStrokeColor: Color = Color.Black,
     ringBorderStrokeWidth: Dp = 4.dp,
+    selectionRadius: Dp = 8.dp,
     onColorChange: (Color) -> Unit
 ) {
 
@@ -88,7 +89,7 @@ fun ColorPickerRingRectHSV(
                 backgroundColor = ringBackgroundColor,
                 borderStrokeColor = ringBorderStrokeColor,
                 borderStrokeWidth = ringBorderStrokeWidth,
-                selectionRadius = 8.dp,
+                selectionRadius = selectionRadius,
             ) { hueChange ->
                 hue = hueChange
             }
@@ -101,7 +102,7 @@ fun ColorPickerRingRectHSV(
                 hue = hue,
                 saturation = saturation,
                 value = value,
-                selectionRadius = 8.dp
+                selectionRadius = selectionRadius
             ) { s, v ->
                 saturation = s
                 value = v

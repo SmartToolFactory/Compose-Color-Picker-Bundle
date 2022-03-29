@@ -31,6 +31,7 @@ import com.smarttoolfactory.colorpicker.widget.ColorModelChangeTabRow
  * @param ringBackgroundColor background from center to inner radius of [HueSelectorRing].
  * @param ringBorderStrokeColor stroke color for drawing borders around inner or outer radius.
  * @param ringBorderStrokeWidth stroke width of borders.
+ * @param selectionRadius radius of white and black circle selector.
  * @param onColorChange callback that is triggered when [Color] is changed using [HueSelectorRing],
  * [SaturationLightnessSelectorDiamondHSL] or [CompositeSliderPanel]
  */
@@ -43,6 +44,7 @@ fun ColorPickerRingDiamondHSL(
     ringBackgroundColor: Color = Color.Black,
     ringBorderStrokeColor: Color = Color.Black,
     ringBorderStrokeWidth: Dp = 4.dp,
+    selectionRadius: Dp = 8.dp,
     onColorChange: (Color) -> Unit
 ) {
 
@@ -88,7 +90,7 @@ fun ColorPickerRingDiamondHSL(
                 backgroundColor = ringBackgroundColor,
                 borderStrokeColor = ringBorderStrokeColor,
                 borderStrokeWidth = ringBorderStrokeWidth,
-                selectionRadius = 8.dp
+                selectionRadius = selectionRadius
             ) { hueChange ->
                 hue = hueChange
             }
@@ -99,7 +101,7 @@ fun ColorPickerRingDiamondHSL(
                 hue = hue,
                 saturation = saturation,
                 lightness = lightness,
-                selectionRadius = 8.dp
+                selectionRadius = selectionRadius
             ) { s, l ->
                 saturation = s
                 lightness = l

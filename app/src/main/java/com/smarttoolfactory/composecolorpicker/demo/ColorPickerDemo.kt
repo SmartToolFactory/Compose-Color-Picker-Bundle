@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.colorpicker.dialog.ColorPickerCircleHSVDialog
 import com.smarttoolfactory.colorpicker.dialog.ColorPickerRingDiamondHSLDialog
 import com.smarttoolfactory.colorpicker.dialog.ColorPickerRingRectHSVDialog
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
@@ -88,6 +89,29 @@ fun ColorPickerDemo() {
 
             ColorPickerRingRectHSVDialog(color) {
                 showColorDialogRingRectHSV = !showColorDialogRingRectHSV
+                color = it
+            }
+        }
+
+
+        var showColorDialogCircleHSV by remember { mutableStateOf(false) }
+
+        OutlinedButton(
+            modifier = buttonModifier,
+            onClick = { showColorDialogCircleHSV = !showColorDialogCircleHSV },
+            colors = ButtonDefaults.outlinedButtonColors(
+                backgroundColor = Color.Transparent
+            )
+
+        ) {
+            Text(text = "Hue Circle HSV Dialog")
+        }
+
+        if (showColorDialogCircleHSV) {
+            previousColor = color.copy()
+
+            ColorPickerCircleHSVDialog(initialColor = color) {
+                showColorDialogCircleHSV = !showColorDialogCircleHSV
                 color = it
             }
         }
