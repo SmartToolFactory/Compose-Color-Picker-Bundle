@@ -30,7 +30,7 @@ import com.smarttoolfactory.gesture.pointerMotionEvents
  *  when position of touch in this selector has changed.
  */
 @Composable
-fun SaturationLightnessSelectorRectHSL(
+fun SelectorRectSaturationLightnessHSL(
     modifier: Modifier = Modifier,
     hue: Float,
     saturation: Float = 0.5f,
@@ -63,7 +63,7 @@ fun SaturationLightnessSelectorRectHSL(
  *  when position of touch in this selector has changed.
  */
 @Composable
-fun SaturationValueSelectorRectHSV(
+fun SelectorRectSaturationValueHSV(
     modifier: Modifier = Modifier,
     hue: Float,
     saturation: Float = 0.5f,

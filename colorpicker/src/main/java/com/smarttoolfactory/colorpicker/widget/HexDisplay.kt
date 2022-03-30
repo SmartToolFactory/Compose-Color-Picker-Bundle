@@ -44,9 +44,9 @@ fun HexDisplay(color: Color, colorModel: ColorModel, onColorModelChange: (ColorM
     var selectedIndex by remember {
         mutableStateOf(
             when (colorModel) {
-                ColorModel.HSL -> 0
+                ColorModel.RGB -> 0
                 ColorModel.HSV -> 1
-                ColorModel.RGB -> 2
+                ColorModel.HSL -> 2
             }
         )
     }

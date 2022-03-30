@@ -1,6 +1,8 @@
 package com.smarttoolfactory.colorpicker.picker
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -9,33 +11,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.ColorModel
-import com.smarttoolfactory.colorpicker.selector.SelectorCircleHueSaturationHSV
-import com.smarttoolfactory.colorpicker.slider.SliderCircleColorDisplayValueHSV
-import com.smarttoolfactory.colorpicker.util.colorToHSV
+import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationLightnessHSL
+import com.smarttoolfactory.colorpicker.slider.SliderCircleColorDisplayHueHSL
+import com.smarttoolfactory.colorpicker.util.colorToHSL
 import com.smarttoolfactory.colorpicker.widget.HexDisplay
 
-/**
- *
- */
 @Composable
-fun ColorPickerCircleValueHSV(
+fun ColorPickerRectSaturationLightnessHSL(
     modifier: Modifier = Modifier,
     selectionRadius: Dp = 8.dp,
     initialColor: Color,
     onColorChange: (Color) -> Unit
 ) {
 
-    val hsvArray = colorToHSV(initialColor)
+    var colorModel by remember { mutableStateOf(ColorModel.HSL) }
 
-    var hue by remember { mutableStateOf(hsvArray[0]) }
-    var saturation by remember { mutableStateOf(hsvArray[1]) }
-    var value by remember { mutableStateOf(hsvArray[2]) }
+    val hslArray = colorToHSL(initialColor)
+
+    var hue by remember { mutableStateOf(hslArray[0]) }
+    var saturation by remember { mutableStateOf(hslArray[1]) }
+    var lightness by remember { mutableStateOf(hslArray[2]) }
     var alpha by remember { mutableStateOf(initialColor.alpha) }
 
-    val currentColor =
-        Color.hsv(hue = hue, saturation = saturation, value = value, alpha = alpha)
 
-    var colorModel by remember { mutableStateOf(ColorModel.HSV) }
+    val currentColor =
+        Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
 
     onColorChange(currentColor)
 
@@ -43,25 +43,27 @@ fun ColorPickerCircleValueHSV(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SelectorCircleHueSaturationHSV(
-            modifier = Modifier.padding(8.dp),
+        SelectorRectSaturationLightnessHSL(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(4 / 3f),
             hue = hue,
             saturation = saturation,
+            lightness = lightness,
             selectionRadius = selectionRadius
-        ) { h, s ->
-            hue = h
+        ) { s, l ->
             saturation = s
-
+            lightness = l
         }
 
-        SliderCircleColorDisplayValueHSV(
+        SliderCircleColorDisplayHueHSL(
             modifier = Modifier.padding(8.dp),
             hue = hue,
             saturation = saturation,
-            value = value,
+            lightness = lightness,
             alpha = alpha,
-            onValueChange = {
-                value = it
+            onHueChange = {
+                hue = it
             },
             onAlphaChange = {
                 alpha = it

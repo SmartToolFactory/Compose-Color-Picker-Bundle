@@ -291,8 +291,8 @@ fun SliderWithCircleDisplay(
     ) {
         CircleDisplay(
             modifier = circleModifier
-                .widthIn(min = 80.dp)
-                .heightIn(min = 80.dp),
+                .widthIn(min = 70.dp)
+                .heightIn(min = 70.dp),
             color = color
         )
         Spacer(modifier = Modifier.width(10.dp))

@@ -29,7 +29,7 @@ import com.smarttoolfactory.gesture.pointerMotionEvents
  *  when position of touch in this selector has changed.
  */
 @Composable
-fun HueValueSelectorRectHSV(
+fun SelectorRectHueValueHSV(
     modifier: Modifier = Modifier,
     hue: Float,
     value: Float,
@@ -51,7 +51,7 @@ fun HueValueSelectorRectHSV(
         transparentToBlackVerticalGradient()
     }
 
-    SelectorRectangle(
+    SelectorRect(
         modifier = modifier,
         hue = hue,
         property = value,
@@ -73,7 +73,7 @@ fun HueValueSelectorRectHSV(
  *  when position of touch in this selector has changed.
  */
 @Composable
-fun HueSaturationSelectorRectHSV(
+fun SelectorRectHueSaturationHSV(
     modifier: Modifier = Modifier,
     hue: Float,
     saturation: Float,
@@ -95,7 +95,7 @@ fun HueSaturationSelectorRectHSV(
         transparentToWhiteVerticalGradient()
     }
 
-    SelectorRectangle(
+    SelectorRect(
         modifier = modifier,
         hue = hue,
         property = saturation,
@@ -119,7 +119,7 @@ fun HueSaturationSelectorRectHSV(
  *  when position of touch in this selector has changed.
  */
 @Composable
-fun HueSaturationSelectorRectHSL(
+fun SelectorRectHueSaturationHSL(
     modifier: Modifier = Modifier,
     hue: Float,
     saturation: Float,
@@ -141,7 +141,7 @@ fun HueSaturationSelectorRectHSL(
         transparentToGrayVerticalGradient()
     }
 
-    SelectorRectangle(
+    SelectorRect(
         modifier = modifier,
         hue = hue,
         property = saturation,
@@ -163,7 +163,7 @@ fun HueSaturationSelectorRectHSL(
  *  when position of touch in this selector has changed.
  */
 @Composable
-fun HueLightnessSelectorRectHSL(
+fun SelectorRectHueLightnessHSL(
     modifier: Modifier = Modifier,
     hue: Float,
     lightness: Float,
@@ -185,7 +185,7 @@ fun HueLightnessSelectorRectHSL(
         whiteToTransparentToBlackVerticalGradient()
     }
 
-    SelectorRectangle(
+    SelectorRect(
         modifier = modifier,
         hue = hue,
         property = lightness,
@@ -213,7 +213,7 @@ fun HueLightnessSelectorRectHSL(
  * @param onChange callback that triggered when input position on selector has changed
  */
 @Composable
-private fun SelectorRectangle(
+private fun SelectorRect(
     modifier: Modifier = Modifier,
     hue: Float,
     property: Float,

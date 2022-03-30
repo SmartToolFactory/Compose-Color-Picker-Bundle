@@ -9,15 +9,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.ColorHSV
 import com.smarttoolfactory.colorpicker.model.ColorModel
-import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
-import com.smarttoolfactory.colorpicker.selector.SaturationValueSelectorRectHSV
+import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
+import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationValueHSV
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.util.colorToHSV
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
 import com.smarttoolfactory.colorpicker.widget.ColorModelChangeTabRow
 
 /**
- * ColorPicker with [HueSelectorRing] hue selector and [SaturationValueSelectorRectHSV]
+ * ColorPicker with [SelectorRingHue] hue selector and [SelectorRectSaturationValueHSV]
  * saturation lightness Selector that uses [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV)
  * color model as base.
  * This color picker has tabs section that can be changed between
@@ -25,14 +25,14 @@ import com.smarttoolfactory.colorpicker.widget.ColorModelChangeTabRow
  * sliders for each color models.
  *
  * @param initialColor color that is passed to this picker initially.
- * @param ringOuterRadiusFraction outer radius of [HueSelectorRing].
- * @param ringInnerRadiusFraction inner radius of [HueSelectorRing].
- * @param ringBackgroundColor background from center to inner radius of [HueSelectorRing].
+ * @param ringOuterRadiusFraction outer radius of [SelectorRingHue].
+ * @param ringInnerRadiusFraction inner radius of [SelectorRingHue].
+ * @param ringBackgroundColor background from center to inner radius of [SelectorRingHue].
  * @param ringBorderStrokeColor stroke color for drawing borders around inner or outer radius.
  * @param ringBorderStrokeWidth stroke width of borders.
  * @param selectionRadius radius of white and black circle selector.
- * @param onColorChange callback that is triggered when [Color] is changed using [HueSelectorRing],
- * [SaturationValueSelectorRectHSV] or [CompositeSliderPanel]
+ * @param onColorChange callback that is triggered when [Color] is changed using [SelectorRingHue],
+ * [SelectorRectSaturationValueHSV] or [CompositeSliderPanel]
  */
 @Composable
 fun ColorPickerRingRectHSV(
@@ -81,7 +81,7 @@ fun ColorPickerRingRectHSV(
         Box(contentAlignment = Alignment.Center) {
 
             // Ring Shaped Hue Selector
-            HueSelectorRing(
+            SelectorRingHue(
                 modifier = Modifier.fillMaxWidth(1f),
                 hue = hue,
                 outerRadiusFraction = ringOuterRadiusFraction,
@@ -95,7 +95,7 @@ fun ColorPickerRingRectHSV(
             }
 
             // Diamond Shaped Saturation and Lightness Selector
-            SaturationValueSelectorRectHSV(
+            SelectorRectSaturationValueHSV(
                 modifier = Modifier
                     .fillMaxWidth(ringInnerRadiusFraction * .65f)
                     .aspectRatio(1f),
@@ -120,6 +120,7 @@ fun ColorPickerRingRectHSV(
 
         // HSL-HSV-RGB Sliders
         CompositeSliderPanel(
+            modifier = Modifier.padding(start = 10.dp, end = 7.dp),
             compositeColor = ColorHSV(
                 hue = hue,
                 saturation = saturation,

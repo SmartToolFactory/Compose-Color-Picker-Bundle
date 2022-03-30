@@ -35,7 +35,7 @@ import com.smarttoolfactory.gesture.pointerMotionEvents
  * @param onChange callback that returns [hue] on user touch
  */
 @Composable
-fun HueSelectorRing(
+fun SelectorRingHue(
     modifier: Modifier = Modifier,
     @FloatRange(from = 0.1, to = 360.0) hue: Float,
     @FloatRange(from = 0.0, to = 1.0) outerRadiusFraction: Float = .9f,

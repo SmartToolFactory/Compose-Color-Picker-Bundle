@@ -29,7 +29,7 @@ import com.smarttoolfactory.gesture.pointerMotionEvents
  *  when position of touch in this selector has changed.
  */
 @Composable
-fun HueSaturationSelectorCircleHSV(
+fun SelectorCircleHueSaturationHSV(
     modifier: Modifier = Modifier,
     hue: Float,
     saturation: Float,
@@ -108,7 +108,7 @@ fun HueSaturationSelectorCircleHSV(
                 delayAfterDownInMillis = 20
             )
 
-        CircleSelectorImpl(
+        SelectorCircleImpl(
             modifier = canvasModifier,
             selectorPosition = currentPosition,
             selectorRadius = selectorRadius
@@ -117,7 +117,7 @@ fun HueSaturationSelectorCircleHSV(
 }
 
 @Composable
-private fun CircleSelectorImpl(
+private fun SelectorCircleImpl(
     modifier: Modifier,
     selectorPosition: Offset,
     selectorRadius: Float

@@ -12,9 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.colorpicker.dialog.ColorPickerCircleHSVDialog
-import com.smarttoolfactory.colorpicker.dialog.ColorPickerRingDiamondHSLDialog
-import com.smarttoolfactory.colorpicker.dialog.ColorPickerRingRectHSVDialog
+import com.smarttoolfactory.colorpicker.dialog.*
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 
@@ -48,72 +46,395 @@ fun ColorPickerDemo() {
             .fillMaxWidth()
             .padding(4.dp)
 
-        var showColorDialogRingDiamondHSL by remember { mutableStateOf(false) }
-
-        OutlinedButton(
+        // Ring Hue, Diamond Saturation-Lightness selector HSL Picker
+        DialogRingHSL(
             modifier = buttonModifier,
-            onClick = { showColorDialogRingDiamondHSL = !showColorDialogRingDiamondHSL },
-            colors = ButtonDefaults.outlinedButtonColors(
-                backgroundColor = Color.Transparent
-            )
-
-        ) {
-            Text(text = "Hue Ring-Diamond HSL Dialog")
-        }
-
-        if (showColorDialogRingDiamondHSL) {
-            previousColor = color.copy()
-
-            ColorPickerRingDiamondHSLDialog(color) {
-                showColorDialogRingDiamondHSL = !showColorDialogRingDiamondHSL
+            color = color,
+            onPreviousColorChange = {
+                previousColor = it
+            },
+            onCurrentColorChange = {
                 color = it
             }
-        }
+        )
 
-
-        var showColorDialogRingRectHSV by remember { mutableStateOf(false) }
-
-        OutlinedButton(
+        // Ring Hue, Rect Saturation-Value selector HSV Picker
+        DialogRingHSV(
             modifier = buttonModifier,
-            onClick = { showColorDialogRingRectHSV = !showColorDialogRingRectHSV },
-            colors = ButtonDefaults.outlinedButtonColors(
-                backgroundColor = Color.Transparent
-            )
-
-        ) {
-            Text(text = "Hue Ring-Rect HSV Dialog")
-        }
-
-        if (showColorDialogRingRectHSV) {
-            previousColor = color.copy()
-
-            ColorPickerRingRectHSVDialog(color) {
-                showColorDialogRingRectHSV = !showColorDialogRingRectHSV
+            color = color,
+            onPreviousColorChange = {
+                previousColor = it
+            },
+            onCurrentColorChange = {
                 color = it
             }
-        }
+        )
 
-
-        var showColorDialogCircleHSV by remember { mutableStateOf(false) }
-
-        OutlinedButton(
+        DialogCircleHSV(
             modifier = buttonModifier,
-            onClick = { showColorDialogCircleHSV = !showColorDialogCircleHSV },
-            colors = ButtonDefaults.outlinedButtonColors(
-                backgroundColor = Color.Transparent
-            )
-
-        ) {
-            Text(text = "Hue Circle HSV Dialog")
-        }
-
-        if (showColorDialogCircleHSV) {
-            previousColor = color.copy()
-
-            ColorPickerCircleHSVDialog(initialColor = color) {
-                showColorDialogCircleHSV = !showColorDialogCircleHSV
+            color = color,
+            onPreviousColorChange = {
+                previousColor = it
+            },
+            onCurrentColorChange = {
                 color = it
             }
+        )
+
+        // Saturation Value Selector Dialogs
+        DialogRectSaturationValueHSV(
+            modifier = buttonModifier,
+            color = color,
+            onPreviousColorChange = {
+                previousColor = it
+            },
+            onCurrentColorChange = {
+                color = it
+            }
+        )
+
+        DialogRectSaturationLightnessHSL(
+            modifier = buttonModifier,
+            color = color,
+            onPreviousColorChange = {
+                previousColor = it
+            },
+            onCurrentColorChange = {
+                color = it
+            }
+        )
+
+        // Hue + Saturation/Value/Lightness Selector Dialogs
+        DialogRectHueSaturationHSV(
+            modifier = buttonModifier,
+            color = color,
+            onPreviousColorChange = {
+                previousColor = it
+            },
+            onCurrentColorChange = {
+                color = it
+            }
+        )
+
+        DialogRectHueValueHSV(
+            modifier = buttonModifier,
+            color = color,
+            onPreviousColorChange = {
+                previousColor = it
+            },
+            onCurrentColorChange = {
+                color = it
+            }
+        )
+
+        DialogRectHueSaturationHSL(
+            modifier = buttonModifier,
+            color = color,
+            onPreviousColorChange = {
+                previousColor = it
+            },
+            onCurrentColorChange = {
+                color = it
+            }
+        )
+
+        DialogRectHueLightnessHSL(
+            modifier = buttonModifier,
+            color = color,
+            onPreviousColorChange = {
+                previousColor = it
+            },
+            onCurrentColorChange = {
+                color = it
+            }
+        )
+    }
+}
+
+@Composable
+private fun DialogRingHSL(
+    modifier: Modifier,
+    color: Color,
+    onPreviousColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color) -> Unit,
+
+    ) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+
+    ) {
+        Text(text = "Hue Ring-Diamond HSL Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(color.copy())
+
+        ColorPickerRingDiamondHSLDialog(color) {
+            showDialog = !showDialog
+            onCurrentColorChange(it)
+        }
+    }
+}
+
+@Composable
+private fun DialogRingHSV(
+    modifier: Modifier,
+    color: Color,
+    onPreviousColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color) -> Unit,
+
+    ) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+
+    ) {
+        Text(text = "Hue Ring-Rect HSV Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(color.copy())
+
+        ColorPickerRingRectHSVDialog(color) {
+            showDialog = !showDialog
+            onCurrentColorChange(it)
+        }
+    }
+}
+
+@Composable
+private fun DialogCircleHSV(
+    modifier: Modifier,
+    color: Color,
+    onPreviousColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color) -> Unit,
+
+    ) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+
+    ) {
+        Text(text = "Hue Circle HSV Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(color.copy())
+
+        ColorPickerCircleHSVDialog(
+            initialColor = color
+        ) {
+            showDialog = !showDialog
+            onCurrentColorChange(it)
+        }
+    }
+}
+
+@Composable
+private fun DialogRectSaturationValueHSV(
+    modifier: Modifier,
+    color: Color,
+    onPreviousColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color) -> Unit,
+
+    ) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+
+    ) {
+        Text(text = "Saturation-Value Rect HSV Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(color.copy())
+
+        ColorPickerSVRectHSVDialog(
+            initialColor = color
+        ) {
+            showDialog = !showDialog
+            onCurrentColorChange(it)
+        }
+    }
+}
+
+@Composable
+private fun DialogRectSaturationLightnessHSL(
+    modifier: Modifier,
+    color: Color,
+    onPreviousColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color) -> Unit,
+
+    ) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+    ) {
+        Text(text = "Saturation-Lightness Rect HSL Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(color.copy())
+
+        ColorPickerSLRectHSLDialog(
+            initialColor = color
+        ) {
+            showDialog = !showDialog
+            onCurrentColorChange(it)
+        }
+    }
+}
+
+@Composable
+private fun DialogRectHueSaturationHSV(
+    modifier: Modifier,
+    color: Color,
+    onPreviousColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color) -> Unit,
+
+    ) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+    ) {
+        Text(text = "Hue-Saturation Rect HSV Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(color.copy())
+
+        ColorPickerHSRectHSVDialog(
+            initialColor = color
+        ) {
+            showDialog = !showDialog
+            onCurrentColorChange(it)
+        }
+    }
+}
+
+@Composable
+private fun DialogRectHueValueHSV(
+    modifier: Modifier,
+    color: Color,
+    onPreviousColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color) -> Unit,
+
+    ) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+    ) {
+        Text(text = "Hue-Value Rect HSV Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(color.copy())
+
+        ColorPickerHVRectHSVDialog(
+            initialColor = color
+        ) {
+            showDialog = !showDialog
+            onCurrentColorChange(it)
+        }
+    }
+}
+
+@Composable
+private fun DialogRectHueSaturationHSL(
+    modifier: Modifier,
+    color: Color,
+    onPreviousColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color) -> Unit,
+
+    ) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+    ) {
+        Text(text = "Hue-Saturation Rect HSL Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(color.copy())
+
+        ColorPickerHSRectHSLDialog(
+            initialColor = color
+        ) {
+            showDialog = !showDialog
+            onCurrentColorChange(it)
+        }
+    }
+}
+
+@Composable
+private fun DialogRectHueLightnessHSL(
+    modifier: Modifier,
+    color: Color,
+    onPreviousColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color) -> Unit,
+
+    ) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+    ) {
+        Text(text = "Hue-Lightness Rect HSL Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(color.copy())
+
+        ColorPickerHLRectHSLDialog(
+            initialColor = color
+        ) {
+            showDialog = !showDialog
+            onCurrentColorChange(it)
         }
     }
 }

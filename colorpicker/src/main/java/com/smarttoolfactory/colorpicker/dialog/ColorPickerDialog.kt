@@ -12,15 +12,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.smarttoolfactory.colorpicker.picker.ColorPickerCircleValueHSV
-import com.smarttoolfactory.colorpicker.picker.ColorPickerRingDiamondHSL
-import com.smarttoolfactory.colorpicker.picker.ColorPickerRingRectHSV
+import com.smarttoolfactory.colorpicker.picker.*
 import com.smarttoolfactory.colorpicker.ui.Blue400
 
 @Composable
@@ -130,7 +129,7 @@ fun ColorPickerCircleHSVDialog(
             ColorPickerCircleValueHSV(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 12.dp),
+                    .padding(horizontal = 8.dp, vertical = 12.dp),
                 initialColor = initialColor,
                 selectionRadius = selectionRadius
             ) {
@@ -140,5 +139,206 @@ fun ColorPickerCircleHSVDialog(
     }
 }
 
+@Composable
+fun ColorPickerSVRectHSVDialog(
+    modifier: Modifier = Modifier,
+    initialColor: Color,
+    selectionRadius: Dp = 8.dp,
+    dialogBackgroundColor: Color = Color.White,
+    dialogShape: Shape = RoundedCornerShape(5.dp),
+    onDismiss: (Color) -> Unit
+) {
 
+    var color by remember { mutableStateOf(initialColor.copy()) }
 
+    Dialog(
+        onDismissRequest = {
+            onDismiss(color)
+        }
+    ) {
+        Surface(
+            modifier = modifier,
+            color = dialogBackgroundColor,
+            shape = dialogShape,
+            elevation = 2.dp
+        ) {
+            ColorPickerRectSaturationValueHSV(
+                modifier = Modifier,
+                initialColor = initialColor,
+                selectionRadius = selectionRadius
+            ) {
+                color = it
+            }
+        }
+    }
+}
+
+@Composable
+fun ColorPickerSLRectHSLDialog(
+    modifier: Modifier = Modifier,
+    initialColor: Color,
+    selectionRadius: Dp = 8.dp,
+    dialogBackgroundColor: Color = Color.White,
+    dialogShape: Shape = RoundedCornerShape(5.dp),
+    onDismiss: (Color) -> Unit
+) {
+
+    var color by remember { mutableStateOf(initialColor.copy()) }
+
+    Dialog(
+        onDismissRequest = {
+            onDismiss(color)
+        }
+    ) {
+        Surface(
+            modifier = modifier,
+            color = dialogBackgroundColor,
+            shape = dialogShape,
+            elevation = 2.dp
+        ) {
+            ColorPickerRectSaturationLightnessHSL(
+                modifier = Modifier,
+                initialColor = initialColor,
+                selectionRadius = selectionRadius
+            ) {
+                color = it
+            }
+        }
+    }
+}
+
+@Composable
+fun ColorPickerHSRectHSVDialog(
+    modifier: Modifier = Modifier,
+    initialColor: Color,
+    selectionRadius: Dp = 8.dp,
+    dialogBackgroundColor: Color = Color.White,
+    dialogShape: Shape = RoundedCornerShape(5.dp),
+    onDismiss: (Color) -> Unit
+) {
+
+    var color by remember { mutableStateOf(initialColor.copy()) }
+
+    Dialog(
+        onDismissRequest = {
+            onDismiss(color)
+        }
+    ) {
+        Surface(
+            modifier = modifier,
+            color = dialogBackgroundColor,
+            shape = dialogShape,
+            elevation = 2.dp
+        ) {
+            ColorPickerRectHueSaturationHSV(
+                modifier = Modifier,
+                initialColor = initialColor,
+                selectionRadius = selectionRadius
+            ) {
+                color = it
+            }
+        }
+    }
+}
+
+@Composable
+fun ColorPickerHVRectHSVDialog(
+    modifier: Modifier = Modifier,
+    initialColor: Color,
+    selectionRadius: Dp = 8.dp,
+    dialogBackgroundColor: Color = Color.White,
+    dialogShape: Shape = RoundedCornerShape(5.dp),
+    onDismiss: (Color) -> Unit
+) {
+
+    var color by remember { mutableStateOf(initialColor.copy()) }
+
+    Dialog(
+        onDismissRequest = {
+            onDismiss(color)
+        }
+    ) {
+        Surface(
+            modifier = modifier,
+            color = dialogBackgroundColor,
+            shape = dialogShape,
+            elevation = 2.dp
+        ) {
+            ColorPickerRectHueValueHSV(
+                modifier = Modifier,
+                initialColor = initialColor,
+                selectionRadius = selectionRadius
+            ) {
+                color = it
+            }
+        }
+    }
+}
+
+@Composable
+fun ColorPickerHSRectHSLDialog(
+    modifier: Modifier = Modifier,
+    initialColor: Color,
+    selectionRadius: Dp = 8.dp,
+    dialogBackgroundColor: Color = Color.White,
+    dialogShape: Shape = RoundedCornerShape(5.dp),
+    onDismiss: (Color) -> Unit
+) {
+
+    var color by remember { mutableStateOf(initialColor.copy()) }
+
+    Dialog(
+        onDismissRequest = {
+            onDismiss(color)
+        }
+    ) {
+        Surface(
+            modifier = modifier,
+            color = dialogBackgroundColor,
+            shape = dialogShape,
+            elevation = 2.dp
+        ) {
+            ColorPickerRectHueSaturationHSL(
+                modifier = Modifier,
+                initialColor = initialColor,
+                selectionRadius = selectionRadius
+            ) {
+                color = it
+            }
+        }
+    }
+}
+
+@Composable
+fun ColorPickerHLRectHSLDialog(
+    modifier: Modifier = Modifier,
+    initialColor: Color,
+    selectionRadius: Dp = 8.dp,
+    dialogBackgroundColor: Color = Color.White,
+    dialogShape: Shape = RoundedCornerShape(5.dp),
+    onDismiss: (Color) -> Unit
+) {
+
+    var color by remember { mutableStateOf(initialColor.copy()) }
+
+    Dialog(
+        onDismissRequest = {
+            onDismiss(color)
+        }
+    ) {
+        Surface(
+            modifier = modifier,
+            color = dialogBackgroundColor,
+            shape = dialogShape,
+            elevation = 2.dp
+        ) {
+            ColorPickerRectHueLightnessHSL(
+                modifier = Modifier,
+                initialColor = initialColor,
+                selectionRadius = selectionRadius
+            ) {
+                color = it
+            }
+        }
+    }
+}

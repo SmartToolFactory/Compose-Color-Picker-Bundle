@@ -50,7 +50,7 @@ import com.smarttoolfactory.gesture.pointerMotionEvents
  *
  */
 @Composable
-fun SaturationLightnessSelectorDiamondHSL(
+fun SelectorDiamondSaturationLightnessHSL(
     modifier: Modifier = Modifier,
     @FloatRange(from = 0.1, to = 360.0) hue: Float,
     @FloatRange(from = 0.0, to = 1.0) saturation: Float = 0.5f,
@@ -116,7 +116,7 @@ fun SaturationLightnessSelectorDiamondHSL(
 }
 
 @Composable
-fun SaturationValueSelectorDiamondHSV(
+fun SelectorDiamondSaturationValueHSV(
     modifier: Modifier = Modifier,
     @FloatRange(from = 0.1, to = 360.0) hue: Float,
     @FloatRange(from = 0.0, to = 1.0) saturation: Float = 0.5f,

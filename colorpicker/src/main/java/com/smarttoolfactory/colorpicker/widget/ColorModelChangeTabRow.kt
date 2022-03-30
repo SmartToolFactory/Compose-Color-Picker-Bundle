@@ -48,7 +48,12 @@ fun ColorModelChangeTabRow(
                     indication = null,
                     onClick = {
                         selectedIndex = index
-                        onColorModelChange(ColorModel.values()[index])
+                        val newColorModel = when (selectedIndex) {
+                            0 -> ColorModel.HSL
+                            1 -> ColorModel.HSV
+                            else -> ColorModel.RGB
+                        }
+                        onColorModelChange(newColorModel)
                     }
                 )
                 .padding(10.dp)
