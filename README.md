@@ -3,6 +3,18 @@
 Bundle of Stylish customizable Color pickers, selectors, colorful sliders written with Jetpack
 Compose enables users to choose from HSL, HSV or RGB color modes to pick Solid colors or gradients.
 
+| Hue-Ring Diamond HSL1 | Hue- Ring Diamond HSL2 | Hue Ring-Rect HSV| Hue-Circle HSV|
+| ----------|-----------| -----------| -----------|
+| <img src="./screenshots/colorpicker/cp_ring_diamond_hsl_1.png"/> | <img src="./screenshots/colorpicker/cp_ring_diamond_hsl_2.png"/> | <img src="./screenshots/colorpicker/cp_ring_rect_hsv.png"/> |  <img src="./screenshots/colorpicker/cp_circle_hue_saturation_hsv.png"/> |
+
+| Rect Saturation-Value HSV | Rect Saturation-Lightness HSL  | Rect Hue-Saturation HSV | Rect Hue-Value HSV  |
+| ----------|-----------| -----------| -----------|
+| <img src="./screenshots/colorpicker/cp_rect_saturation_value_hsv.png"/> | <img src="./screenshots/colorpicker/cp_rect_saturation_lightness_hsl.png"/> | <img src="./screenshots/colorpicker/cp_rect_hue_saturation_hsv.png"/> |  <img src="./screenshots/colorpicker/cp_rect_hue_value_hsv.png"/> |
+
+| Rect Hue-Saturation HSL     | Rect Hue-Lightness HSL   | 
+| ----------|-----------|
+| <img src="./screenshots/colorpicker/cp_rect_hue_saturation_hsl.png"/> | <img src="./screenshots/colorpicker/cp_rect_hue_lightness_hsl.png"/> |
+
 <img src="/./screenshots/intro.gif" align="right" width="32%"/>
 
 <br>

@@ -17,7 +17,7 @@ fun Float.fractionToRGBString() = this.fractionToRGBRange().toString()
 /**
  * Rounds this [Float] to another with 2 significant numbers
  * 0.1234 is rounded to 0.12
- * 0.129 is rounded to 0.12
+ * 0.127 is rounded to 0.13
  */
 fun Float.roundToTwoDigits() = (this * 100.0f).roundToInt() / 100.0f
 
