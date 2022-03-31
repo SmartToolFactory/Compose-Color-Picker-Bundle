@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -25,6 +24,11 @@ import com.smarttoolfactory.colorpicker.ui.Blue400
 @Composable
 fun ColorPickerRingDiamondHSLDialog(
     initialColor: Color,
+    ringOuterRadiusFraction: Float = .9f,
+    ringInnerRadiusFraction: Float = .6f,
+    ringBackgroundColor: Color = Color.Transparent,
+    ringBorderStrokeColor: Color = Color.Black,
+    ringBorderStrokeWidth: Dp = 4.dp,
     selectionRadius: Dp = 8.dp,
     onDismiss: (Color) -> Unit
 ) {
@@ -44,6 +48,11 @@ fun ColorPickerRingDiamondHSLDialog(
                     .background(Color(0xcc212121), shape = RoundedCornerShape(5.dp))
                     .padding(horizontal = 10.dp, vertical = 2.dp),
                 initialColor = initialColor,
+                ringOuterRadiusFraction = ringOuterRadiusFraction,
+                ringInnerRadiusFraction = ringInnerRadiusFraction,
+                ringBackgroundColor = ringBackgroundColor,
+                ringBorderStrokeColor = ringBorderStrokeColor,
+                ringBorderStrokeWidth = ringBorderStrokeWidth,
                 selectionRadius = selectionRadius
             ) {
                 color = it
@@ -66,6 +75,11 @@ fun ColorPickerRingDiamondHSLDialog(
 @Composable
 fun ColorPickerRingRectHSVDialog(
     initialColor: Color,
+    ringOuterRadiusFraction: Float = .9f,
+    ringInnerRadiusFraction: Float = .6f,
+    ringBackgroundColor: Color = Color.Transparent,
+    ringBorderStrokeColor: Color = Color.Black,
+    ringBorderStrokeWidth: Dp = 4.dp,
     selectionRadius: Dp = 8.dp,
     onDismiss: (Color) -> Unit
 ) {
@@ -84,6 +98,11 @@ fun ColorPickerRingRectHSVDialog(
                     .background(Color(0xcc212121), shape = RoundedCornerShape(5.dp))
                     .padding(horizontal = 10.dp, vertical = 2.dp),
                 initialColor = initialColor,
+                ringOuterRadiusFraction = ringOuterRadiusFraction,
+                ringInnerRadiusFraction = ringInnerRadiusFraction,
+                ringBackgroundColor = ringBackgroundColor,
+                ringBorderStrokeColor = ringBorderStrokeColor,
+                ringBorderStrokeWidth = ringBorderStrokeWidth,
                 selectionRadius = selectionRadius
             ) {
                 color = it

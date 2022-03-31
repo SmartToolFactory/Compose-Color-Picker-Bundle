@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,6 +15,7 @@ import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.selector.SelectorRectHueSaturationHSV
 import com.smarttoolfactory.colorpicker.selector.SelectorRectHueValueHSV
 import com.smarttoolfactory.colorpicker.slider.SliderCircleColorDisplaySaturationHSV
+import com.smarttoolfactory.colorpicker.slider.SliderCircleColorDisplayValueHSV
 import com.smarttoolfactory.colorpicker.util.colorToHSV
 import com.smarttoolfactory.colorpicker.widget.HexDisplay
 
@@ -29,7 +31,7 @@ fun ColorPickerRectHueSaturationHSV(
 
     var hue by remember { mutableStateOf(hsvArray[0]) }
     var saturation by remember { mutableStateOf(hsvArray[1]) }
-    val value by remember { mutableStateOf(hsvArray[2]) }
+    var value by remember { mutableStateOf(hsvArray[2]) }
     var alpha by remember { mutableStateOf(initialColor.alpha) }
 
     val currentColor =
@@ -56,27 +58,28 @@ fun ColorPickerRectHueSaturationHSV(
             },
         )
 
-        SliderCircleColorDisplaySaturationHSV(
-            modifier = Modifier.padding(8.dp),
-            hue = hue,
-            saturation = saturation,
-            value = value,
-            alpha = alpha,
-            onSaturationChange = {
-                saturation = it
-            },
-            onAlphaChange = {
-                alpha = it
-            }
-        )
+        Column(modifier = Modifier.padding(8.dp)) {
+            SliderCircleColorDisplayValueHSV(
+                hue = hue,
+                saturation = saturation,
+                value = value,
+                alpha = alpha,
+                onValueChange = {
+                    value = it
+                },
+                onAlphaChange = {
+                    alpha = it
+                }
+            )
 
-        HexDisplay(
-            color = currentColor,
-            colorModel = colorModel,
-            onColorModelChange = {
-                colorModel = it
-            }
-        )
+            HexDisplay(
+                color = currentColor,
+                colorModel = colorModel,
+                onColorModelChange = {
+                    colorModel = it
+                }
+            )
+        }
     }
 }
 

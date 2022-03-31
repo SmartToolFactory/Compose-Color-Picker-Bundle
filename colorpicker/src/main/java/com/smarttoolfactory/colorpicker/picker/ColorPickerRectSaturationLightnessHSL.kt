@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,26 +57,28 @@ fun ColorPickerRectSaturationLightnessHSL(
             lightness = l
         }
 
-        SliderCircleColorDisplayHueHSL(
-            modifier = Modifier.padding(8.dp),
-            hue = hue,
-            saturation = saturation,
-            lightness = lightness,
-            alpha = alpha,
-            onHueChange = {
-                hue = it
-            },
-            onAlphaChange = {
-                alpha = it
-            }
-        )
+        Column(modifier = Modifier.padding(8.dp)) {
+            SliderCircleColorDisplayHueHSL(
+                modifier = Modifier.padding(8.dp),
+                hue = hue,
+                saturation = saturation,
+                lightness = lightness,
+                alpha = alpha,
+                onHueChange = {
+                    hue = it
+                },
+                onAlphaChange = {
+                    alpha = it
+                }
+            )
 
-        HexDisplay(
-            color = currentColor,
-            colorModel = colorModel,
-            onColorModelChange = {
-                colorModel = it
-            }
-        )
+            HexDisplay(
+                color = currentColor,
+                colorModel = colorModel,
+                onColorModelChange = {
+                    colorModel = it
+                }
+            )
+        }
     }
 }

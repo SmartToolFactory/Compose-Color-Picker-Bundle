@@ -54,26 +54,27 @@ fun ColorPickerCircleValueHSV(
 
         }
 
-        SliderCircleColorDisplayValueHSV(
-            modifier = Modifier.padding(8.dp),
-            hue = hue,
-            saturation = saturation,
-            value = value,
-            alpha = alpha,
-            onValueChange = {
-                value = it
-            },
-            onAlphaChange = {
-                alpha = it
-            }
-        )
+        Column(modifier=Modifier.padding(8.dp)) {
+            SliderCircleColorDisplayValueHSV(
+                hue = hue,
+                saturation = saturation,
+                value = value,
+                alpha = alpha,
+                onValueChange = {
+                    value = it
+                },
+                onAlphaChange = {
+                    alpha = it
+                }
+            )
 
-        HexDisplay(
-            color = currentColor,
-            colorModel = colorModel,
-            onColorModelChange = {
-                colorModel = it
-            }
-        )
+            HexDisplay(
+                color = currentColor,
+                colorModel = colorModel,
+                onColorModelChange = {
+                    colorModel = it
+                }
+            )
+        }
     }
 }
