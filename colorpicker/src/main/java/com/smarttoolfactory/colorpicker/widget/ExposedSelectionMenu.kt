@@ -14,6 +14,10 @@ fun ExposedSelectionMenu(
     modifier: Modifier = Modifier,
     index: Int,
     title: String? = null,
+    textStyle: TextStyle = TextStyle(
+        fontWeight = FontWeight.W600,
+        fontSize = 14.sp
+    ),
     options: List<String>,
     onSelected: (Int) -> Unit
 ) {
@@ -29,7 +33,7 @@ fun ExposedSelectionMenu(
         }
     ) {
         TextField(
-            modifier =modifier,
+            modifier = modifier,
             readOnly = true,
             value = selectedOptionText,
             onValueChange = { },
@@ -49,10 +53,7 @@ fun ExposedSelectionMenu(
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
             ),
-            textStyle = TextStyle(
-                fontWeight = FontWeight.W600,
-                fontSize = 14.sp
-            )
+            textStyle = textStyle
         )
         ExposedDropdownMenu(
             expanded = expanded,
