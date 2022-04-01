@@ -1,17 +1,27 @@
 package com.smarttoolfactory.colorpicker.model
 
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.DpSize
+import com.smarttoolfactory.colorpicker.selector.gradient.GradientType
+import com.smarttoolfactory.colorpicker.ui.GradientAngle
+import com.smarttoolfactory.colorpicker.ui.GradientOffset
 
 
 class GradientColor {
-    val brushColor = BrushColor()
 
-}
-
-class GradientMeta {
-
+    var dpSize: DpSize by mutableStateOf(DpSize.Zero)
+    var brushColor = BrushColor()
+    var gradientType: GradientType by mutableStateOf( GradientType.Linear)
+    val colorStop = mutableStateListOf<Pair<Float, Color>>()
+    var tileMode by mutableStateOf(TileMode.Clamp)
+    var gradientOffset by mutableStateOf(GradientOffset(GradientAngle.CW0))
+    var center = derivedStateOf { DpOffset(dpSize.width / 2, dpSize.height / 2) }
+    var radiusFraction: Float = .5f
 }
 
 /**

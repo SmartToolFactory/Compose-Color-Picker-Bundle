@@ -20,7 +20,19 @@ import com.smarttoolfactory.slider.ui.ThumbColor
 import kotlin.math.roundToInt
 
 @Composable
-internal fun GradientOffsetSelection(
+internal fun LinearGradientSelection(
+    size: Size,
+    onGradientOffsetChange: (GradientOffset) -> Unit
+) {
+
+    GradientOffsetSelection(
+        size = size,
+        onGradientOffsetChange = onGradientOffsetChange
+    )
+}
+
+@Composable
+private fun GradientOffsetSelection(
     size: Size,
     onGradientOffsetChange: (GradientOffset) -> Unit
 ) {

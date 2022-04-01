@@ -16,7 +16,8 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.ui.GradientAngle
@@ -30,18 +31,57 @@ import com.smarttoolfactory.slider.ColorfulSlider
 import com.smarttoolfactory.slider.MaterialSliderDefaults
 import com.smarttoolfactory.slider.ui.InactiveTrackColor
 
+enum class GradientType {
+    Linear, Radial, Sweep
+}
+
 internal val gradientOptions = listOf(
     "Linear",
     "Radial",
     "Sweep"
 )
+
 internal val gradientTileModeOptions = listOf("Clamp", "Repeated", "Mirror", "Decal")
 
 @Composable
-fun GradientSelector(color: Color, size: Size = Size.Unspecified) {
+fun GradientSelector(
+    color: Color,
+    dpSize: DpSize,
+    onGradientChange: (Brush) -> Unit
+) {
 
-    var gradientSelection by remember { mutableStateOf(0) }
+    val size = with(LocalDensity.current) {
+        Size(
+            dpSize.width.toPx(),
+            dpSize.width.toPx()
+        )
+    }
+
+    // Gradient type
+    var gradientType by remember { mutableStateOf(GradientType.Linear) }
+
+    // Tile mode
     var tileModeSelection by remember { mutableStateOf(0) }
+    val tileMode = when (tileModeSelection) {
+        0 -> TileMode.Clamp
+        1 -> TileMode.Repeated
+        2 -> TileMode.Mirror
+        else -> TileMode.Decal
+    }
+
+    // Color Stops
+    val colorStops = remember {
+        mutableStateListOf(
+            0.0f to Color.Red,
+            0.3f to Color.Green,
+            1.0f to Color.Blue,
+        )
+    }
+
+    // Offset for Linear Gradient
+    var gradientOffset by remember {
+        mutableStateOf(GradientOffset(GradientAngle.CW0))
+    }
 
     Column(
         modifier = Modifier
@@ -51,14 +91,16 @@ fun GradientSelector(color: Color, size: Size = Size.Unspecified) {
     ) {
         ExposedSelectionMenu(
             modifier = Modifier.fillMaxWidth(),
-            index = gradientSelection,
+            index = gradientType.ordinal,
             title = "Gradient",
             options = gradientOptions,
             onSelected = {
-                gradientSelection = it
+                gradientType = GradientType.values()[it]
             }
         )
+
         Spacer(modifier = Modifier.height(10.dp))
+
         ExposedSelectionMenu(
             modifier = Modifier.fillMaxWidth(),
             index = tileModeSelection,
@@ -69,80 +111,117 @@ fun GradientSelector(color: Color, size: Size = Size.Unspecified) {
             }
         )
 
-        val tileMode = when (tileModeSelection) {
-            0 -> TileMode.Clamp
-            1 -> TileMode.Repeated
-            2 -> TileMode.Mirror
-            else -> TileMode.Decal
+        // Display Brush
+        BrushDisplay(
+            gradientType = gradientType,
+            colorStops = colorStops,
+            gradientOffset = gradientOffset,
+            size = size,
+            tileMode = tileMode
+        ) { brush: Brush ->
+            onGradientChange(brush)
         }
-        LinearGradientSelection(currentColor = color, tileMode = tileMode)
+
+        // Gradient type selection
+        when (gradientType) {
+            GradientType.Linear -> LinearGradientSelection(
+                size,
+            ) { offset: GradientOffset ->
+                gradientOffset = offset
+            }
+            GradientType.Radial -> RadialGradientSelection(
+                size,
+            ) { offset: GradientOffset ->
+                gradientOffset = offset
+            }
+            GradientType.Sweep -> SweepGradientSelection(
+                size,
+            ) { offset: GradientOffset ->
+                gradientOffset = offset
+            }
+        }
+
+        // Color Stops and Colors
+        ColorStopSelection(
+            color = color,
+            colorStops = colorStops,
+            onRemoveClick = { index: Int ->
+                if (colorStops.size > 2) {
+                    colorStops.removeAt(index)
+                }
+            },
+            onValueChange = { index: Int, pair: Pair<Float, Color> ->
+                colorStops[index] = pair.copy()
+            },
+            onAddColorStop = { pair: Pair<Float, Color> ->
+                colorStops.add(pair)
+            }
+        )
     }
 }
 
 @Composable
-internal fun LinearGradientSelection(currentColor: Color, tileMode: TileMode) {
+internal fun BrushDisplay(
+    gradientType: GradientType,
+    colorStops: List<Pair<Float, Color>>,
+    gradientOffset: GradientOffset,
+    size: Size,
+    tileMode: TileMode,
+    onBrushChange: (Brush) -> Unit
+) {
+    val brush = when (gradientType) {
+        GradientType.Linear -> {
+            if (colorStops.size == 1) {
+                val brushColor = colorStops.first().second
+                Brush.linearGradient(listOf(brushColor, brushColor))
+            } else {
+                Brush.linearGradient(
+                    colorStops = colorStops.toTypedArray(),
+                    start = gradientOffset.start,
+                    end = gradientOffset.end,
+                    tileMode = tileMode
+                )
+            }
+        }
+        GradientType.Radial -> {
+            Brush.radialGradient(
+                colorStops = colorStops.toTypedArray(),
+                center = gradientOffset.start,
+                radius = size.width
+            )
+        }
 
-    val colorStops = remember {
-        mutableStateListOf(
-            0.0f to Color.Red,
-            0.3f to Color.Green,
-            1.0f to Color.Blue,
-        )
+        GradientType.Sweep -> {
+            Brush.sweepGradient(
+                colorStops = colorStops.toTypedArray(),
+                center = gradientOffset.start
+            )
+        }
+
     }
 
-    var gradientOffset by remember {
-        mutableStateOf(
-            GradientOffset(GradientAngle.CW0)
-        )
-    }
+    val contentWidth = size.width
+    val contentHeight = size.height
 
-    val brush = if (colorStops.size == 1) {
-        val color = colorStops.first().second
-        Brush.linearGradient(listOf(color, color))
-    } else {
-        Brush.linearGradient(
-            colorStops = colorStops.toTypedArray(),
-            start = gradientOffset.start,
-            end = gradientOffset.end,
-            tileMode = tileMode
-        )
-    }
+    onBrushChange(brush)
 
-    var size by remember {
-        mutableStateOf(Size.Zero)
-    }
     // Display Brush
-    Box(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
-            .background(brush)
-            .onSizeChanged {
-                size = Size(it.width.toFloat(), it.height.toFloat())
-            }
-    )
+            .height(150.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .height(maxHeight)
+                .aspectRatio(contentWidth / contentHeight)
+                .background(brush)
+        ) {
 
-    GradientOffsetSelection(
-        size = size
-    ) { offset ->
-        gradientOffset = offset
+        }
     }
 
-    ColorStopSelection(
-        color = currentColor,
-        colorStops = colorStops,
-        onRemoveClick = { index: Int ->
-            if (colorStops.size > 2) {
-                colorStops.removeAt(index)
-            }
-        },
-        onValueChange = { index: Int, pair: Pair<Float, Color> ->
-            colorStops[index] = pair.copy()
-        },
-        onAddColorStop = { pair: Pair<Float, Color> ->
-            colorStops.add(pair)
-        }
-    )
 }
 
 @Composable
@@ -152,7 +231,6 @@ internal fun ColorStopSelection(
     onRemoveClick: (Int) -> Unit,
     onAddColorStop: (Pair<Float, Color>) -> Unit,
     onValueChange: (Int, Pair<Float, Color>) -> Unit
-
 ) {
 
     ExpandableColumn(title = "Colors and Stops", color = Orange400) {
