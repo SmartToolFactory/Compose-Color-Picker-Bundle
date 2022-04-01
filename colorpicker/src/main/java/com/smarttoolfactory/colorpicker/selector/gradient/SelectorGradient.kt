@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -20,7 +21,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.colorpicker.ui.GradientAngle
+import com.smarttoolfactory.colorpicker.model.GradientColor
 import com.smarttoolfactory.colorpicker.ui.GradientOffset
 import com.smarttoolfactory.colorpicker.ui.Grey800
 import com.smarttoolfactory.colorpicker.ui.Orange400
@@ -47,8 +48,9 @@ internal val gradientTileModeOptions = listOf("Clamp", "Repeated", "Mirror", "De
 fun GradientSelector(
     color: Color,
     dpSize: DpSize,
-    onGradientChange: (Brush) -> Unit
+    gradientColor: GradientColor
 ) {
+
 
     val size = with(LocalDensity.current) {
         Size(
@@ -69,6 +71,7 @@ fun GradientSelector(
         else -> TileMode.Decal
     }
 
+
     // Color Stops
     val colorStops = remember {
         mutableStateListOf(
@@ -78,10 +81,11 @@ fun GradientSelector(
         )
     }
 
-    // Offset for Linear Gradient
-    var gradientOffset by remember {
-        mutableStateOf(GradientOffset(GradientAngle.CW0))
-    }
+    gradientColor.size = size
+    gradientColor.gradientType = gradientType
+    gradientColor.tileMode = tileMode
+    gradientColor.colorStops = colorStops
+
 
     Column(
         modifier = Modifier
@@ -113,32 +117,25 @@ fun GradientSelector(
 
         // Display Brush
         BrushDisplay(
-            gradientType = gradientType,
-            colorStops = colorStops,
-            gradientOffset = gradientOffset,
             size = size,
-            tileMode = tileMode
-        ) { brush: Brush ->
-            onGradientChange(brush)
-        }
+            gradientColor = gradientColor
+        )
 
         // Gradient type selection
         when (gradientType) {
-            GradientType.Linear -> LinearGradientSelection(
-                size,
-            ) { offset: GradientOffset ->
-                gradientOffset = offset
-            }
-            GradientType.Radial -> RadialGradientSelection(
-                size,
-            ) { offset: GradientOffset ->
-                gradientOffset = offset
-            }
-            GradientType.Sweep -> SweepGradientSelection(
-                size,
-            ) { offset: GradientOffset ->
-                gradientOffset = offset
-            }
+            GradientType.Linear ->
+                LinearGradientSelection(size) { offset: GradientOffset ->
+                    gradientColor.gradientOffset = offset
+                }
+            GradientType.Radial ->
+                RadialGradientSelection { centerFriction: Offset, radiusFriction: Float ->
+                    gradientColor.centerFriction = centerFriction
+                    gradientColor.radiusFriction = radiusFriction
+                }
+            GradientType.Sweep ->
+                SweepGradientSelection { centerFriction: Offset ->
+                    gradientColor.centerFriction = centerFriction
+                }
         }
 
         // Color Stops and Colors
@@ -162,49 +159,9 @@ fun GradientSelector(
 
 @Composable
 internal fun BrushDisplay(
-    gradientType: GradientType,
-    colorStops: List<Pair<Float, Color>>,
-    gradientOffset: GradientOffset,
     size: Size,
-    tileMode: TileMode,
-    onBrushChange: (Brush) -> Unit
+    gradientColor: GradientColor
 ) {
-    val brush = when (gradientType) {
-        GradientType.Linear -> {
-            if (colorStops.size == 1) {
-                val brushColor = colorStops.first().second
-                Brush.linearGradient(listOf(brushColor, brushColor))
-            } else {
-                Brush.linearGradient(
-                    colorStops = colorStops.toTypedArray(),
-                    start = gradientOffset.start,
-                    end = gradientOffset.end,
-                    tileMode = tileMode
-                )
-            }
-        }
-        GradientType.Radial -> {
-            Brush.radialGradient(
-                colorStops = colorStops.toTypedArray(),
-                center = gradientOffset.start,
-                radius = size.width
-            )
-        }
-
-        GradientType.Sweep -> {
-            Brush.sweepGradient(
-                colorStops = colorStops.toTypedArray(),
-                center = gradientOffset.start
-            )
-        }
-
-    }
-
-    val contentWidth = size.width
-    val contentHeight = size.height
-
-    onBrushChange(brush)
-
     // Display Brush
     BoxWithConstraints(
         modifier = Modifier
@@ -212,17 +169,130 @@ internal fun BrushDisplay(
             .height(150.dp),
         contentAlignment = Alignment.Center
     ) {
+
+        val contentWidth = size.width
+        val contentHeight = size.height
+        val contentAspectRatio = contentWidth / contentHeight
+
+        val boxHeight = constraints.maxHeight
+        val boxWidth = boxHeight * contentAspectRatio
+        val gradientType = gradientColor.gradientType
+        val colorStops = gradientColor.colorStops
+        val gradientOffset = gradientColor.gradientOffset
+        val tileMode = gradientColor.tileMode
+        val centerFriction = gradientColor.centerFriction
+        val radiusFriction = gradientColor.radiusFriction
+
+        val center = Offset(
+            boxWidth * centerFriction.x,
+            boxHeight * centerFriction.y
+        )
+
+        val radius = boxHeight * radiusFriction
+
+        val brush = when (gradientType) {
+            GradientType.Linear -> {
+                if (colorStops.size == 1) {
+                    val brushColor = colorStops.first().second
+                    Brush.linearGradient(listOf(brushColor, brushColor))
+                } else {
+                    Brush.linearGradient(
+                        colorStops = colorStops.toTypedArray(),
+                        start = gradientOffset.start,
+                        end = gradientOffset.end,
+                        tileMode = tileMode
+                    )
+                }
+            }
+            GradientType.Radial -> {
+                Brush.radialGradient(
+                    colorStops = colorStops.toTypedArray(),
+                    center = center,
+                    radius = radius
+                )
+            }
+
+            GradientType.Sweep -> {
+                Brush.sweepGradient(
+                    colorStops = colorStops.toTypedArray(),
+                    center = center
+                )
+            }
+        }
+
         Box(
             modifier = Modifier
                 .height(maxHeight)
-                .aspectRatio(contentWidth / contentHeight)
+                .aspectRatio(contentAspectRatio)
                 .background(brush)
-        ) {
-
-        }
+        )
     }
 
 }
+
+//@Composable
+//internal fun BrushDisplay(
+//    gradientType: GradientType,
+//    colorStops: List<Pair<Float, Color>>,
+//    gradientOffset: GradientOffset,
+//    size: Size,
+//    tileMode: TileMode,
+//    onBrushChange: (Brush) -> Unit
+//) {
+//    val brush = when (gradientType) {
+//        GradientType.Linear -> {
+//            if (colorStops.size == 1) {
+//                val brushColor = colorStops.first().second
+//                Brush.linearGradient(listOf(brushColor, brushColor))
+//            } else {
+//                Brush.linearGradient(
+//                    colorStops = colorStops.toTypedArray(),
+//                    start = gradientOffset.start,
+//                    end = gradientOffset.end,
+//                    tileMode = tileMode
+//                )
+//            }
+//        }
+//        GradientType.Radial -> {
+//            Brush.radialGradient(
+//                colorStops = colorStops.toTypedArray(),
+//                center = gradientOffset.start,
+//                radius = size.width
+//            )
+//        }
+//
+//        GradientType.Sweep -> {
+//            Brush.sweepGradient(
+//                colorStops = colorStops.toTypedArray(),
+//                center = gradientOffset.start
+//            )
+//        }
+//
+//    }
+//
+//    val contentWidth = size.width
+//    val contentHeight = size.height
+//
+//    onBrushChange(brush)
+//
+//    // Display Brush
+//    BoxWithConstraints(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .height(150.dp),
+//        contentAlignment = Alignment.Center
+//    ) {
+//        Box(
+//            modifier = Modifier
+//                .height(maxHeight)
+//                .aspectRatio(contentWidth / contentHeight)
+//                .background(brush)
+//        ) {
+//
+//        }
+//    }
+//
+//}
 
 @Composable
 internal fun ColorStopSelection(

@@ -4,29 +4,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import com.smarttoolfactory.colorpicker.ui.GradientOffset
 
 @Composable
 internal fun SweepGradientSelection(
-    size: Size,
-    onGradientOffsetChange: (GradientOffset) -> Unit
+    onCenterChange: (Offset) -> Unit
 ) {
     var centerX by remember { mutableStateOf(.5f) }
     var centerY by remember { mutableStateOf(.5f) }
 
-    onGradientOffsetChange(
-        GradientOffset(
-            start = Offset(
-                x = size.width * centerX,
-                y = size.height * centerY
-            ),
-            end = Offset(
-                x = size.width * centerX,
-                y = size.height * centerY
-            )
-        )
-    )
+    onCenterChange(Offset(centerX, centerY))
 
     SliderWithPercent(
         modifier = Modifier.fillMaxWidth(),
