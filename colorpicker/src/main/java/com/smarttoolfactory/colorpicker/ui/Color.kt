@@ -14,6 +14,8 @@ val BlueGrey400 = Color(0xff78909C)
 val Grey400 = Color(0xffBDBDBD)
 
 val Grey600 = Color(0xff757575)
+val Grey800 = Color(0xff424242)
+val Grey900 = Color(0xff212121)
 
 val Gray = Color(0xff808080)
 val WhiteTransparent = Color(0x00ffffff)

@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSV
 import com.smarttoolfactory.colorpicker.util.calculateAngleFomLocalCoordinates
 import com.smarttoolfactory.colorpicker.util.calculateDistanceFromCenter
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleRGB
@@ -148,7 +149,7 @@ private fun HueSelectorRingImpl(
 
         // Draw hue selection circle with sweep gradient
         drawCircle(
-            brush = Brush.sweepGradient(colors = gradientColorScaleRGB, center = center),
+            brush = Brush.sweepGradient(colors = gradientColorScaleHSV, center = center),
             radius = radiusInner + strokeWidth / 2,
             style = Stroke(
                 width = strokeWidth

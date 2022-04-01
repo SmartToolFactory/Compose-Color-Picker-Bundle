@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.colorpicker.ui.Grey400
 import com.smarttoolfactory.colorpicker.util.fractionToPercent
 import com.smarttoolfactory.colorpicker.util.fractionToRGBString
-import com.smarttoolfactory.colorpicker.ui.Grey400
 
 /*
     HSV Slider Displays
