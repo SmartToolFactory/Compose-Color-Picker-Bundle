@@ -1,9 +1,11 @@
 package com.smarttoolfactory.colorpicker.selector.gradient
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import com.smarttoolfactory.colorpicker.ui.Pink400
 
 @Composable
 internal fun SweepGradientSelection(
@@ -14,20 +16,28 @@ internal fun SweepGradientSelection(
 
     onCenterChange(Offset(centerX, centerY))
 
-    SliderWithPercent(
-        modifier = Modifier.fillMaxWidth(),
-        title = "CenterX",
-        value = centerX
+    ExpandableColumn(
+        title = "Gradient Center",
+        color = Pink400,
+        initialExpandState = false
     ) {
-        centerX = it
-    }
+        Column {
+            SliderWithPercent(
+                modifier = Modifier.fillMaxWidth(),
+                title = "CenterX",
+                value = centerX
+            ) {
+                centerX = it
+            }
 
-    SliderWithPercent(
-        modifier = Modifier.fillMaxWidth(),
-        title = "CenterY",
-        value = centerY
-    ) {
-        centerY = it
+            SliderWithPercent(
+                modifier = Modifier.fillMaxWidth(),
+                title = "CenterY",
+                value = centerY
+            ) {
+                centerY = it
+            }
+        }
     }
 }
 

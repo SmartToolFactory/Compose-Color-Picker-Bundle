@@ -7,20 +7,36 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.DpSize
 import com.smarttoolfactory.colorpicker.selector.gradient.GradientType
 import com.smarttoolfactory.colorpicker.ui.GradientAngle
 import com.smarttoolfactory.colorpicker.ui.GradientOffset
 
 @Composable
-fun rememberGradientColor(): GradientColor {
+fun rememberGradientColor(dpSize: DpSize = DpSize.Zero): GradientColor {
+
+    val density = LocalDensity.current
+
     return remember {
-        GradientColor()
+
+        val size = if (dpSize == DpSize.Zero) {
+            Size.Zero
+        } else {
+            with(density) {
+                Size(
+                    dpSize.width.toPx(),
+                    dpSize.height.toPx()
+                )
+            }
+        }
+        GradientColor(size)
     }
 }
 
-class GradientColor {
+class GradientColor(size: Size) {
 
-    var size by mutableStateOf(Size.Zero)
+    var size by mutableStateOf(size)
     val brushColor: BrushColor
         get() {
             val colorStops = colorStops.toTypedArray()
@@ -37,14 +53,16 @@ class GradientColor {
                         x = size.width * centerFriction.x,
                         y = size.height * centerFriction.y
                     ),
-                    radius = (size.width.coerceAtLeast(size.height)) / 2 * radiusFriction
+                    radius = ((size.width.coerceAtLeast(size.height)) / 2 * radiusFriction)
+                        .coerceAtLeast(0.01f),
+                    tileMode = tileMode
                 )
                 GradientType.Sweep -> Brush.sweepGradient(
                     colorStops = colorStops,
                     center = Offset(
                         x = size.width * centerFriction.x,
                         y = size.height * centerFriction.y
-                    )
+                    ),
                 )
             }
             return BrushColor(brush = brush)

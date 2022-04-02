@@ -2,31 +2,30 @@ package com.smarttoolfactory.colorpicker.selector.gradient
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.model.GradientColor
+import com.smarttoolfactory.colorpicker.ui.Blue400
 import com.smarttoolfactory.colorpicker.ui.GradientOffset
 import com.smarttoolfactory.colorpicker.ui.Grey800
 import com.smarttoolfactory.colorpicker.ui.Orange400
 import com.smarttoolfactory.colorpicker.util.fractionToIntPercent
 import com.smarttoolfactory.colorpicker.widget.ExposedSelectionMenu
+import com.smarttoolfactory.colorpicker.widget.drawChecker
 import com.smarttoolfactory.slider.ColorBrush
 import com.smarttoolfactory.slider.ColorfulSlider
 import com.smarttoolfactory.slider.MaterialSliderDefaults
@@ -47,84 +46,27 @@ internal val gradientTileModeOptions = listOf("Clamp", "Repeated", "Mirror", "De
 @Composable
 fun GradientSelector(
     color: Color,
-    dpSize: DpSize,
     gradientColor: GradientColor
 ) {
-
-
-    val size = with(LocalDensity.current) {
-        Size(
-            dpSize.width.toPx(),
-            dpSize.width.toPx()
-        )
-    }
-
-    // Gradient type
-    var gradientType by remember { mutableStateOf(GradientType.Linear) }
-
-    // Tile mode
-    var tileModeSelection by remember { mutableStateOf(0) }
-    val tileMode = when (tileModeSelection) {
-        0 -> TileMode.Clamp
-        1 -> TileMode.Repeated
-        2 -> TileMode.Mirror
-        else -> TileMode.Decal
-    }
-
-
-    // Color Stops
-    val colorStops = remember {
-        mutableStateListOf(
-            0.0f to Color.Red,
-            0.3f to Color.Green,
-            1.0f to Color.Blue,
-        )
-    }
-
-    gradientColor.size = size
-    gradientColor.gradientType = gradientType
-    gradientColor.tileMode = tileMode
-    gradientColor.colorStops = colorStops
-
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
-            .verticalScroll(rememberScrollState())
     ) {
-        ExposedSelectionMenu(
-            modifier = Modifier.fillMaxWidth(),
-            index = gradientType.ordinal,
-            title = "Gradient",
-            options = gradientOptions,
-            onSelected = {
-                gradientType = GradientType.values()[it]
-            }
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        ExposedSelectionMenu(
-            modifier = Modifier.fillMaxWidth(),
-            index = tileModeSelection,
-            title = "Tile Mode",
-            options = gradientTileModeOptions,
-            onSelected = {
-                tileModeSelection = it
-            }
-        )
 
         // Display Brush
-        BrushDisplay(
-            size = size,
-            gradientColor = gradientColor
-        )
+//        ExpandableColumn(title = "Brush Output", color = Green400) {
+//            BrushDisplay(gradientColor = gradientColor)
+//
+//        }
+
+        GradientProperties(gradientColor = gradientColor)
 
         // Gradient type selection
-        when (gradientType) {
+        when (gradientColor.gradientType) {
             GradientType.Linear ->
-                LinearGradientSelection(size) { offset: GradientOffset ->
+                LinearGradientSelection(gradientColor.size) { offset: GradientOffset ->
                     gradientColor.gradientOffset = offset
                 }
             GradientType.Radial ->
@@ -141,41 +83,99 @@ fun GradientSelector(
         // Color Stops and Colors
         ColorStopSelection(
             color = color,
-            colorStops = colorStops,
+            colorStops = gradientColor.colorStops,
             onRemoveClick = { index: Int ->
-                if (colorStops.size > 2) {
-                    colorStops.removeAt(index)
+                if (gradientColor.colorStops.size > 2) {
+                    gradientColor.colorStops.removeAt(index)
                 }
             },
             onValueChange = { index: Int, pair: Pair<Float, Color> ->
-                colorStops[index] = pair.copy()
+                gradientColor.colorStops[index] = pair.copy()
             },
             onAddColorStop = { pair: Pair<Float, Color> ->
-                colorStops.add(pair)
+                gradientColor.colorStops.add(pair)
             }
         )
     }
 }
 
 @Composable
-internal fun BrushDisplay(
-    size: Size,
+private fun GradientProperties(gradientColor: GradientColor) {
+
+    var tileModeSelection by remember { mutableStateOf(0) }
+    gradientColor.tileMode = when (tileModeSelection) {
+        0 -> TileMode.Clamp
+        1 -> TileMode.Repeated
+        2 -> TileMode.Mirror
+        else -> TileMode.Decal
+    }
+
+
+    ExpandableColumn(
+        title = "Gradient Properties",
+        color = Blue400,
+        initialExpandState = false
+    ) {
+        Column {
+            ExposedSelectionMenu(
+//                modifier = Modifier.fillMaxWidth(),
+                index = gradientColor.gradientType.ordinal,
+                title = "Gradient Type",
+                options = if (gradientColor.size == Size.Zero) gradientOptions.subList(
+                    0,
+                    1
+                ) else gradientOptions,
+                onSelected = {
+                    gradientColor.gradientType = GradientType.values()[it]
+                }
+            )
+
+            Spacer(modifier = Modifier.height(5.dp))
+
+            if (gradientColor.gradientType != GradientType.Sweep) {
+                ExposedSelectionMenu(
+//                    modifier = Modifier
+//                        .padding(end = 10.dp)
+//                        .fillMaxWidth(),
+                    index = tileModeSelection,
+                    title = "Tile Mode",
+                    options = gradientTileModeOptions,
+                    onSelected = {
+                        tileModeSelection = it
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun BrushDisplay(
+    modifier: Modifier = Modifier,
     gradientColor: GradientColor
 ) {
     // Display Brush
     BoxWithConstraints(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .height(150.dp),
+            .height(120.dp),
         contentAlignment = Alignment.Center
     ) {
 
+        val size = gradientColor.size
         val contentWidth = size.width
         val contentHeight = size.height
         val contentAspectRatio = contentWidth / contentHeight
 
-        val boxHeight = constraints.maxHeight
-        val boxWidth = boxHeight * contentAspectRatio
+        var boxHeight: Float = constraints.maxHeight.toFloat()
+        var boxWidth: Float = boxHeight * contentAspectRatio
+
+        if (boxWidth > constraints.maxWidth) {
+            boxWidth = constraints.maxWidth.toFloat()
+            boxHeight = (boxWidth / contentAspectRatio)
+
+        }
+
         val gradientType = gradientColor.gradientType
         val colorStops = gradientColor.colorStops
         val gradientOffset = gradientColor.gradientOffset
@@ -188,7 +188,14 @@ internal fun BrushDisplay(
             boxHeight * centerFriction.y
         )
 
-        val radius = boxHeight * radiusFriction
+        val boxWidthInDp: Dp
+        val boxHeightInDp: Dp
+        with(LocalDensity.current) {
+            boxWidthInDp = boxWidth.toDp()
+            boxHeightInDp = boxHeight.toDp()
+        }
+
+        val radius = (boxHeight * radiusFriction).coerceAtLeast(0.01f)
 
         val brush = when (gradientType) {
             GradientType.Linear -> {
@@ -208,7 +215,8 @@ internal fun BrushDisplay(
                 Brush.radialGradient(
                     colorStops = colorStops.toTypedArray(),
                     center = center,
-                    radius = radius
+                    radius = radius,
+                    tileMode = tileMode
                 )
             }
 
@@ -222,77 +230,13 @@ internal fun BrushDisplay(
 
         Box(
             modifier = Modifier
-                .height(maxHeight)
-                .aspectRatio(contentAspectRatio)
-                .background(brush)
+                .height(boxHeightInDp)
+                .width(boxWidthInDp)
+                .drawChecker(RoundedCornerShape(5.dp))
+                .background(brush, RoundedCornerShape(5.dp))
         )
     }
-
 }
-
-//@Composable
-//internal fun BrushDisplay(
-//    gradientType: GradientType,
-//    colorStops: List<Pair<Float, Color>>,
-//    gradientOffset: GradientOffset,
-//    size: Size,
-//    tileMode: TileMode,
-//    onBrushChange: (Brush) -> Unit
-//) {
-//    val brush = when (gradientType) {
-//        GradientType.Linear -> {
-//            if (colorStops.size == 1) {
-//                val brushColor = colorStops.first().second
-//                Brush.linearGradient(listOf(brushColor, brushColor))
-//            } else {
-//                Brush.linearGradient(
-//                    colorStops = colorStops.toTypedArray(),
-//                    start = gradientOffset.start,
-//                    end = gradientOffset.end,
-//                    tileMode = tileMode
-//                )
-//            }
-//        }
-//        GradientType.Radial -> {
-//            Brush.radialGradient(
-//                colorStops = colorStops.toTypedArray(),
-//                center = gradientOffset.start,
-//                radius = size.width
-//            )
-//        }
-//
-//        GradientType.Sweep -> {
-//            Brush.sweepGradient(
-//                colorStops = colorStops.toTypedArray(),
-//                center = gradientOffset.start
-//            )
-//        }
-//
-//    }
-//
-//    val contentWidth = size.width
-//    val contentHeight = size.height
-//
-//    onBrushChange(brush)
-//
-//    // Display Brush
-//    BoxWithConstraints(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(150.dp),
-//        contentAlignment = Alignment.Center
-//    ) {
-//        Box(
-//            modifier = Modifier
-//                .height(maxHeight)
-//                .aspectRatio(contentWidth / contentHeight)
-//                .background(brush)
-//        ) {
-//
-//        }
-//    }
-//
-//}
 
 @Composable
 internal fun ColorStopSelection(
@@ -303,7 +247,10 @@ internal fun ColorStopSelection(
     onValueChange: (Int, Pair<Float, Color>) -> Unit
 ) {
 
-    ExpandableColumn(title = "Colors and Stops", color = Orange400) {
+    ExpandableColumn(
+        title = "Colors and Stops",
+        color = Orange400
+    ) {
         Column {
             colorStops.forEachIndexed { index: Int, pair: Pair<Float, Color> ->
                 GradientColorStopSelection(
@@ -316,8 +263,6 @@ internal fun ColorStopSelection(
                     },
                     onValueChange = { newPair: Pair<Float, Color> ->
                         onValueChange(index, newPair)
-                        println("onValueChange: ")
-
                     }
                 )
             }
@@ -355,7 +300,7 @@ private fun GradientColorStopSelection(
         Box(contentAlignment = Alignment.Center) {
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(percent = 25))
+                    .drawChecker(RoundedCornerShape(percent = 25))
                     .background(color)
                     .size(40.dp)
             )

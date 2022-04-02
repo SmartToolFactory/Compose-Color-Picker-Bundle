@@ -23,6 +23,7 @@ internal fun SliderWithPercent(
     modifier: Modifier = Modifier,
     title: String,
     value: Float,
+    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     onValueChange: (Float) -> Unit
 ) {
     Row(
@@ -41,6 +42,7 @@ internal fun SliderWithPercent(
         ColorfulSlider(
             modifier = Modifier.weight(1f),
             value = value,
+            valueRange = valueRange,
             onValueChange = onValueChange,
             thumbRadius = 10.dp,
             trackHeight = 8.dp,

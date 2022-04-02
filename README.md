@@ -3,9 +3,11 @@
 Bundle of Stylish customizable Color pickers, selectors, colorful sliders written with Jetpack
 Compose enables users to choose from HSL, HSV or RGB color models to pick Solid colors or gradients.
 
-Inspired by mchome's (flutter_colorpicker)[https://github.com/mchome/flutter_colorpicker] for Flutter
+Inspired by mchome's (flutter_colorpicker)[https://github.com/mchome/flutter_colorpicker] for
+Flutter
 
 ### Color Pickers
+
 There are various selection of default color pickers and with selectors sliders, and hex displays
 it's possible to create new ones either.
 
@@ -23,18 +25,18 @@ it's possible to create new ones either.
 
 <img src="/./screenshots/intro.gif" align="center" width="50%"/>
 
-
 ### Demos
 
 * `SaturationSelectorDemo`  different type of Hue/Saturation/Value/Lightness Selectors
+* `GradientSelection`  select gradient with varying properties such as tile mode, angle, size, or type, colors and color stops
 * `GradientAngleDeme` gradient rotation with `GradientOffset` objects.
 * `HSVHSLGradientDemo` various types of gradients for creating pickers
 * `ColorfulSliderDemo` Sliders that can be used with different type of options with different
   Selectors and Pickers
 
-| Selectors      | Gradient Angle   | HSV/HSL Gradients| Colorful Sliders |
-| ----------|-----------| -----------| -----------|
-| <img src="./screenshots/saturation.gif"/> | <img src="./screenshots/gradient_angle.gif"/> | <img src="./screenshots/hsv_hsl_gradient.gif"/> | <img src="./screenshots/colorful_sliders.gif"/> |
+| Selectors      | Gradient Selection   |Gradient Angle   | HSV/HSL Gradients| Colorful Sliders |
+| ----------|-----------|-----------| -----------| -----------|
+| <img src="./screenshots/saturation.gif"/> | <img src="./screenshots/gradient_selection.gif"/> | <img src="./screenshots/gradient_angle.gif"/> |  <img src="./screenshots/hsv_hsl_gradient.gif"/> | <img src="./screenshots/colorful_sliders.gif"/> |
 
 ### Completed:
 
@@ -53,11 +55,12 @@ it's possible to create new ones either.
 - [x] Add Circle Hue Saturation Selector
 - [x] Add Composable to display colors in HEX and change color using TextField
 - [x] Add option to display colors in a dialog
+- [x] Add gradient color selection with percentage stops, linear, radial and sweep options
+- [x] Add gradient selection demo
 
 ### TODOs:
 
 - [ ] Add and display colors selected previously
-- [ ] Add gradient color selection with percentage stops, linear, radial and sweep options
 - [ ] Add option to select colors from Image
 - [ ] Add option to select colors from Screen
 - [ ] Add option to select colors from Camera

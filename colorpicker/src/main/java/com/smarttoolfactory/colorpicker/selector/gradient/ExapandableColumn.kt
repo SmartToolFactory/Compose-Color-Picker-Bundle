@@ -18,12 +18,18 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 internal fun ExpandableColumn(
+    modifier: Modifier = Modifier,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     title: String,
     color: Color,
+    initialExpandState:Boolean = true,
     content: @Composable () -> Unit
 ) {
-    var expanded by remember { mutableStateOf(true) }
-    Column(modifier = Modifier.fillMaxWidth()) {
+    var expanded by remember { mutableStateOf(initialExpandState) }
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = horizontalAlignment
+    ) {
 
         Row(
             modifier = Modifier

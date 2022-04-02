@@ -38,7 +38,8 @@ private fun GradientOffsetSelection(
 ) {
     ExpandableColumn(
         title = "Gradient Position/Angle",
-        color = Pink400
+        color = Pink400,
+        initialExpandState = false
     ) {
         GradientOffsetTypeSelection(size, onGradientOffsetChange)
     }
@@ -55,7 +56,6 @@ private fun GradientOffsetTypeSelection(
 
     Column() {
         ExposedSelectionMenu(
-            modifier = Modifier.fillMaxWidth(),
             index = gradientOffsetOption,
             title = "Gradient Offset Type",
             options = gradientOffsetOptions,
@@ -143,7 +143,7 @@ private fun GradientOffsetAngleSelection(
     var gradientOffsetSelection by remember { mutableStateOf(0) }
 
     ExposedSelectionMenu(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.width(250.dp),
         index = gradientOffsetSelection,
         title = "Angle",
         options = gradientAngleOptions,
