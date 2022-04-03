@@ -3,6 +3,7 @@ package com.smarttoolfactory.colorpicker.widget
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -22,11 +23,11 @@ fun ColorDisplayRoundedRect(
     initialColor: Color,
     currentColor: Color
 ) {
-    Row(modifier = modifier) {
+    Row(modifier = modifier.height(40.dp)) {
         Box(
             modifier = Modifier
                 .weight(1f)
-                .height(40.dp)
+                .fillMaxHeight()
                 .background(
                     initialColor,
                     shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
@@ -35,7 +36,7 @@ fun ColorDisplayRoundedRect(
         Box(
             modifier = Modifier
                 .weight(1f)
-                .height(40.dp)
+                .fillMaxHeight()
                 .drawChecker(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp))
                 .background(
                     currentColor,

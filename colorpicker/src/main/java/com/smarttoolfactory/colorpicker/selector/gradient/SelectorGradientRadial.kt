@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import com.smarttoolfactory.colorpicker.ui.Pink400
+import com.smarttoolfactory.colorpicker.widget.ExpandableColumnWithTitle
 
 
 @Composable
@@ -19,7 +20,7 @@ internal fun RadialGradientSelection(
 
     onRadialDimensionsChange(Offset(centerX, centerY), radius)
 
-    ExpandableColumn(
+    ExpandableColumnWithTitle(
         title = "Gradient Center/Radius",
         color = Pink400,
         initialExpandState = false

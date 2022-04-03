@@ -1,4 +1,4 @@
-package com.smarttoolfactory.colorpicker.selector.gradient
+package com.smarttoolfactory.colorpicker.widget
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -16,13 +16,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Column with full width title and expand icon that can expand/shrink with [AnimatedVisibility].
+ * @param title text on top of the column that is visible on both states.
+ * @param color of [title].
+ * @param initialExpandState whether this composable should be expanded initially.
+ * @param content is the content that should be expended or hidden.
+ */
 @Composable
-internal fun ExpandableColumn(
+fun ExpandableColumnWithTitle(
     modifier: Modifier = Modifier,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     title: String,
     color: Color,
-    initialExpandState:Boolean = true,
+    initialExpandState: Boolean = true,
     content: @Composable () -> Unit
 ) {
     var expanded by remember { mutableStateOf(initialExpandState) }
@@ -33,12 +40,11 @@ internal fun ExpandableColumn(
 
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .clickable { expanded = !expanded }
-                .padding(10.dp),
+                .clickable { expanded = !expanded },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
+                modifier = Modifier.padding(vertical = 8.dp),
                 text = title,
                 fontSize = 16.sp,
                 color = color,

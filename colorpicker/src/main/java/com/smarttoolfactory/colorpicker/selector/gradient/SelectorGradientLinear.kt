@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.ui.*
+import com.smarttoolfactory.colorpicker.widget.ExpandableColumnWithTitle
 import com.smarttoolfactory.colorpicker.widget.ExposedSelectionMenu
 import com.smarttoolfactory.slider.ui.ActiveTrackColor
 import com.smarttoolfactory.slider.ui.InactiveTrackColor
@@ -36,7 +37,7 @@ private fun GradientOffsetSelection(
     size: Size,
     onGradientOffsetChange: (GradientOffset) -> Unit
 ) {
-    ExpandableColumn(
+    ExpandableColumnWithTitle(
         title = "Gradient Position/Angle",
         color = Pink400,
         initialExpandState = false
@@ -50,11 +51,13 @@ private fun GradientOffsetTypeSelection(
     size: Size,
     onGradientOffsetChange: (GradientOffset) -> Unit,
 ) {
-    val gradientOffsetOptions = listOf("Angle", "Position")
+    val gradientOffsetOptions = if (size != Size.Zero) {
+        listOf("Angle", "Position")
+    }else listOf("Angle")
 
     var gradientOffsetOption by remember { mutableStateOf(0) }
 
-    Column() {
+    Column {
         ExposedSelectionMenu(
             index = gradientOffsetOption,
             title = "Gradient Offset Type",
@@ -76,7 +79,6 @@ private fun GradientOffsetTypeSelection(
             }
         }
     }
-
 }
 
 @Composable

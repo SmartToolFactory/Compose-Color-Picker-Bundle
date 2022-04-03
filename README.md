@@ -3,7 +3,7 @@
 Bundle of Stylish customizable Color pickers, selectors, colorful sliders written with Jetpack
 Compose enables users to choose from HSL, HSV or RGB color models to pick Solid colors or gradients.
 
-Inspired by mchome's (flutter_colorpicker)[https://github.com/mchome/flutter_colorpicker] for Flutter
+Inspired by [mchome's flutter_colorpicker  for Flutter](https://github.com/mchome/flutter_colorpicker)
 
 ### Color Pickers
 

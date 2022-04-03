@@ -27,7 +27,7 @@ internal fun SliderWithPercent(
     onValueChange: (Float) -> Unit
 ) {
     Row(
-        modifier = modifier.padding(horizontal = 6.dp),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
 

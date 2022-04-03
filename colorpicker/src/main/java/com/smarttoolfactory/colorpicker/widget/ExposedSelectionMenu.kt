@@ -7,6 +7,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.colorpicker.ui.Green400
+import com.smarttoolfactory.colorpicker.ui.Grey400
+import com.smarttoolfactory.colorpicker.ui.Orange400
+import com.smarttoolfactory.colorpicker.ui.Red400
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -18,6 +22,17 @@ fun ExposedSelectionMenu(
         fontWeight = FontWeight.W600,
         fontSize = 14.sp
     ),
+    colors: TextFieldColors = ExposedDropdownMenuDefaults.textFieldColors(
+        backgroundColor = Color.Transparent,
+        focusedIndicatorColor = Color.Transparent,
+        unfocusedIndicatorColor = Color.Transparent,
+        disabledIndicatorColor = Color.Transparent,
+        focusedLabelColor = Grey400,
+        unfocusedLabelColor = Grey400,
+        trailingIconColor = Grey400,
+        focusedTrailingIconColor = Grey400,
+        textColor = Grey400,
+        ),
     options: List<String>,
     onSelected: (Int) -> Unit
 ) {
@@ -47,12 +62,7 @@ fun ExposedSelectionMenu(
                     expanded = expanded
                 )
             },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(
-                backgroundColor = Color.White,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-            ),
+            colors = colors,
             textStyle = textStyle
         )
         ExposedDropdownMenu(

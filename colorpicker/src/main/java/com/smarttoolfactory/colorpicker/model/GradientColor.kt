@@ -39,7 +39,13 @@ class GradientColor(size: Size) {
     var size by mutableStateOf(size)
     val brushColor: BrushColor
         get() {
-            val colorStops = colorStops.toTypedArray()
+
+            val colorStops = if (colorStops.size == 1) {
+                listOf(colorStops.first(), colorStops.first()).toTypedArray()
+            } else {
+                colorStops.toTypedArray()
+            }
+
             val brush = when (gradientType) {
                 GradientType.Linear -> Brush.linearGradient(
                     colorStops = colorStops,

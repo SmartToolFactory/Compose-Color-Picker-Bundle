@@ -19,11 +19,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.model.GradientColor
-import com.smarttoolfactory.colorpicker.ui.Blue400
-import com.smarttoolfactory.colorpicker.ui.GradientOffset
-import com.smarttoolfactory.colorpicker.ui.Grey800
-import com.smarttoolfactory.colorpicker.ui.Orange400
+import com.smarttoolfactory.colorpicker.ui.*
 import com.smarttoolfactory.colorpicker.util.fractionToIntPercent
+import com.smarttoolfactory.colorpicker.widget.ExpandableColumnWithTitle
 import com.smarttoolfactory.colorpicker.widget.ExposedSelectionMenu
 import com.smarttoolfactory.colorpicker.widget.drawChecker
 import com.smarttoolfactory.slider.ColorBrush
@@ -45,21 +43,14 @@ internal val gradientTileModeOptions = listOf("Clamp", "Repeated", "Mirror", "De
 
 @Composable
 fun GradientSelector(
+    modifier: Modifier = Modifier,
     color: Color,
     gradientColor: GradientColor
 ) {
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
+        modifier = modifier
     ) {
-
-        // Display Brush
-//        ExpandableColumn(title = "Brush Output", color = Green400) {
-//            BrushDisplay(gradientColor = gradientColor)
-//
-//        }
 
         GradientProperties(gradientColor = gradientColor)
 
@@ -111,7 +102,7 @@ private fun GradientProperties(gradientColor: GradientColor) {
     }
 
 
-    ExpandableColumn(
+    ExpandableColumnWithTitle(
         title = "Gradient Properties",
         color = Blue400,
         initialExpandState = false
@@ -127,16 +118,13 @@ private fun GradientProperties(gradientColor: GradientColor) {
                 ) else gradientOptions,
                 onSelected = {
                     gradientColor.gradientType = GradientType.values()[it]
-                }
+                },
             )
 
             Spacer(modifier = Modifier.height(5.dp))
 
             if (gradientColor.gradientType != GradientType.Sweep) {
                 ExposedSelectionMenu(
-//                    modifier = Modifier
-//                        .padding(end = 10.dp)
-//                        .fillMaxWidth(),
                     index = tileModeSelection,
                     title = "Tile Mode",
                     options = gradientTileModeOptions,
@@ -158,13 +146,13 @@ fun BrushDisplay(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxWidth()
-            .height(120.dp),
+            .height(80.dp),
         contentAlignment = Alignment.Center
     ) {
 
         val size = gradientColor.size
-        val contentWidth = size.width
-        val contentHeight = size.height
+        val contentWidth = size.width.coerceAtLeast(2f)
+        val contentHeight = size.height.coerceAtLeast(1f)
         val contentAspectRatio = contentWidth / contentHeight
 
         var boxHeight: Float = constraints.maxHeight.toFloat()
@@ -247,7 +235,7 @@ internal fun ColorStopSelection(
     onValueChange: (Int, Pair<Float, Color>) -> Unit
 ) {
 
-    ExpandableColumn(
+    ExpandableColumnWithTitle(
         title = "Colors and Stops",
         color = Orange400
     ) {
@@ -271,13 +259,16 @@ internal fun ColorStopSelection(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     onAddColorStop(Pair(1f, color))
-                }) {
+                }
+            ) {
                 Text(
                     modifier = Modifier.padding(4.dp),
                     text = "Add new Color",
+                    color = Green400,
                     fontSize = 16.sp
                 )
             }
+            Spacer(modifier=Modifier.height(10.dp))
         }
     }
 }
@@ -293,7 +284,7 @@ private fun GradientColorStopSelection(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 2.dp),
+            .padding(vertical = 2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -328,18 +319,19 @@ private fun GradientColorStopSelection(
             )
         )
 
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(4.dp))
         FloatingActionButton(
             modifier = Modifier
-                .padding(start = 4.dp, end = 12.dp)
-                .size(20.dp),
+                .padding(start = 4.dp, end = 4.dp)
+                .size(16.dp),
             elevation = FloatingActionButtonDefaults.elevation(
                 defaultElevation = 0.dp
             ),
-            backgroundColor = Grey800,
+            backgroundColor = Red400,
             contentColor = Color.White,
             onClick = { onRemoveClick(index) }) {
             Icon(
+                modifier = Modifier.size(12.dp),
                 imageVector = Icons.Filled.Close,
                 contentDescription = "close",
             )

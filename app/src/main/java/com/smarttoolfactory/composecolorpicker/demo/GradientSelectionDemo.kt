@@ -1,9 +1,10 @@
 package com.smarttoolfactory.composecolorpicker.demo
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -20,7 +21,6 @@ import com.smarttoolfactory.colorpicker.selector.gradient.BrushDisplay
 import com.smarttoolfactory.colorpicker.selector.gradient.GradientSelector
 import com.smarttoolfactory.colorpicker.slider.SliderCircleColorDisplayHueHSL
 import com.smarttoolfactory.colorpicker.ui.Blue400
-import com.smarttoolfactory.colorpicker.widget.drawChecker
 
 
 /**
@@ -89,7 +89,11 @@ fun GradientSelectionDemo() {
 //                    .background(gradientColor.brushColor.activeBrush),
 //            )
             BrushDisplay(gradientColor = gradientColor)
-            GradientSelector(currentColor, gradientColor)
+            GradientSelector(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                color = currentColor,
+                gradientColor = gradientColor
+            )
         }
     }
 }

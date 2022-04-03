@@ -23,7 +23,7 @@ import com.smarttoolfactory.colorpicker.ui.Grey600
  */
 @Composable
 fun ColorModelChangeTabRow(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     colorModel: ColorModel,
     onColorModelChange: (ColorModel) -> Unit
 ) {

@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import com.smarttoolfactory.colorpicker.ui.Pink400
+import com.smarttoolfactory.colorpicker.widget.ExpandableColumnWithTitle
 
 @Composable
 internal fun SweepGradientSelection(
@@ -16,7 +17,7 @@ internal fun SweepGradientSelection(
 
     onCenterChange(Offset(centerX, centerY))
 
-    ExpandableColumn(
+    ExpandableColumnWithTitle(
         title = "Gradient Center",
         color = Pink400,
         initialExpandState = false
