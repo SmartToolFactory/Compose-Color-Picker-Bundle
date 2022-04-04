@@ -6,3 +6,10 @@ package com.smarttoolfactory.colorpicker.model
 enum class ColorModel {
     RGB, HSV, HSL
 }
+
+/**
+ * Color Modes that contain HSL, HSV, RGB, and Gradient
+ */
+enum class ColorMode {
+    HSL, HSV, RGB, Gradient
+}

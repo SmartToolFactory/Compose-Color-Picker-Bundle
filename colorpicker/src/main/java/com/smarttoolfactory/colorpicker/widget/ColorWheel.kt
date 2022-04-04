@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleRGB
@@ -16,7 +17,10 @@ import com.smarttoolfactory.colorpicker.ui.gradientColorScaleRGB
  * Simple circle with stroke to show rainbow colors as [Brush.sweepGradient]
  */
 @Composable
-fun ColorWheel(modifier: Modifier = Modifier) {
+fun ColorWheel(
+    modifier: Modifier = Modifier,
+    borderColor: Color
+) {
 
     Canvas(modifier = modifier.sizeIn(minWidth = 24.dp, minHeight = 24.dp)) {
         val canvasWidth = size.width
@@ -31,17 +35,18 @@ fun ColorWheel(modifier: Modifier = Modifier) {
         val cY = canvasHeight / 2
         val canvasRadius = canvasWidth.coerceAtMost(canvasHeight) / 2f
         val center = Offset(cX, cY)
-        val strokeWidth = canvasRadius * .3f
-        // Stroke is drawn out of the radius, so it's required to subtract stroke width from radius
-        val radius = canvasRadius - strokeWidth
 
         drawCircle(
             brush = Brush.sweepGradient(colors = gradientColorScaleRGB, center = center),
-            radius = radius,
+            radius = canvasRadius,
+            center = center
+        )
+
+        drawCircle(
+            color = borderColor,
+            radius = canvasRadius,
             center = center,
-            style = Stroke(
-                width = strokeWidth
-            )
+            style = Stroke(width = 2.dp.toPx())
         )
     }
 }
