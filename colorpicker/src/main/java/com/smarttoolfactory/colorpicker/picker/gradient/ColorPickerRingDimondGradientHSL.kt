@@ -6,6 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -49,7 +50,8 @@ fun ColorPickerRingDiamondGradientHSL(
     ringBorderStrokeColor: Color = Color.Black,
     ringBorderStrokeWidth: Dp = 4.dp,
     selectionRadius: Dp = 8.dp,
-    onBrushColorChange: (BrushColor) -> Unit
+    onColorChange: (Color) -> Unit,
+    onBrushColorChange: (Brush) -> Unit
 ) {
 
     var inputColorModel by remember { mutableStateOf(ColorModel.HSL) }
@@ -64,6 +66,8 @@ fun ColorPickerRingDiamondGradientHSL(
 
     val currentColor =
         Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
+    gradientColorState.color = currentColor
+    onColorChange(currentColor)
 
     Column(
         modifier = modifier,
@@ -152,9 +156,7 @@ fun ColorPickerRingDiamondGradientHSL(
                         color = currentColor,
                         gradientColorState = gradientColorState
                     ) {
-                        onBrushColorChange(
-                            BrushColor(brush = it)
-                        )
+                        onBrushColorChange(it)
                     }
                 }
             }
@@ -172,18 +174,6 @@ fun ColorPickerRingDiamondGradientHSL(
                             saturation = color.saturation
                             lightness = color.lightness
                             alpha = color.alpha
-
-                            gradientColorState.color = Color.hsl(
-                                hue = hue,
-                                saturation = saturation,
-                                lightness = lightness,
-                                alpha = alpha
-                            )
-
-                            onBrushColorChange(
-                                BrushColor(color = gradientColorState.color)
-                            )
-
                         }
                     },
                     showAlphaSlider = true,

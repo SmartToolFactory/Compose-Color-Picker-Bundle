@@ -25,7 +25,7 @@ import com.smarttoolfactory.colorpicker.ui.Blue400
 @Composable
 fun ColorPickerRingDiamondGradientHSLDialog(
     initialBrushColor: BrushColor,
-    gradientColorState: GradientColorState= rememberGradientColorState(),
+    gradientColorState: GradientColorState = rememberGradientColorState(),
     ringOuterRadiusFraction: Float = .9f,
     ringInnerRadiusFraction: Float = .6f,
     ringBackgroundColor: Color = Color.Transparent,
@@ -35,9 +35,7 @@ fun ColorPickerRingDiamondGradientHSLDialog(
     onDismiss: (BrushColor) -> Unit
 ) {
 
-    var brushColor by remember(initialBrushColor) {
-        mutableStateOf(BrushColor(color = initialBrushColor.color.copy()))
-    }
+    var brushColor: BrushColor by remember { mutableStateOf(initialBrushColor.copy()) }
 
     Dialog(
         onDismissRequest = {
@@ -45,24 +43,27 @@ fun ColorPickerRingDiamondGradientHSLDialog(
         }
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
             ColorPickerRingDiamondGradientHSL(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
                     .background(Color(0xcc212121), shape = RoundedCornerShape(5.dp))
                     .padding(horizontal = 10.dp, vertical = 2.dp),
-                initialColor = brushColor.color,
+                initialColor = initialBrushColor.color,
                 gradientColorState = gradientColorState,
                 ringOuterRadiusFraction = ringOuterRadiusFraction,
                 ringInnerRadiusFraction = ringInnerRadiusFraction,
                 ringBackgroundColor = ringBackgroundColor,
                 ringBorderStrokeColor = ringBorderStrokeColor,
                 ringBorderStrokeWidth = ringBorderStrokeWidth,
-                selectionRadius = selectionRadius
-            ) {
-                brushColor = it
-            }
+                selectionRadius = selectionRadius,
+                onColorChange = {
+                    brushColor = BrushColor(color = it)
+                },
+                onBrushColorChange = {
+                    brushColor = BrushColor(brush = it)
+                }
+            )
 
             FloatingActionButton(
                 onClick = { onDismiss(brushColor) },

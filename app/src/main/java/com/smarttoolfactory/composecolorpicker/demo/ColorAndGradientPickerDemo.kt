@@ -3,6 +3,7 @@ package com.smarttoolfactory.composecolorpicker.demo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedButton
@@ -17,6 +18,7 @@ import com.smarttoolfactory.colorpicker.dialog.ColorPickerRingDiamondGradientHSL
 import com.smarttoolfactory.colorpicker.model.BrushColor
 import com.smarttoolfactory.colorpicker.model.GradientColorState
 import com.smarttoolfactory.colorpicker.model.rememberGradientColorState
+import com.smarttoolfactory.colorpicker.widget.drawChecker
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 
 @Composable
@@ -44,17 +46,25 @@ fun ColorAndGradientPickerDemo() {
             mutableStateOf(previousBrushColor.copy())
         }
 
-
         Row {
             Box(
                 modifier = Modifier
                     .size(size)
-                    .background(previousBrushColor.activeBrush)
+                    .fillMaxHeight()
+                    .drawChecker(RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
+                    .background(
+                        previousBrushColor.activeBrush,
+                        shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp)
+                    )
             )
             Box(
                 modifier = Modifier
                     .size(size)
-                    .background(currentBrushColor.activeBrush)
+                    .drawChecker(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp))
+                    .background(
+                        currentBrushColor.activeBrush,
+                        shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp)
+                    )
             )
         }
 
