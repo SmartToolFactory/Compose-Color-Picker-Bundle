@@ -18,60 +18,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.smarttoolfactory.colorpicker.model.BrushColor
 import com.smarttoolfactory.colorpicker.picker.*
 import com.smarttoolfactory.colorpicker.ui.Blue400
-
-@Composable
-fun ColorPickerRingDiamondGradientHSLDialog(
-    initialColor: Color,
-    ringOuterRadiusFraction: Float = .9f,
-    ringInnerRadiusFraction: Float = .6f,
-    ringBackgroundColor: Color = Color.Transparent,
-    ringBorderStrokeColor: Color = Color.Black,
-    ringBorderStrokeWidth: Dp = 4.dp,
-    selectionRadius: Dp = 8.dp,
-    onDismiss: (BrushColor) -> Unit
-) {
-
-    var color by remember { mutableStateOf(BrushColor(color = initialColor.copy())) }
-    Dialog(
-        onDismissRequest = {
-            onDismiss(color)
-        }
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-            ColorPickerRingDiamondGradientHSL(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .background(Color(0xcc212121), shape = RoundedCornerShape(5.dp))
-                    .padding(horizontal = 10.dp, vertical = 2.dp),
-                initialColor = initialColor,
-                ringOuterRadiusFraction = ringOuterRadiusFraction,
-                ringInnerRadiusFraction = ringInnerRadiusFraction,
-                ringBackgroundColor = ringBackgroundColor,
-                ringBorderStrokeColor = ringBorderStrokeColor,
-                ringBorderStrokeWidth = ringBorderStrokeWidth,
-                selectionRadius = selectionRadius
-            ) {
-                color = it
-            }
-
-            FloatingActionButton(
-                onClick = { onDismiss(color) },
-                backgroundColor = Color.Black
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Close,
-                    contentDescription = null,
-                    tint = Blue400
-                )
-            }
-        }
-    }
-}
 
 @Composable
 fun ColorPickerRingDiamondHSLDialog(

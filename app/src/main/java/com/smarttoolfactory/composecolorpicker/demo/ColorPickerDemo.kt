@@ -32,7 +32,7 @@ fun ColorPickerDemo() {
             )
         }
         var color by remember {
-            mutableStateOf(Color.hsl(0f, 0.5f, 0.5f))
+            mutableStateOf(previousColor.copy())
         }
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -48,17 +48,6 @@ fun ColorPickerDemo() {
 
         // Ring Hue, Diamond Saturation-Lightness selector HSL Picker
         DialogRingHSL(
-            modifier = buttonModifier,
-            color = color,
-            onPreviousColorChange = {
-                previousColor = it
-            },
-            onCurrentColorChange = {
-                color = it
-            }
-        )
-
-        DialogRingGradientHSL(
             modifier = buttonModifier,
             color = color,
             onPreviousColorChange = {
@@ -189,37 +178,6 @@ private fun DialogRingHSL(
         ColorPickerRingDiamondHSLDialog(color) {
             showDialog = !showDialog
             onCurrentColorChange(it)
-        }
-    }
-}
-
-@Composable
-private fun DialogRingGradientHSL(
-    modifier: Modifier,
-    color: Color,
-    onPreviousColorChange: (Color) -> Unit,
-    onCurrentColorChange: (Color) -> Unit,
-
-    ) {
-    var showDialog by remember { mutableStateOf(false) }
-
-    OutlinedButton(
-        modifier = modifier,
-        onClick = { showDialog = !showDialog },
-        colors = ButtonDefaults.outlinedButtonColors(
-            backgroundColor = Color.Transparent
-        )
-
-    ) {
-        Text(text = "Hue Ring-Diamond HSL Dialog")
-    }
-
-    if (showDialog) {
-        onPreviousColorChange(color.copy())
-
-        ColorPickerRingDiamondGradientHSLDialog(color) {
-            showDialog = !showDialog
-//            onCurrentColorChange(it)
         }
     }
 }
