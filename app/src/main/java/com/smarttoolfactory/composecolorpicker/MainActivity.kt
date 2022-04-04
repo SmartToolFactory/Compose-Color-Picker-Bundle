@@ -79,11 +79,12 @@ private fun HomeContent() {
 
         when (page) {
             0 -> ColorPickerDemo()
-            1 -> SaturationSelectorDemo()
-            2 -> GradientSelectionDemo()
-            3 -> GradientAngleDemo()
-            4 -> HSVHSLGradientDemo()
-            5 -> ColorfulSliderDemo()
+            1 -> ColorAndGradientPickerDemo()
+            2 -> SaturationSelectorDemo()
+            3 -> GradientSelectionDemo()
+            4 -> GradientAngleDemo()
+            5 -> HSVHSLGradientDemo()
+            6 -> ColorfulSliderDemo()
             else -> ColorModeConversionDemo()
         }
     }
@@ -92,6 +93,7 @@ private fun HomeContent() {
 internal val tabList =
     listOf(
         "Color Picker",
+        "Gradient Color Picker",
         "Saturation Selector",
         "Gradient Selection",
         "Gradient Angle",
