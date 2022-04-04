@@ -2,7 +2,6 @@ package com.smarttoolfactory.colorpicker.selector.gradient
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.ui.Grey400
 import com.smarttoolfactory.colorpicker.util.fractionToIntPercent
-import com.smarttoolfactory.slider.ColorBrush
+import com.smarttoolfactory.slider.SliderBrushColor
 import com.smarttoolfactory.slider.ColorfulSlider
 import com.smarttoolfactory.slider.MaterialSliderDefaults
 import com.smarttoolfactory.slider.ui.InactiveTrackColor
@@ -47,7 +46,7 @@ internal fun SliderWithPercent(
             thumbRadius = 10.dp,
             trackHeight = 8.dp,
             colors = MaterialSliderDefaults.materialColors(
-                inactiveTrackColor = ColorBrush(InactiveTrackColor)
+                inactiveTrackColor = SliderBrushColor(InactiveTrackColor)
             )
         )
         Spacer(modifier = Modifier.width(10.dp))

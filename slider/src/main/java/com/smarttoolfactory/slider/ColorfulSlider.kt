@@ -69,8 +69,8 @@ fun ColorfulSlider(
  * of steps between min and max values:
  *
  * Material Slider allows to choose height for track and thumb radius and selection between
- * [Color] or [Brush] using [ColorBrush]. If brush of [ColorBrush.brush] is not null gradient
- * provided in this [Brush] is used for drawing otherwise solid color [ColorBrush.solidColor] is used.
+ * [Color] or [Brush] using [SliderBrushColor]. If brush of [SliderBrushColor.brush] is not null gradient
+ * provided in this [Brush] is used for drawing otherwise solid color [SliderBrushColor.solidColor] is used.
  *
  * @param value current value of the Slider. If outside of [valueRange] provided, value will be
  * coerced to this range.
@@ -273,8 +273,8 @@ private fun SliderImpl(
  * If inactive track is to be drawn it's drawn between start and end of canvas. Active track
  * is drawn between start and current value.
  *
- * Drawing both tracks use [ColorBrush] to draw a nullable [Brush] first. If it's not then
- * [ColorBrush.solidColor] is used to draw with solid colors provided by [MaterialSliderColors]
+ * Drawing both tracks use [SliderBrushColor] to draw a nullable [Brush] first. If it's not then
+ * [SliderBrushColor.solidColor] is used to draw with solid colors provided by [MaterialSliderColors]
  */
 @Composable
 private fun Track(
