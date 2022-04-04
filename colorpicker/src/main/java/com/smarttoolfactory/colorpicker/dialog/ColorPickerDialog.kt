@@ -73,6 +73,58 @@ fun ColorPickerRingDiamondHSLDialog(
 }
 
 @Composable
+fun ColorPickerRingRectHSLDialog(
+    initialColor: Color,
+    ringOuterRadiusFraction: Float = .9f,
+    ringInnerRadiusFraction: Float = .6f,
+    ringBackgroundColor: Color = Color.Transparent,
+    ringBorderStrokeColor: Color = Color.Black,
+    ringBorderStrokeWidth: Dp = 4.dp,
+    selectionRadius: Dp = 8.dp,
+    onDismiss: (Color) -> Unit
+) {
+
+    var color by remember { mutableStateOf(initialColor.copy()) }
+    Dialog(
+        onDismissRequest = {
+            onDismiss(color)
+        }
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+            ColorPickerRingRectHSL(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(Color(0xcc212121), shape = RoundedCornerShape(5.dp))
+                    .padding(horizontal = 10.dp, vertical = 2.dp),
+                initialColor = initialColor,
+                ringOuterRadiusFraction = ringOuterRadiusFraction,
+                ringInnerRadiusFraction = ringInnerRadiusFraction,
+                ringBackgroundColor = ringBackgroundColor,
+                ringBorderStrokeColor = ringBorderStrokeColor,
+                ringBorderStrokeWidth = ringBorderStrokeWidth,
+                selectionRadius = selectionRadius
+            ) {
+                color = it
+            }
+
+            FloatingActionButton(
+                onClick = { onDismiss(color) },
+                backgroundColor = Color.Black
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = null,
+                    tint = Blue400
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
 fun ColorPickerRingRectHSVDialog(
     initialColor: Color,
     ringOuterRadiusFraction: Float = .9f,

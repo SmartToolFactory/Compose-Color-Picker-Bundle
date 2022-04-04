@@ -47,7 +47,19 @@ fun ColorPickerDemo() {
             .padding(4.dp)
 
         // Ring Hue, Diamond Saturation-Lightness selector HSL Picker
-        DialogRingHSL(
+        DialogRingDiamondHSL(
+            modifier = buttonModifier,
+            color = color,
+            onPreviousColorChange = {
+                previousColor = it
+            },
+            onCurrentColorChange = {
+                color = it
+            }
+        )
+
+        // Ring Hue, Rect Saturation-Lightness selector HSL Picker
+        DialogRingRectHSL(
             modifier = buttonModifier,
             color = color,
             onPreviousColorChange = {
@@ -59,7 +71,7 @@ fun ColorPickerDemo() {
         )
 
         // Ring Hue, Rect Saturation-Value selector HSV Picker
-        DialogRingHSV(
+        DialogRingRectHSV(
             modifier = buttonModifier,
             color = color,
             onPreviousColorChange = {
@@ -152,7 +164,7 @@ fun ColorPickerDemo() {
 }
 
 @Composable
-private fun DialogRingHSL(
+private fun DialogRingDiamondHSL(
     modifier: Modifier,
     color: Color,
     onPreviousColorChange: (Color) -> Unit,
@@ -183,7 +195,38 @@ private fun DialogRingHSL(
 }
 
 @Composable
-private fun DialogRingHSV(
+private fun DialogRingRectHSL(
+    modifier: Modifier,
+    color: Color,
+    onPreviousColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color) -> Unit,
+
+    ) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+
+    ) {
+        Text(text = "Hue Ring-Rect HSL Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(color.copy())
+
+        ColorPickerRingRectHSLDialog(color) {
+            showDialog = !showDialog
+            onCurrentColorChange(it)
+        }
+    }
+}
+
+@Composable
+private fun DialogRingRectHSV(
     modifier: Modifier,
     color: Color,
     onPreviousColorChange: (Color) -> Unit,

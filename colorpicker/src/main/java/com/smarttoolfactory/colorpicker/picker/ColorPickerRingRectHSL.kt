@@ -7,18 +7,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.smarttoolfactory.colorpicker.model.ColorHSV
+import com.smarttoolfactory.colorpicker.model.ColorHSL
 import com.smarttoolfactory.colorpicker.model.ColorModel
+import com.smarttoolfactory.colorpicker.selector.SelectorDiamondSaturationLightnessHSL
+import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationLightnessHSL
 import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
-import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationValueHSV
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
-import com.smarttoolfactory.colorpicker.util.colorToHSV
+import com.smarttoolfactory.colorpicker.util.colorToHSL
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
 import com.smarttoolfactory.colorpicker.widget.ColorModelChangeTabRow
 
 /**
- * ColorPicker with [SelectorRingHue] hue selector and [SelectorRectSaturationValueHSV]
- * saturation lightness Selector that uses [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV)
+ * ColorPicker with [SelectorRingHue] hue selector and [SelectorRectSaturationLightnessHSL]
+ * saturation lightness Selector that uses [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV)
  * color model as base.
  * This color picker has tabs section that can be changed between
  * HSL, HSV and RGB color models and color can be set using [CompositeSliderPanel] which contains
@@ -32,10 +33,10 @@ import com.smarttoolfactory.colorpicker.widget.ColorModelChangeTabRow
  * @param ringBorderStrokeWidth stroke width of borders.
  * @param selectionRadius radius of white and black circle selector.
  * @param onColorChange callback that is triggered when [Color] is changed using [SelectorRingHue],
- * [SelectorRectSaturationValueHSV] or [CompositeSliderPanel]
+ * [SelectorDiamondSaturationLightnessHSL] or [CompositeSliderPanel]
  */
 @Composable
-fun ColorPickerRingRectHSV(
+fun ColorPickerRingRectHSL(
     modifier: Modifier = Modifier,
     initialColor: Color,
     ringOuterRadiusFraction: Float = .9f,
@@ -47,18 +48,17 @@ fun ColorPickerRingRectHSV(
     onColorChange: (Color) -> Unit
 ) {
 
-    var inputColorModel by remember { mutableStateOf(ColorModel.HSV) }
+    var inputColorModel by remember { mutableStateOf(ColorModel.HSL) }
 
-    val hsvArray = colorToHSV(initialColor)
+    val hslArray = colorToHSL(initialColor)
 
-    var hue by remember { mutableStateOf(hsvArray[0]) }
-    var saturation by remember { mutableStateOf(hsvArray[1]) }
-    var value by remember { mutableStateOf(hsvArray[2]) }
+    var hue by remember { mutableStateOf(hslArray[0]) }
+    var saturation by remember { mutableStateOf(hslArray[1]) }
+    var lightness by remember { mutableStateOf(hslArray[2]) }
     var alpha by remember { mutableStateOf(initialColor.alpha) }
 
     val currentColor =
-        Color.hsv(hue = hue, saturation = saturation, value = value, alpha = alpha)
-
+        Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
     onColorChange(currentColor)
 
     Column(
@@ -95,17 +95,17 @@ fun ColorPickerRingRectHSV(
             }
 
             // Rect Shaped Saturation and Lightness Selector
-            SelectorRectSaturationValueHSV(
+            SelectorRectSaturationLightnessHSL(
                 modifier = Modifier
                     .fillMaxWidth(ringInnerRadiusFraction * .65f)
                     .aspectRatio(1f),
                 hue = hue,
                 saturation = saturation,
-                value = value,
+                lightness = lightness,
                 selectionRadius = selectionRadius
-            ) { s, v ->
+            ) { s, l ->
                 saturation = s
-                value = v
+                lightness = l
             }
         }
 
@@ -121,24 +121,23 @@ fun ColorPickerRingRectHSV(
         // HSL-HSV-RGB Sliders
         CompositeSliderPanel(
             modifier = Modifier.padding(start = 10.dp, end = 7.dp),
-            compositeColor = ColorHSV(
+            compositeColor = ColorHSL(
                 hue = hue,
                 saturation = saturation,
-                value = value,
+                lightness = lightness,
                 alpha = alpha
             ),
             onColorChange = {
-                (it as? ColorHSV)?.let { color ->
+                (it as? ColorHSL)?.let { color ->
                     hue = color.hue
                     saturation = color.saturation
-                    value = color.value
+                    lightness = color.lightness
                     alpha = color.alpha
                 }
-
             },
             showAlphaSlider = true,
             inputColorModel = inputColorModel,
-            outputColorModel = ColorModel.HSV
+            outputColorModel = ColorModel.HSL
         )
     }
 }
