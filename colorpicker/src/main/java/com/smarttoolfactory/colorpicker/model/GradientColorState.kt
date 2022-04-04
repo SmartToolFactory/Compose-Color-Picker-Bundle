@@ -14,30 +14,37 @@ import com.smarttoolfactory.colorpicker.ui.GradientAngle
 import com.smarttoolfactory.colorpicker.ui.GradientOffset
 
 @Composable
-fun rememberGradientColor(dpSize: DpSize = DpSize.Zero): GradientColor {
+fun rememberGradientColorState(
+    color: Color = Color.Unspecified,
+    size: DpSize = DpSize.Zero
+): GradientColorState {
 
     val density = LocalDensity.current
 
     return remember {
 
-        val size = if (dpSize == DpSize.Zero) {
+        val sizePx = if (size == DpSize.Zero) {
             Size.Zero
         } else {
             with(density) {
                 Size(
-                    dpSize.width.toPx(),
-                    dpSize.height.toPx()
+                    size.width.toPx(),
+                    size.height.toPx()
                 )
             }
         }
-        GradientColor(size)
+        GradientColorState(color, sizePx)
     }
 }
 
-class GradientColor(size: Size) {
+class GradientColorState internal constructor(initialColor: Color, size: Size) {
 
     var size by mutableStateOf(size)
-    val brushColor: BrushColor
+
+    var color: Color = initialColor
+        internal set
+
+    val brush: Brush
         get() {
 
             val colorStops = if (colorStops.size == 1) {
@@ -71,8 +78,14 @@ class GradientColor(size: Size) {
                     ),
                 )
             }
-            return BrushColor(brush = brush)
+            return brush
         }
+
+    val brushColor: BrushColor
+        get() {
+            return BrushColor(color = color, brush = brush)
+        }
+
     var gradientType: GradientType by mutableStateOf(GradientType.Linear)
     var colorStops = mutableStateListOf(
         0.0f to Color.Red,

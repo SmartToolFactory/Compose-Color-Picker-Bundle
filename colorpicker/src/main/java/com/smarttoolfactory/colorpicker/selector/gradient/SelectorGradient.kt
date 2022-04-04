@@ -18,13 +18,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.colorpicker.model.GradientColor
+import com.smarttoolfactory.colorpicker.model.GradientColorState
 import com.smarttoolfactory.colorpicker.ui.*
 import com.smarttoolfactory.colorpicker.util.fractionToIntPercent
 import com.smarttoolfactory.colorpicker.widget.ExpandableColumnWithTitle
 import com.smarttoolfactory.colorpicker.widget.ExposedSelectionMenu
 import com.smarttoolfactory.colorpicker.widget.drawChecker
-import com.smarttoolfactory.slider.ColorBrush
+import com.smarttoolfactory.slider.SliderBrushColor
 import com.smarttoolfactory.slider.ColorfulSlider
 import com.smarttoolfactory.slider.MaterialSliderDefaults
 import com.smarttoolfactory.slider.ui.InactiveTrackColor
@@ -45,62 +45,64 @@ internal val gradientTileModeOptions = listOf("Clamp", "Repeated", "Mirror", "De
 fun GradientSelector(
     modifier: Modifier = Modifier,
     color: Color,
-    gradientColor: GradientColor
+    gradientColorState: GradientColorState,
+    onBrushChange:(Brush)->Unit
 ) {
 
     Column(
         modifier = modifier
     ) {
 
-        GradientProperties(gradientColor = gradientColor)
+        onBrushChange(gradientColorState.brush)
+
+        GradientProperties(gradientColorState = gradientColorState)
 
         // Gradient type selection
-        when (gradientColor.gradientType) {
+        when (gradientColorState.gradientType) {
             GradientType.Linear ->
-                LinearGradientSelection(gradientColor.size) { offset: GradientOffset ->
-                    gradientColor.gradientOffset = offset
+                LinearGradientSelection(gradientColorState.size) { offset: GradientOffset ->
+                    gradientColorState.gradientOffset = offset
                 }
             GradientType.Radial ->
                 RadialGradientSelection { centerFriction: Offset, radiusFriction: Float ->
-                    gradientColor.centerFriction = centerFriction
-                    gradientColor.radiusFriction = radiusFriction
+                    gradientColorState.centerFriction = centerFriction
+                    gradientColorState.radiusFriction = radiusFriction
                 }
             GradientType.Sweep ->
                 SweepGradientSelection { centerFriction: Offset ->
-                    gradientColor.centerFriction = centerFriction
+                    gradientColorState.centerFriction = centerFriction
                 }
         }
 
         // Color Stops and Colors
         ColorStopSelection(
             color = color,
-            colorStops = gradientColor.colorStops,
+            colorStops = gradientColorState.colorStops,
             onRemoveClick = { index: Int ->
-                if (gradientColor.colorStops.size > 2) {
-                    gradientColor.colorStops.removeAt(index)
+                if (gradientColorState.colorStops.size > 2) {
+                    gradientColorState.colorStops.removeAt(index)
                 }
             },
             onValueChange = { index: Int, pair: Pair<Float, Color> ->
-                gradientColor.colorStops[index] = pair.copy()
+                gradientColorState.colorStops[index] = pair.copy()
             },
             onAddColorStop = { pair: Pair<Float, Color> ->
-                gradientColor.colorStops.add(pair)
+                gradientColorState.colorStops.add(pair)
             }
         )
     }
 }
 
 @Composable
-private fun GradientProperties(gradientColor: GradientColor) {
+private fun GradientProperties(gradientColorState: GradientColorState) {
 
     var tileModeSelection by remember { mutableStateOf(0) }
-    gradientColor.tileMode = when (tileModeSelection) {
+    gradientColorState.tileMode = when (tileModeSelection) {
         0 -> TileMode.Clamp
         1 -> TileMode.Repeated
         2 -> TileMode.Mirror
         else -> TileMode.Decal
     }
-
 
     ExpandableColumnWithTitle(
         title = "Gradient Properties",
@@ -109,21 +111,20 @@ private fun GradientProperties(gradientColor: GradientColor) {
     ) {
         Column {
             ExposedSelectionMenu(
-//                modifier = Modifier.fillMaxWidth(),
-                index = gradientColor.gradientType.ordinal,
+                index = gradientColorState.gradientType.ordinal,
                 title = "Gradient Type",
-                options = if (gradientColor.size == Size.Zero) gradientOptions.subList(
+                options = if (gradientColorState.size == Size.Zero) gradientOptions.subList(
                     0,
                     1
                 ) else gradientOptions,
                 onSelected = {
-                    gradientColor.gradientType = GradientType.values()[it]
+                    gradientColorState.gradientType = GradientType.values()[it]
                 },
             )
 
             Spacer(modifier = Modifier.height(5.dp))
 
-            if (gradientColor.gradientType != GradientType.Sweep) {
+            if (gradientColorState.gradientType != GradientType.Sweep) {
                 ExposedSelectionMenu(
                     index = tileModeSelection,
                     title = "Tile Mode",
@@ -140,7 +141,7 @@ private fun GradientProperties(gradientColor: GradientColor) {
 @Composable
 fun BrushDisplay(
     modifier: Modifier = Modifier,
-    gradientColor: GradientColor
+    gradientColorState: GradientColorState
 ) {
     // Display Brush
     BoxWithConstraints(
@@ -150,7 +151,7 @@ fun BrushDisplay(
         contentAlignment = Alignment.Center
     ) {
 
-        val size = gradientColor.size
+        val size = gradientColorState.size
         val contentWidth = size.width.coerceAtLeast(2f)
         val contentHeight = size.height.coerceAtLeast(1f)
         val contentAspectRatio = contentWidth / contentHeight
@@ -164,12 +165,12 @@ fun BrushDisplay(
 
         }
 
-        val gradientType = gradientColor.gradientType
-        val colorStops = gradientColor.colorStops
-        val gradientOffset = gradientColor.gradientOffset
-        val tileMode = gradientColor.tileMode
-        val centerFriction = gradientColor.centerFriction
-        val radiusFriction = gradientColor.radiusFriction
+        val gradientType = gradientColorState.gradientType
+        val colorStops = gradientColorState.colorStops
+        val gradientOffset = gradientColorState.gradientOffset
+        val tileMode = gradientColorState.tileMode
+        val centerFriction = gradientColorState.centerFriction
+        val radiusFriction = gradientColorState.radiusFriction
 
         val center = Offset(
             boxWidth * centerFriction.x,
@@ -315,7 +316,7 @@ private fun GradientColorStopSelection(
             thumbRadius = 10.dp,
             trackHeight = 8.dp,
             colors = MaterialSliderDefaults.materialColors(
-                inactiveTrackColor = ColorBrush(InactiveTrackColor)
+                inactiveTrackColor = SliderBrushColor(InactiveTrackColor)
             )
         )
 
