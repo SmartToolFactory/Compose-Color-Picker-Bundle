@@ -5,10 +5,8 @@ Compose enables users to choose from HSL, HSV or RGB color models to pick Solid 
 With colorful Sliders, panels, hex and color displays and various elements to create customized
 pickers based on preference.
 
-There are 10(for now) different color pickers and 3 different color+gradient pickers available
-to choose from to use as Composables or inside dialogs that are available in demos.
-
-
+There are 10(for now) different color pickers and 3 different color+gradient pickers available to
+choose from to use as Composables or inside dialogs that are available in demos.
 
 Inspired
 by [mchome's flutter_colorpicker  for Flutter](https://github.com/mchome/flutter_colorpicker)
@@ -46,8 +44,10 @@ ColorPickerRingRectHSL(
 ) 
 ```
 
-ColorPicker with `SelectorRingHue` hue selector and `SelectorRectSaturationLightnessHSL`  saturation lightness Selector that uses [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model as base.
- This color picker has tabs section that can be changed between HSL, HSV and RGB color models and color can be set using `CompositeSliderPanel` which contains  sliders for each color models.
+ColorPicker with `SelectorRingHue` hue selector and `SelectorRectSaturationLightnessHSL`  saturation
+lightness Selector that uses [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model as base.
+This color picker has tabs section that can be changed between HSL, HSV and RGB color models and
+color can be set using `CompositeSliderPanel` which contains sliders for each color models.
 
 * **initialColor** color that is passed to this picker initially.
 * **ringOuterRadiusFraction** outer radius of `SelectorRingHue`.
@@ -56,9 +56,11 @@ ColorPicker with `SelectorRingHue` hue selector and `SelectorRectSaturationLight
 * **ringBorderStrokeColor** stroke color for drawing borders around inner or outer radius.
 * **ringBorderStrokeWidth** stroke width of borders.
 * **selectionRadius radius** of white and black circle selector.
-* **onColorChange** callback that is triggered when `Color` is changed using `SelectorRingHue` `SelectorDiamondSaturationLightnessHSL` or `CompositeSliderPanel`
+* **onColorChange** callback that is triggered when `Color` is changed
+  using `SelectorRingHue` `SelectorDiamondSaturationLightnessHSL` or `CompositeSliderPanel`
 
 #### Implementation for other Color Pickers
+
 ```
 ColorPickerCircleValueHSV(
     modifier: Modifier = Modifier,
@@ -67,6 +69,7 @@ ColorPickerCircleValueHSV(
     onColorChange: (Color) -> Unit
 )
 ```
+
 * **selectionRadius radius** of white and black circle selector.
 * **initialColor** color that is passed to this picker initially.
 * **onColorChange** callback that is triggered when `Color` is changed
@@ -78,6 +81,7 @@ ColorPickerCircleValueHSV(
 | <img src="./screenshots/colorpicker/cp_gradient_diamond_hsl.png"/> | <img src="./screenshots/colorpicker/cp_gradient_diamond_hsl2.png"/> | <img src="./screenshots/colorpicker/cp_gradient_rect_hsl.png"/> |  <img src="./screenshots/colorpicker/cp_gradient_rect_hsv.png"/> |
 
 ### Implementation
+
 ```
 ColorPickerGradientRingDiamondHSL(
     modifier: Modifier = Modifier,
@@ -92,12 +96,13 @@ ColorPickerGradientRingDiamondHSL(
     onBrushColorChange: (BrushColor) -> Unit
 )
 ```
+
 Gradients in Compose might require **Size**, Offset, or radius based on Linear, Radial, or Sweep
 gradient is implemented.
 
-A `GradientColorState` should be provided to this picker that hold **brush**, **color** and
-other meta-data about the gradient or color. When no size is provided it's not possible
-to choose linear gradient other than with angle, or other gradients.
+A `GradientColorState` should be provided to this picker that hold **brush**, **color** and other
+meta-data about the gradient or color. When there is no size provided you won't be able to choose
+linear gradient with start end offset, angle rotation still available, or other gradients.
 
 ```
 @Composable
@@ -126,6 +131,7 @@ fun rememberGradientColorState(
 ```
 
 Set size of your container that you wish to display gradients in and pass it
+
 ```
 val size = DpSize(150.dp, 100.dp)
 
@@ -136,8 +142,8 @@ val gradientColorState = rememberGradientColorState(
 )
 ```
 
-`BrushColor` class is a color and brush wrapper class that is returned from gradient pickers
-in **onChange** callback instead of **Color**
+`BrushColor` class is a color and brush wrapper class that is returned from gradient pickers in **
+onChange** callback instead of **Color**
 
 ```
 /**
@@ -161,7 +167,6 @@ data class BrushColor(
     val solidColor = SolidColor(color)
 }
 ```
-
 
 ### Demos
 
