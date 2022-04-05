@@ -6,7 +6,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -29,7 +28,7 @@ import com.smarttoolfactory.colorpicker.widget.ColorGradientModeChangeTabRow
  * HSL, HSV and RGB color models and color can be set using [CompositeSliderPanel] which contains
  * sliders for each color models.
  *
- * @param initialColor color that is passed to this picker initially.
+ * @param initialBrushColor [BrushColor] that is passed to this picker initially.
  * @param ringOuterRadiusFraction outer radius of [SelectorRingHue].
  * @param ringInnerRadiusFraction inner radius of [SelectorRingHue].
  * @param ringBackgroundColor background from center to inner radius of [SelectorRingHue].
@@ -40,9 +39,9 @@ import com.smarttoolfactory.colorpicker.widget.ColorGradientModeChangeTabRow
  * [SelectorDiamondSaturationLightnessHSL] or [CompositeSliderPanel]
  */
 @Composable
-fun ColorPickerRingDiamondGradientHSL(
+fun ColorPickerGradientRingDiamondHSL(
     modifier: Modifier = Modifier,
-    initialColor: Color,
+    initialBrushColor: BrushColor,
     gradientColorState: GradientColorState = rememberGradientColorState(),
     ringOuterRadiusFraction: Float = .9f,
     ringInnerRadiusFraction: Float = .6f,
@@ -50,24 +49,31 @@ fun ColorPickerRingDiamondGradientHSL(
     ringBorderStrokeColor: Color = Color.Black,
     ringBorderStrokeWidth: Dp = 4.dp,
     selectionRadius: Dp = 8.dp,
-    onColorChange: (Color) -> Unit,
-    onBrushColorChange: (Brush) -> Unit
+    onBrushColorChange: (BrushColor) -> Unit
 ) {
 
     var inputColorModel by remember { mutableStateOf(ColorModel.HSL) }
-    var colorMode by remember { mutableStateOf(ColorMode.HSL) }
 
-    val hslArray = colorToHSL(initialColor)
+    var colorMode by remember {
+        mutableStateOf(
+            if (initialBrushColor.brush != null) ColorMode.Gradient else ColorMode.HSL
+        )
+    }
 
+    // Hue, Saturation, Lightness and Alpha properties
+    val hslArray = remember { colorToHSL(gradientColorState.color) }
     var hue by remember { mutableStateOf(hslArray[0]) }
     var saturation by remember { mutableStateOf(hslArray[1]) }
     var lightness by remember { mutableStateOf(hslArray[2]) }
-    var alpha by remember { mutableStateOf(initialColor.alpha) }
+    var alpha by remember { mutableStateOf(gradientColorState.color.alpha) }
 
-    val currentColor =
-        Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
-    gradientColorState.color = currentColor
-    onColorChange(currentColor)
+    gradientColorState.color =
+        Color.hsl(
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            alpha = alpha
+        )
 
     Column(
         modifier = modifier,
@@ -84,8 +90,8 @@ fun ColorPickerRingDiamondGradientHSL(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 50.dp, vertical = 10.dp),
-                    initialColor = initialColor,
-                    currentColor = currentColor
+                    initialColor = initialBrushColor.color,
+                    currentColor = gradientColorState.color
                 )
             }
         }
@@ -104,6 +110,15 @@ fun ColorPickerRingDiamondGradientHSL(
                 selectionRadius = selectionRadius
             ) { hueChange ->
                 hue = hueChange
+
+                gradientColorState.color =
+                    Color.hsl(
+                        hue = hue,
+                        saturation = saturation,
+                        lightness = lightness,
+                        alpha = alpha
+                    )
+                onBrushColorChange(BrushColor(color = gradientColorState.color))
             }
 
             // Diamond Shaped Saturation and Lightness Selector
@@ -116,6 +131,15 @@ fun ColorPickerRingDiamondGradientHSL(
             ) { s, l ->
                 saturation = s
                 lightness = l
+
+                gradientColorState.color =
+                    Color.hsl(
+                        hue = hue,
+                        saturation = saturation,
+                        lightness = lightness,
+                        alpha = alpha
+                    )
+                onBrushColorChange(BrushColor(color = gradientColorState.color))
             }
         }
 
@@ -133,7 +157,7 @@ fun ColorPickerRingDiamondGradientHSL(
                             inputColorModel = ColorModel.HSL
                         }
                         ColorMode.HSV -> {
-                            inputColorModel = ColorModel.HSL
+                            inputColorModel = ColorModel.HSV
                         }
                         ColorMode.RGB -> {
                             inputColorModel = ColorModel.RGB
@@ -153,10 +177,10 @@ fun ColorPickerRingDiamondGradientHSL(
                         .verticalScroll(rememberScrollState())
                 ) {
                     GradientSelector(
-                        color = currentColor,
+                        color = gradientColorState.color,
                         gradientColorState = gradientColorState
                     ) {
-                        onBrushColorChange(it)
+                        onBrushColorChange(BrushColor(brush = it))
                     }
                 }
             }
@@ -174,6 +198,15 @@ fun ColorPickerRingDiamondGradientHSL(
                             saturation = color.saturation
                             lightness = color.lightness
                             alpha = color.alpha
+
+                            gradientColorState.color =
+                                Color.hsl(
+                                    hue = hue,
+                                    saturation = saturation,
+                                    lightness = lightness,
+                                    alpha = alpha
+                                )
+                            onBrushColorChange(BrushColor(color = gradientColorState.color))
                         }
                     },
                     showAlphaSlider = true,

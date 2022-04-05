@@ -5,20 +5,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import com.smarttoolfactory.colorpicker.model.GradientColorState
 import com.smarttoolfactory.colorpicker.ui.Pink400
 import com.smarttoolfactory.colorpicker.widget.ExpandableColumnWithTitle
 
 
 @Composable
 internal fun RadialGradientSelection(
+    gradientColorState: GradientColorState,
     onRadialDimensionsChange: (Offset, Float) -> Unit
 ) {
 
-    var centerX by remember { mutableStateOf(.5f) }
-    var centerY by remember { mutableStateOf(.5f) }
-    var radius by remember { mutableStateOf(.5f) }
+    var centerX by remember { mutableStateOf(gradientColorState.centerFriction.x) }
+    var centerY by remember { mutableStateOf(gradientColorState.centerFriction.y) }
+    var radiusFriction by remember { mutableStateOf(gradientColorState.radiusFriction) }
 
-    onRadialDimensionsChange(Offset(centerX, centerY), radius)
+    onRadialDimensionsChange(Offset(centerX, centerY), radiusFriction)
 
     ExpandableColumnWithTitle(
         title = "Gradient Center/Radius",
@@ -45,9 +47,9 @@ internal fun RadialGradientSelection(
             SliderWithPercent(
                 modifier = Modifier.fillMaxWidth(),
                 title = "Radius",
-                value = radius
+                value = radiusFriction
             ) {
-                radius = it
+                radiusFriction = it
             }
         }
     }

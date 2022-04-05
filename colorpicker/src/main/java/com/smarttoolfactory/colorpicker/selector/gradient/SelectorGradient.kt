@@ -24,9 +24,9 @@ import com.smarttoolfactory.colorpicker.util.fractionToIntPercent
 import com.smarttoolfactory.colorpicker.widget.ExpandableColumnWithTitle
 import com.smarttoolfactory.colorpicker.widget.ExposedSelectionMenu
 import com.smarttoolfactory.colorpicker.widget.drawChecker
-import com.smarttoolfactory.slider.SliderBrushColor
 import com.smarttoolfactory.slider.ColorfulSlider
 import com.smarttoolfactory.slider.MaterialSliderDefaults
+import com.smarttoolfactory.slider.SliderBrushColor
 import com.smarttoolfactory.slider.ui.InactiveTrackColor
 
 enum class GradientType {
@@ -46,7 +46,7 @@ fun GradientSelector(
     modifier: Modifier = Modifier,
     color: Color,
     gradientColorState: GradientColorState,
-    onBrushChange:(Brush)->Unit
+    onBrushChange: (Brush) -> Unit
 ) {
 
     Column(
@@ -60,16 +60,23 @@ fun GradientSelector(
         // Gradient type selection
         when (gradientColorState.gradientType) {
             GradientType.Linear ->
-                LinearGradientSelection(gradientColorState.size) { offset: GradientOffset ->
+                LinearGradientSelection(
+                    gradientColorState,
+                    gradientColorState.size
+                ) { offset: GradientOffset ->
                     gradientColorState.gradientOffset = offset
                 }
             GradientType.Radial ->
-                RadialGradientSelection { centerFriction: Offset, radiusFriction: Float ->
+                RadialGradientSelection(
+                    gradientColorState
+                ) { centerFriction: Offset, radiusFriction: Float ->
                     gradientColorState.centerFriction = centerFriction
                     gradientColorState.radiusFriction = radiusFriction
                 }
             GradientType.Sweep ->
-                SweepGradientSelection { centerFriction: Offset ->
+                SweepGradientSelection(
+                    gradientColorState
+                ) { centerFriction: Offset ->
                     gradientColorState.centerFriction = centerFriction
                 }
         }
@@ -96,12 +103,15 @@ fun GradientSelector(
 @Composable
 private fun GradientProperties(gradientColorState: GradientColorState) {
 
-    var tileModeSelection by remember { mutableStateOf(0) }
-    gradientColorState.tileMode = when (tileModeSelection) {
-        0 -> TileMode.Clamp
-        1 -> TileMode.Repeated
-        2 -> TileMode.Mirror
-        else -> TileMode.Decal
+    var tileModeSelection by remember {
+        mutableStateOf(
+            when (gradientColorState.tileMode) {
+                TileMode.Clamp -> 0
+                TileMode.Repeated -> 1
+                TileMode.Mirror -> 2
+                else -> 3
+            }
+        )
     }
 
     ExpandableColumnWithTitle(
@@ -131,6 +141,12 @@ private fun GradientProperties(gradientColorState: GradientColorState) {
                     options = gradientTileModeOptions,
                     onSelected = {
                         tileModeSelection = it
+                        gradientColorState.tileMode = when (tileModeSelection) {
+                            0 -> TileMode.Clamp
+                            1 -> TileMode.Repeated
+                            2 -> TileMode.Mirror
+                            else -> TileMode.Decal
+                        }
                     }
                 )
             }
@@ -269,7 +285,7 @@ internal fun ColorStopSelection(
                     fontSize = 16.sp
                 )
             }
-            Spacer(modifier=Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }

@@ -5,15 +5,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import com.smarttoolfactory.colorpicker.model.GradientColorState
 import com.smarttoolfactory.colorpicker.ui.Pink400
 import com.smarttoolfactory.colorpicker.widget.ExpandableColumnWithTitle
 
 @Composable
 internal fun SweepGradientSelection(
+    gradientColorState: GradientColorState,
     onCenterChange: (Offset) -> Unit
 ) {
-    var centerX by remember { mutableStateOf(.5f) }
-    var centerY by remember { mutableStateOf(.5f) }
+    var centerX by remember { mutableStateOf(gradientColorState.centerFriction.x) }
+    var centerY by remember { mutableStateOf(gradientColorState.centerFriction.y) }
 
     onCenterChange(Offset(centerX, centerY))
 

@@ -3,16 +3,17 @@
 Bundle of Stylish customizable Color pickers, selectors, colorful sliders written with Jetpack
 Compose enables users to choose from HSL, HSV or RGB color models to pick Solid colors or gradients.
 
-Inspired by [mchome's flutter_colorpicker  for Flutter](https://github.com/mchome/flutter_colorpicker)
+Inspired
+by [mchome's flutter_colorpicker  for Flutter](https://github.com/mchome/flutter_colorpicker)
 
 ### Color Pickers
 
 There are various selection of default color pickers and with selectors sliders, and hex displays
 it's possible to create new ones either.
 
-| Hue Ring-Diamond HSL1 | Hue- Ring-Diamond HSL2 | Hue Ring-Rect HSV| Hue-Circle HSV|
+| Hue Ring-Diamond HSL | Hue- Ring-Rect HSL | Hue Ring-Rect HSV| Hue-Circle HSV|
 | ----------|-----------| -----------| -----------|
-| <img src="./screenshots/colorpicker/cp_ring_diamond_hsl_1.png"/> | <img src="./screenshots/colorpicker/cp_ring_diamond_hsl2.png"/> | <img src="./screenshots/colorpicker/cp_ring_rect_hsv.png"/> |  <img src="./screenshots/colorpicker/cp_circle_hue_saturation_hsv.png"/> |
+| <img src="./screenshots/colorpicker/cp_ring_diamond_hsl.png"/> | <img src="./screenshots/colorpicker/cp_ring_rect_hsl.png"/> | <img src="./screenshots/colorpicker/cp_ring_rect_hsv.png"/> |  <img src="./screenshots/colorpicker/cp_circle_hue_saturation_hsv.png"/> |
 
 | Saturation-Value HSV | Saturation-Lightness HSL | Hue-Saturation HSV | Hue-Value HSV  |
 | ----------|-----------| -----------| -----------|
@@ -22,12 +23,17 @@ it's possible to create new ones either.
 | ----------|-----------|
 | <img src="./screenshots/colorpicker/cp_rect_hue_saturation_hsl.png"/> | <img src="./screenshots/colorpicker/cp_rect_hue_lightness_hsl.png"/> |
 
-<img src="/./screenshots/intro.gif" align="center" width="50%"/>
+### Gradient Color Pickers
+
+| Hue Ring-Diamond HSL | Hue Ring-Diamond HSL2 | Hue- Ring-Rect HSL | Hue Ring-Rect HSV|
+| ----------|-----------| -----------| -----------|
+| <img src="./screenshots/colorpicker/cp_gradient_diamond_hsl.png"/> | <img src="./screenshots/colorpicker/cp_gradient_diamond_hsl2.png"/> | <img src="./screenshots/colorpicker/cp_gradient_rect_hsl.png"/> |  <img src="./screenshots/colorpicker/cp_gradient_rect_hsv.png"/> |
 
 ### Demos
 
 * `SaturationSelectorDemo`  different type of Hue/Saturation/Value/Lightness Selectors
-* `GradientSelection`  select gradient with varying properties such as tile mode, angle, size, or type, colors and color stops
+* `GradientSelection`  select gradient with varying properties such as tile mode, angle, size, or
+  type, colors and color stops
 * `GradientAngleDeme` gradient rotation with `GradientOffset` objects.
 * `HSVHSLGradientDemo` various types of gradients for creating pickers
 * `ColorfulSliderDemo` Sliders that can be used with different type of options with different

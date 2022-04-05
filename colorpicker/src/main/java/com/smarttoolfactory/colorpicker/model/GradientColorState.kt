@@ -5,7 +5,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpSize
@@ -37,12 +36,16 @@ fun rememberGradientColorState(
     }
 }
 
+/**
+ * Gradient and color state for setting and getting gradient color
+ * with [gradientType] such as Linear, Radial or Sweep, [tileMode]s, and [colorStops].
+ * * Linear gradient uses [gradientOffset] to set offset or angle.
+ * * Radial gradient uses [centerFriction] and [radiusFriction]
+ */
 class GradientColorState internal constructor(initialColor: Color, size: Size) {
 
     var size by mutableStateOf(size)
-
     var color: Color = initialColor
-        internal set
 
     val brush: Brush
         get() {
@@ -95,26 +98,5 @@ class GradientColorState internal constructor(initialColor: Color, size: Size) {
     var tileMode by mutableStateOf(TileMode.Clamp)
     var gradientOffset by mutableStateOf(GradientOffset(GradientAngle.CW0))
     var centerFriction by mutableStateOf(Offset(.5f, .5f))
-    var radiusFriction: Float by mutableStateOf(.5f)
-}
-
-/**
- * Data class that contains [Brush] and [Color] and can return either based on user selection.
- */
-data class BrushColor(
-    var color: Color = Color.Unspecified,
-    var brush: Brush? = null
-) {
-    /**
-     * [Brush] that is not **null** [brush] property or [SolidColor] that is not nullable and
-     * contains [color] property as [SolidColor.value]
-     */
-    val activeBrush: Brush
-        get() = brush ?: solidColor
-
-    /**
-     * [SolidColor] is a [Brush] that
-     * wraps [color] property that is used for [activeBrush] if [brush] property is **null**
-     */
-    val solidColor = SolidColor(color)
+    var radiusFriction by mutableStateOf(.5f)
 }

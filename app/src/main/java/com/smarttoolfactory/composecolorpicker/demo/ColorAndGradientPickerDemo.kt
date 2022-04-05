@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.dialog.ColorPickerRingDiamondGradientHSLDialog
+import com.smarttoolfactory.colorpicker.dialog.ColorPickerRingRectGradientHSLDialog
+import com.smarttoolfactory.colorpicker.dialog.ColorPickerRingRectGradientHSVDialog
 import com.smarttoolfactory.colorpicker.model.BrushColor
 import com.smarttoolfactory.colorpicker.model.GradientColorState
 import com.smarttoolfactory.colorpicker.model.rememberGradientColorState
@@ -79,7 +81,31 @@ fun ColorAndGradientPickerDemo() {
             size = size
         )
 
-        DialogRingGradientHSL(
+        DialogRingDiamondGradientHSL(
+            modifier = buttonModifier,
+            initialBrushColor = currentBrushColor,
+            gradientColorState = gradientColorState,
+            onPreviousColorChange = {
+                previousBrushColor = it.copy()
+            },
+            onCurrentColorChange = {
+                currentBrushColor = it
+            }
+        )
+
+        DialogRingRectGradientHSL(
+            modifier = buttonModifier,
+            initialBrushColor = currentBrushColor,
+            gradientColorState = gradientColorState,
+            onPreviousColorChange = {
+                previousBrushColor = it.copy()
+            },
+            onCurrentColorChange = {
+                currentBrushColor = it
+            }
+        )
+
+        DialogRingRectGradientHSV(
             modifier = buttonModifier,
             initialBrushColor = currentBrushColor,
             gradientColorState = gradientColorState,
@@ -95,7 +121,7 @@ fun ColorAndGradientPickerDemo() {
 
 
 @Composable
-private fun DialogRingGradientHSL(
+private fun DialogRingDiamondGradientHSL(
     modifier: Modifier,
     initialBrushColor: BrushColor,
     gradientColorState: GradientColorState,
@@ -112,7 +138,7 @@ private fun DialogRingGradientHSL(
         )
 
     ) {
-        Text(text = "Ring Gradient HSL Dialog")
+        Text(text = "Ring-Diamond Gradient HSL Dialog")
     }
 
     if (showDialog) {
@@ -127,3 +153,72 @@ private fun DialogRingGradientHSL(
         }
     }
 }
+
+@Composable
+private fun DialogRingRectGradientHSL(
+    modifier: Modifier,
+    initialBrushColor: BrushColor,
+    gradientColorState: GradientColorState,
+    onPreviousColorChange: (BrushColor) -> Unit,
+    onCurrentColorChange: (BrushColor) -> Unit,
+) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+
+    ) {
+        Text(text = "Ring-Rect Gradient HSL Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(initialBrushColor.copy())
+
+        ColorPickerRingRectGradientHSLDialog(
+            initialBrushColor = initialBrushColor,
+            gradientColorState = gradientColorState
+        ) {
+            showDialog = !showDialog
+            onCurrentColorChange(it)
+        }
+    }
+}
+
+@Composable
+private fun DialogRingRectGradientHSV(
+    modifier: Modifier,
+    initialBrushColor: BrushColor,
+    gradientColorState: GradientColorState,
+    onPreviousColorChange: (BrushColor) -> Unit,
+    onCurrentColorChange: (BrushColor) -> Unit,
+) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+
+    ) {
+        Text(text = "Ring-Rect Gradient HSV Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(initialBrushColor.copy())
+
+        ColorPickerRingRectGradientHSVDialog(
+            initialBrushColor = initialBrushColor,
+            gradientColorState = gradientColorState
+        ) {
+            showDialog = !showDialog
+            onCurrentColorChange(it)
+        }
+    }
+}
+

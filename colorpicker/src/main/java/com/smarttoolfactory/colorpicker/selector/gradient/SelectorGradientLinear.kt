@@ -12,6 +12,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.smarttoolfactory.colorpicker.model.GradientColorState
 import com.smarttoolfactory.colorpicker.ui.*
 import com.smarttoolfactory.colorpicker.widget.ExpandableColumnWithTitle
 import com.smarttoolfactory.colorpicker.widget.ExposedSelectionMenu
@@ -22,11 +23,12 @@ import kotlin.math.roundToInt
 
 @Composable
 internal fun LinearGradientSelection(
+    gradientColorState: GradientColorState,
     size: Size,
     onGradientOffsetChange: (GradientOffset) -> Unit
 ) {
-
     GradientOffsetSelection(
+        gradientColorState,
         size = size,
         onGradientOffsetChange = onGradientOffsetChange
     )
@@ -34,6 +36,7 @@ internal fun LinearGradientSelection(
 
 @Composable
 private fun GradientOffsetSelection(
+    gradientColorState: GradientColorState,
     size: Size,
     onGradientOffsetChange: (GradientOffset) -> Unit
 ) {
@@ -42,12 +45,13 @@ private fun GradientOffsetSelection(
         color = Pink400,
         initialExpandState = false
     ) {
-        GradientOffsetTypeSelection(size, onGradientOffsetChange)
+        GradientOffsetTypeSelection(gradientColorState, size, onGradientOffsetChange)
     }
 }
 
 @Composable
 private fun GradientOffsetTypeSelection(
+    gradientColorState: GradientColorState,
     size: Size,
     onGradientOffsetChange: (GradientOffset) -> Unit,
 ) {
@@ -69,10 +73,14 @@ private fun GradientOffsetTypeSelection(
 
         when (gradientOffsetOption) {
             0 -> {
-                GradientOffsetAngleSelectionSlider(onGradientOffsetChange = onGradientOffsetChange)
+                GradientOffsetAngleSelectionSlider(
+                    gradientColorState=gradientColorState,
+                    onGradientOffsetChange = onGradientOffsetChange
+                )
             }
             else -> {
                 GradientOffsetPositionSelection(
+                    gradientColorState=gradientColorState,
                     size = size,
                     onGradientOffsetChange = onGradientOffsetChange
                 )
@@ -83,6 +91,7 @@ private fun GradientOffsetTypeSelection(
 
 @Composable
 private fun GradientOffsetPositionSelection(
+    gradientColorState:GradientColorState,
     size: Size,
     onGradientOffsetChange: (GradientOffset) -> Unit,
 ) {
@@ -170,6 +179,7 @@ private fun GradientOffsetAngleSelection(
 
 @Composable
 private fun GradientOffsetAngleSelectionSlider(
+    gradientColorState:GradientColorState,
     onGradientOffsetChange: (GradientOffset) -> Unit
 ) {
 
