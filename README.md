@@ -8,6 +8,12 @@ pickers based on preference.
 There are 10(for now) different color pickers and 3 different color+gradient pickers available to
 choose from to use as Composables or inside dialogs that are available in demos.
 
+
+
+https://user-images.githubusercontent.com/35650605/161702454-34b0cf00-8496-4060-bfe1-bea9d1bf754d.mp4
+
+
+
 Inspired
 by [mchome's flutter_colorpicker  for Flutter](https://github.com/mchome/flutter_colorpicker)
 
