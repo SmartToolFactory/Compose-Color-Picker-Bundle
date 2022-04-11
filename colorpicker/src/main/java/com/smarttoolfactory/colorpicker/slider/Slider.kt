@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.ui.brush.*
 import com.smarttoolfactory.colorpicker.util.roundToTwoDigits
@@ -380,6 +381,7 @@ fun CheckeredColorfulSlider(
             coerceThumbInTrack = true,
             colors = MaterialSliderDefaults.materialColors(
                 activeTrackColor = SliderBrushColor(brush = brush),
+                inactiveTrackColor = SliderBrushColor(color = Color.Transparent)
             ),
             drawInactiveTrack = false
         )
