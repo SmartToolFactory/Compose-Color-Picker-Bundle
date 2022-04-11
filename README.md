@@ -1,4 +1,4 @@
-### Jetpack Compose Color Picker
+### Jetpack Compose Color Picker Bundle
 
 Bundle of Stylish customizable Color pickers, selectors, colorful sliders written with Jetpack
 Compose enables users to choose from HSL, HSV or RGB color models to pick Solid colors or gradients.
@@ -208,10 +208,4 @@ data class BrushColor(
 - [x] Add gradient color selection with percentage stops, linear, radial and sweep options
 - [x] Add gradient selection demo
 
-### TODOs:
-
-- [ ] Add and display colors selected previously
-- [ ] Add option to select colors from Image
-- [ ] Add option to select colors from Screen
-- [ ] Add option to select colors from Camera
   
