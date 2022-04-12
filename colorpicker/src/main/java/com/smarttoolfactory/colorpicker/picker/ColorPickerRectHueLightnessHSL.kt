@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,15 +14,15 @@ import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.selector.SelectorRectHueLightnessHSL
 import com.smarttoolfactory.colorpicker.slider.SliderCircleColorDisplaySaturationHSL
 import com.smarttoolfactory.colorpicker.util.colorToHSL
+import com.smarttoolfactory.colorpicker.util.colorToHex
 import com.smarttoolfactory.colorpicker.widget.HexDisplay
-
 
 @Composable
 fun ColorPickerRectHueLightnessHSL(
     modifier: Modifier = Modifier,
     selectionRadius: Dp = 8.dp,
     initialColor: Color,
-    onColorChange: (Color) -> Unit
+    onColorChange: (Color, String) -> Unit
 ) {
 
     var colorModel by remember { mutableStateOf(ColorModel.HSL) }
@@ -39,7 +38,7 @@ fun ColorPickerRectHueLightnessHSL(
     val currentColor =
         Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
 
-    onColorChange(currentColor)
+    onColorChange(currentColor, colorToHex(currentColor))
 
     Column(
         modifier = modifier,

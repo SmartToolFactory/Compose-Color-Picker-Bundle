@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +14,7 @@ import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationValueHSV
 import com.smarttoolfactory.colorpicker.slider.SliderCircleColorDisplayHueHSV
 import com.smarttoolfactory.colorpicker.util.colorToHSV
+import com.smarttoolfactory.colorpicker.util.colorToHex
 import com.smarttoolfactory.colorpicker.widget.HexDisplay
 
 @Composable
@@ -22,7 +22,7 @@ fun ColorPickerRectSaturationValueHSV(
     modifier: Modifier = Modifier,
     selectionRadius: Dp = 8.dp,
     initialColor: Color,
-    onColorChange: (Color) -> Unit
+    onColorChange: (Color, String) -> Unit
 ) {
 
     val hsvArray = colorToHSV(initialColor)
@@ -37,7 +37,7 @@ fun ColorPickerRectSaturationValueHSV(
 
     var colorModel by remember { mutableStateOf(ColorModel.HSV) }
 
-    onColorChange(currentColor)
+    onColorChange(currentColor, colorToHex(currentColor))
 
     Column(
         modifier = modifier,

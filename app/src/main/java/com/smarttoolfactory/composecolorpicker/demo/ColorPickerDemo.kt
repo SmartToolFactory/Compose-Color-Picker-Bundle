@@ -11,8 +11,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.dialog.*
+import com.smarttoolfactory.colorpicker.ui.Blue400
+import com.smarttoolfactory.colorpicker.util.colorToHex
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 
@@ -35,12 +39,17 @@ fun ColorPickerDemo() {
             mutableStateOf(previousColor.copy())
         }
 
+        var hexString by remember { mutableStateOf(colorToHex(color)) }
+
         Spacer(modifier = Modifier.height(30.dp))
         ColorDisplayRoundedRect(
             modifier = Modifier.fillMaxWidth(.5f),
             initialColor = previousColor,
             currentColor = color
         )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(text = hexString, fontSize = 18.sp, color = Blue400, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(10.dp))
 
         val buttonModifier = Modifier
             .fillMaxWidth()
@@ -53,8 +62,9 @@ fun ColorPickerDemo() {
             onPreviousColorChange = {
                 previousColor = it
             },
-            onCurrentColorChange = {
-                color = it
+            onCurrentColorChange = { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
             }
         )
 
@@ -65,8 +75,9 @@ fun ColorPickerDemo() {
             onPreviousColorChange = {
                 previousColor = it
             },
-            onCurrentColorChange = {
-                color = it
+            onCurrentColorChange = { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
             }
         )
 
@@ -77,8 +88,9 @@ fun ColorPickerDemo() {
             onPreviousColorChange = {
                 previousColor = it
             },
-            onCurrentColorChange = {
-                color = it
+            onCurrentColorChange = { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
             }
         )
 
@@ -88,8 +100,9 @@ fun ColorPickerDemo() {
             onPreviousColorChange = {
                 previousColor = it
             },
-            onCurrentColorChange = {
-                color = it
+            onCurrentColorChange = { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
             }
         )
 
@@ -100,8 +113,9 @@ fun ColorPickerDemo() {
             onPreviousColorChange = {
                 previousColor = it
             },
-            onCurrentColorChange = {
-                color = it
+            onCurrentColorChange = { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
             }
         )
 
@@ -111,8 +125,9 @@ fun ColorPickerDemo() {
             onPreviousColorChange = {
                 previousColor = it
             },
-            onCurrentColorChange = {
-                color = it
+            onCurrentColorChange = { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
             }
         )
 
@@ -123,8 +138,9 @@ fun ColorPickerDemo() {
             onPreviousColorChange = {
                 previousColor = it
             },
-            onCurrentColorChange = {
-                color = it
+            onCurrentColorChange = { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
             }
         )
 
@@ -134,8 +150,9 @@ fun ColorPickerDemo() {
             onPreviousColorChange = {
                 previousColor = it
             },
-            onCurrentColorChange = {
-                color = it
+            onCurrentColorChange = { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
             }
         )
 
@@ -145,8 +162,9 @@ fun ColorPickerDemo() {
             onPreviousColorChange = {
                 previousColor = it
             },
-            onCurrentColorChange = {
-                color = it
+            onCurrentColorChange = { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
             }
         )
 
@@ -156,8 +174,9 @@ fun ColorPickerDemo() {
             onPreviousColorChange = {
                 previousColor = it
             },
-            onCurrentColorChange = {
-                color = it
+            onCurrentColorChange = { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
             }
         )
     }
@@ -168,9 +187,9 @@ private fun DialogRingDiamondHSL(
     modifier: Modifier,
     color: Color,
     onPreviousColorChange: (Color) -> Unit,
-    onCurrentColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color, String) -> Unit
 
-    ) {
+) {
     var showDialog by remember { mutableStateOf(false) }
 
     OutlinedButton(
@@ -187,9 +206,9 @@ private fun DialogRingDiamondHSL(
     if (showDialog) {
         onPreviousColorChange(color.copy())
 
-        ColorPickerRingDiamondHSLDialog(color) {
+        ColorPickerRingDiamondHSLDialog(color) { colorChange, hexChange ->
             showDialog = !showDialog
-            onCurrentColorChange(it)
+            onCurrentColorChange(colorChange, hexChange)
         }
     }
 }
@@ -199,9 +218,8 @@ private fun DialogRingRectHSL(
     modifier: Modifier,
     color: Color,
     onPreviousColorChange: (Color) -> Unit,
-    onCurrentColorChange: (Color) -> Unit,
-
-    ) {
+    onCurrentColorChange: (Color, String) -> Unit
+) {
     var showDialog by remember { mutableStateOf(false) }
 
     OutlinedButton(
@@ -218,9 +236,9 @@ private fun DialogRingRectHSL(
     if (showDialog) {
         onPreviousColorChange(color.copy())
 
-        ColorPickerRingRectHSLDialog(color) {
+        ColorPickerRingRectHSLDialog(color) { colorChange, hexChange ->
             showDialog = !showDialog
-            onCurrentColorChange(it)
+            onCurrentColorChange(colorChange, hexChange)
         }
     }
 }
@@ -230,9 +248,8 @@ private fun DialogRingRectHSV(
     modifier: Modifier,
     color: Color,
     onPreviousColorChange: (Color) -> Unit,
-    onCurrentColorChange: (Color) -> Unit,
-
-    ) {
+    onCurrentColorChange: (Color, String) -> Unit
+) {
     var showDialog by remember { mutableStateOf(false) }
 
     OutlinedButton(
@@ -249,9 +266,9 @@ private fun DialogRingRectHSV(
     if (showDialog) {
         onPreviousColorChange(color.copy())
 
-        ColorPickerRingRectHSVDialog(color) {
+        ColorPickerRingRectHSVDialog(color) { colorChange, hexChange ->
             showDialog = !showDialog
-            onCurrentColorChange(it)
+            onCurrentColorChange(colorChange, hexChange)
         }
     }
 }
@@ -261,9 +278,8 @@ private fun DialogCircleHSV(
     modifier: Modifier,
     color: Color,
     onPreviousColorChange: (Color) -> Unit,
-    onCurrentColorChange: (Color) -> Unit,
-
-    ) {
+    onCurrentColorChange: (Color, String) -> Unit
+) {
     var showDialog by remember { mutableStateOf(false) }
 
     OutlinedButton(
@@ -282,9 +298,9 @@ private fun DialogCircleHSV(
 
         ColorPickerCircleHSVDialog(
             initialColor = color
-        ) {
+        ) { colorChange, hexChange ->
             showDialog = !showDialog
-            onCurrentColorChange(it)
+            onCurrentColorChange(colorChange, hexChange)
         }
     }
 }
@@ -294,9 +310,8 @@ private fun DialogRectSaturationValueHSV(
     modifier: Modifier,
     color: Color,
     onPreviousColorChange: (Color) -> Unit,
-    onCurrentColorChange: (Color) -> Unit,
-
-    ) {
+    onCurrentColorChange: (Color, String) -> Unit
+) {
     var showDialog by remember { mutableStateOf(false) }
 
     OutlinedButton(
@@ -315,9 +330,9 @@ private fun DialogRectSaturationValueHSV(
 
         ColorPickerSVRectHSVDialog(
             initialColor = color
-        ) {
+        ) { colorChange, hexChange ->
             showDialog = !showDialog
-            onCurrentColorChange(it)
+            onCurrentColorChange(colorChange, hexChange)
         }
     }
 }
@@ -327,9 +342,8 @@ private fun DialogRectSaturationLightnessHSL(
     modifier: Modifier,
     color: Color,
     onPreviousColorChange: (Color) -> Unit,
-    onCurrentColorChange: (Color) -> Unit,
-
-    ) {
+    onCurrentColorChange: (Color, String) -> Unit
+) {
     var showDialog by remember { mutableStateOf(false) }
 
     OutlinedButton(
@@ -347,9 +361,9 @@ private fun DialogRectSaturationLightnessHSL(
 
         ColorPickerSLRectHSLDialog(
             initialColor = color
-        ) {
+        ) { colorChange, hexChange ->
             showDialog = !showDialog
-            onCurrentColorChange(it)
+            onCurrentColorChange(colorChange, hexChange)
         }
     }
 }
@@ -359,9 +373,8 @@ private fun DialogRectHueSaturationHSV(
     modifier: Modifier,
     color: Color,
     onPreviousColorChange: (Color) -> Unit,
-    onCurrentColorChange: (Color) -> Unit,
-
-    ) {
+    onCurrentColorChange: (Color, String) -> Unit
+) {
     var showDialog by remember { mutableStateOf(false) }
 
     OutlinedButton(
@@ -379,9 +392,9 @@ private fun DialogRectHueSaturationHSV(
 
         ColorPickerHSRectHSVDialog(
             initialColor = color
-        ) {
+        ) { colorChange, hexChange ->
             showDialog = !showDialog
-            onCurrentColorChange(it)
+            onCurrentColorChange(colorChange, hexChange)
         }
     }
 }
@@ -391,9 +404,8 @@ private fun DialogRectHueValueHSV(
     modifier: Modifier,
     color: Color,
     onPreviousColorChange: (Color) -> Unit,
-    onCurrentColorChange: (Color) -> Unit,
-
-    ) {
+    onCurrentColorChange: (Color, String) -> Unit
+) {
     var showDialog by remember { mutableStateOf(false) }
 
     OutlinedButton(
@@ -411,9 +423,9 @@ private fun DialogRectHueValueHSV(
 
         ColorPickerHVRectHSVDialog(
             initialColor = color
-        ) {
+        ) { colorChange, hexChange ->
             showDialog = !showDialog
-            onCurrentColorChange(it)
+            onCurrentColorChange(colorChange, hexChange)
         }
     }
 }
@@ -423,9 +435,8 @@ private fun DialogRectHueSaturationHSL(
     modifier: Modifier,
     color: Color,
     onPreviousColorChange: (Color) -> Unit,
-    onCurrentColorChange: (Color) -> Unit,
-
-    ) {
+    onCurrentColorChange: (Color, String) -> Unit
+) {
     var showDialog by remember { mutableStateOf(false) }
 
     OutlinedButton(
@@ -443,9 +454,9 @@ private fun DialogRectHueSaturationHSL(
 
         ColorPickerHSRectHSLDialog(
             initialColor = color
-        ) {
+        ) { colorChange, hexChange ->
             showDialog = !showDialog
-            onCurrentColorChange(it)
+            onCurrentColorChange(colorChange, hexChange)
         }
     }
 }
@@ -455,9 +466,8 @@ private fun DialogRectHueLightnessHSL(
     modifier: Modifier,
     color: Color,
     onPreviousColorChange: (Color) -> Unit,
-    onCurrentColorChange: (Color) -> Unit,
-
-    ) {
+    onCurrentColorChange: (Color, String) -> Unit
+) {
     var showDialog by remember { mutableStateOf(false) }
 
     OutlinedButton(
@@ -475,9 +485,9 @@ private fun DialogRectHueLightnessHSL(
 
         ColorPickerHLRectHSLDialog(
             initialColor = color
-        ) {
+        ) { colorChange, hexChange ->
             showDialog = !showDialog
-            onCurrentColorChange(it)
+            onCurrentColorChange(colorChange, hexChange)
         }
     }
 }

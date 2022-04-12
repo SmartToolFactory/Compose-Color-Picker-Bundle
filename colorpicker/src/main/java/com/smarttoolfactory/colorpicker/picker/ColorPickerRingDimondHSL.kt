@@ -9,10 +9,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.ColorHSL
 import com.smarttoolfactory.colorpicker.model.ColorModel
-import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
 import com.smarttoolfactory.colorpicker.selector.SelectorDiamondSaturationLightnessHSL
+import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.util.colorToHSL
+import com.smarttoolfactory.colorpicker.util.colorToHex
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
 import com.smarttoolfactory.colorpicker.widget.ColorModelChangeTabRow
 
@@ -45,7 +46,7 @@ fun ColorPickerRingDiamondHSL(
     ringBorderStrokeColor: Color = Color.Black,
     ringBorderStrokeWidth: Dp = 4.dp,
     selectionRadius: Dp = 8.dp,
-    onColorChange: (Color) -> Unit
+    onColorChange: (Color, String) -> Unit
 ) {
 
     var inputColorModel by remember { mutableStateOf(ColorModel.HSL) }
@@ -60,7 +61,7 @@ fun ColorPickerRingDiamondHSL(
     val currentColor =
         Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
 
-    onColorChange(currentColor)
+    onColorChange(currentColor, colorToHex(currentColor))
 
     Column(
         modifier = modifier,

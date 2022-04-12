@@ -9,10 +9,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.ColorHSV
 import com.smarttoolfactory.colorpicker.model.ColorModel
-import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
 import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationValueHSV
+import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.util.colorToHSV
+import com.smarttoolfactory.colorpicker.util.colorToHex
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
 import com.smarttoolfactory.colorpicker.widget.ColorModelChangeTabRow
 
@@ -44,7 +45,7 @@ fun ColorPickerRingRectHSV(
     ringBorderStrokeColor: Color = Color.Black,
     ringBorderStrokeWidth: Dp = 4.dp,
     selectionRadius: Dp = 8.dp,
-    onColorChange: (Color) -> Unit
+    onColorChange: (Color, String) -> Unit
 ) {
 
     var inputColorModel by remember { mutableStateOf(ColorModel.HSV) }
@@ -59,7 +60,7 @@ fun ColorPickerRingRectHSV(
     val currentColor =
         Color.hsv(hue = hue, saturation = saturation, value = value, alpha = alpha)
 
-    onColorChange(currentColor)
+    onColorChange(currentColor, colorToHex(currentColor))
 
     Column(
         modifier = modifier,
