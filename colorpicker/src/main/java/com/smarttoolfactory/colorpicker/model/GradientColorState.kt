@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.DpSize
 import com.smarttoolfactory.colorpicker.selector.gradient.GradientType
 import com.smarttoolfactory.colorpicker.ui.GradientAngle
 import com.smarttoolfactory.colorpicker.ui.GradientOffset
+import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
 
 @Composable
 fun rememberGradientColorState(
@@ -46,6 +47,11 @@ class GradientColorState internal constructor(initialColor: Color, size: Size) {
 
     var size by mutableStateOf(size)
     var color: Color = initialColor
+
+    val hexString: String
+        get() {
+            return colorToHexAlpha(color)
+        }
 
     val brush: Brush
         get() {
