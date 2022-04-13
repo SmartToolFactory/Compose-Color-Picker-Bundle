@@ -15,7 +15,7 @@ import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationValueHSV
 import com.smarttoolfactory.colorpicker.slider.SliderCircleColorDisplayHueHSV
 import com.smarttoolfactory.colorpicker.util.colorToHSV
 import com.smarttoolfactory.colorpicker.util.colorToHex
-import com.smarttoolfactory.colorpicker.widget.HexDisplay
+import com.smarttoolfactory.colorpicker.widget.ColorDisplayExposedSelectionMenu
 
 @Composable
 fun ColorPickerRectSaturationValueHSV(
@@ -70,7 +70,7 @@ fun ColorPickerRectSaturationValueHSV(
                 }
             )
 
-            HexDisplay(
+            ColorDisplayExposedSelectionMenu(
                 color = currentColor,
                 colorModel = colorModel,
                 onColorModelChange = {

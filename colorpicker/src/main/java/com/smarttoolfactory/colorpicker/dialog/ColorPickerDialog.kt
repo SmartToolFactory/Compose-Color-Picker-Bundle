@@ -189,6 +189,44 @@ fun ColorPickerRingRectHSVDialog(
 }
 
 @Composable
+fun ColorPickerRingHexHSVDialog(
+    modifier: Modifier = Modifier,
+    initialColor: Color,
+    selectionRadius: Dp = 8.dp,
+    dialogBackgroundColor: Color = Color.White,
+    dialogShape: Shape = RoundedCornerShape(5.dp),
+    onDismiss: (Color, String) -> Unit
+) {
+
+    var color by remember { mutableStateOf(initialColor.copy()) }
+    var hexString by remember { mutableStateOf(colorToHex(color)) }
+
+    Dialog(
+        onDismissRequest = {
+            onDismiss(color, hexString)
+        }
+    ) {
+        Surface(
+            modifier = modifier,
+            color = dialogBackgroundColor,
+            shape = dialogShape,
+            elevation = 2.dp
+        ) {
+            ColorPickerRingRectHex(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 12.dp),
+                initialColor = initialColor,
+                selectionRadius = selectionRadius
+            ) { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
+            }
+        }
+    }
+}
+
+@Composable
 fun ColorPickerCircleHSVDialog(
     modifier: Modifier = Modifier,
     initialColor: Color,

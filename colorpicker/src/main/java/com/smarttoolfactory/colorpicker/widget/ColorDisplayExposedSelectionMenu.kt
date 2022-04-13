@@ -2,12 +2,13 @@ package com.smarttoolfactory.colorpicker.widget
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ExposedDropdownMenuDefaults
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -16,7 +17,7 @@ import com.smarttoolfactory.colorpicker.model.CompositeColor
 import com.smarttoolfactory.colorpicker.util.*
 
 @Composable
-fun HexDisplay(compositeColor: CompositeColor, colorModel: ColorModel) {
+fun ColorDisplayExposedSelectionMenu(compositeColor: CompositeColor, colorModel: ColorModel) {
 
     val options = listOf("HEX", "HSV", "HSL")
     var index by remember { mutableStateOf(0) }
@@ -36,8 +37,16 @@ fun HexDisplay(compositeColor: CompositeColor, colorModel: ColorModel) {
     }
 }
 
+/**
+ * Selection menu that displays Color's components in Hex, HSL, or HSL
+ */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun HexDisplay(color: Color, colorModel: ColorModel, onColorModelChange: (ColorModel) -> Unit) {
+fun ColorDisplayExposedSelectionMenu(
+    color: Color,
+    colorModel: ColorModel,
+    onColorModelChange: (ColorModel) -> Unit
+) {
 
     val options = listOf("HEX", "HSV", "HSL")
 
@@ -61,6 +70,17 @@ fun HexDisplay(color: Color, colorModel: ColorModel, onColorModelChange: (ColorM
         ExposedSelectionMenu(
             modifier = Modifier.width(100.dp),
             index = selectedIndex,
+            colors = ExposedDropdownMenuDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                focusedLabelColor = Color.Black,
+                unfocusedLabelColor = Color.Black,
+                trailingIconColor = Color.Black,
+                focusedTrailingIconColor = Color.Black,
+                textColor = Color.Black,
+            ),
             options = options,
             onSelected = {
                 selectedIndex = it

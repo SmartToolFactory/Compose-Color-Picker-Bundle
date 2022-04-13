@@ -15,7 +15,7 @@ import com.smarttoolfactory.colorpicker.selector.SelectorRectHueLightnessHSL
 import com.smarttoolfactory.colorpicker.slider.SliderCircleColorDisplaySaturationHSL
 import com.smarttoolfactory.colorpicker.util.colorToHSL
 import com.smarttoolfactory.colorpicker.util.colorToHex
-import com.smarttoolfactory.colorpicker.widget.HexDisplay
+import com.smarttoolfactory.colorpicker.widget.ColorDisplayExposedSelectionMenu
 
 @Composable
 fun ColorPickerRectHueLightnessHSL(
@@ -71,7 +71,7 @@ fun ColorPickerRectHueLightnessHSL(
                 }
             )
 
-            HexDisplay(
+            ColorDisplayExposedSelectionMenu(
                 color = currentColor,
                 colorModel = colorModel,
                 onColorModelChange = {

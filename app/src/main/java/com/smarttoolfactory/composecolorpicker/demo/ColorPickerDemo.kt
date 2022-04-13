@@ -105,6 +105,19 @@ fun ColorPickerDemo() {
             }
         )
 
+        // Ring Hue, Rect Saturation-Value selector HexHSV Picker
+        DialogRingHexHSV(
+            modifier = buttonModifier,
+            color = color,
+            onPreviousColorChange = {
+                previousColor = it
+            },
+            onCurrentColorChange = { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
+            }
+        )
+
         DialogCircleHSV(
             modifier = buttonModifier,
             color = color,
@@ -278,6 +291,38 @@ private fun DialogRingRectHSV(
         onPreviousColorChange(color.copy())
 
         ColorPickerRingRectHSVDialog(color) { colorChange, hexChange ->
+            showDialog = !showDialog
+            onCurrentColorChange(colorChange, hexChange)
+        }
+    }
+}
+
+@Composable
+private fun DialogRingHexHSV(
+    modifier: Modifier,
+    color: Color,
+    onPreviousColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color, String) -> Unit
+) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+
+    ) {
+        Text(text = "Hue Ring-Hex HSV Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(color.copy())
+
+        ColorPickerRingHexHSVDialog(
+            initialColor = color
+        ) { colorChange, hexChange ->
             showDialog = !showDialog
             onCurrentColorChange(colorChange, hexChange)
         }
