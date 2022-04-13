@@ -1,7 +1,6 @@
 package com.smarttoolfactory.composecolorpicker.demo
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -10,12 +9,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
-import com.smarttoolfactory.colorpicker.widget.HexAlphaTextField
+import com.smarttoolfactory.colorpicker.widget.HexTextField
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 
 @Composable
@@ -45,7 +43,7 @@ fun HexConversionDemo() {
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        HexAlphaTextField(
+        HexTextField(
             hexString = hexString,
 
             onTextChange = {

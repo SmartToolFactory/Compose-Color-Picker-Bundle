@@ -220,9 +220,10 @@ fun rgbToHex(
     green: Int,
     blue: Int
 ): String {
-    return "#${Integer.toHexString(red)}" +
-            Integer.toHexString(green) +
-            Integer.toHexString(blue)
+    return "#" +
+            Integer.toHexString(red).toStringComponent() +
+            Integer.toHexString(green).toStringComponent() +
+            Integer.toHexString(blue).toStringComponent()
 }
 
 /**
@@ -234,9 +235,10 @@ fun rgbToHex(
  * ```
  */
 fun rgbToHex(rgb: IntArray): String {
-    return "#${Integer.toHexString(rgb[0])}" +
-            Integer.toHexString(rgb[1]) +
-            Integer.toHexString(rgb[2])
+    return "#" +
+            Integer.toHexString(rgb[0]).toStringComponent() +
+            Integer.toHexString(rgb[1]).toStringComponent() +
+            Integer.toHexString(rgb[2]).toStringComponent()
 }
 
 /**
@@ -247,9 +249,10 @@ fun rgbToHex(
     green: Float,
     blue: Float
 ): String {
-    return "#${Integer.toHexString(red.fractionToRGBRange())}" +
-            Integer.toHexString(green.fractionToRGBRange()) +
-            Integer.toHexString(blue.fractionToRGBRange())
+    return "#" +
+            Integer.toHexString(red.fractionToRGBRange()).toStringComponent() +
+            Integer.toHexString(green.fractionToRGBRange()).toStringComponent() +
+            Integer.toHexString(blue.fractionToRGBRange()).toStringComponent()
 }
 
 
@@ -311,10 +314,11 @@ fun argbToHex(
     green: Int,
     blue: Int
 ): String {
-    return "#${Integer.toHexString(alpha)}" +
-            Integer.toHexString(red) +
-            Integer.toHexString(green) +
-            Integer.toHexString(blue)
+    return "#" +
+            Integer.toHexString(alpha).toStringComponent() +
+            Integer.toHexString(red).toStringComponent() +
+            Integer.toHexString(green).toStringComponent() +
+            Integer.toHexString(blue).toStringComponent()
 }
 
 /**
@@ -333,10 +337,11 @@ fun argbToHex(
     green: Float,
     blue: Float
 ): String {
-    return "#${Integer.toHexString(alpha.fractionToRGBRange())}" +
-            Integer.toHexString(red.fractionToRGBRange()) +
-            Integer.toHexString(green.fractionToRGBRange()) +
-            Integer.toHexString(blue.fractionToRGBRange())
+    return "#" +
+            Integer.toHexString(alpha.fractionToRGBRange()).toStringComponent() +
+            Integer.toHexString(red.fractionToRGBRange()).toStringComponent() +
+            Integer.toHexString(green.fractionToRGBRange()).toStringComponent() +
+            Integer.toHexString(blue.fractionToRGBRange()).toStringComponent()
 }
 
 /*
@@ -362,6 +367,9 @@ fun Int.toArgbString(): String =
             green.toStringComponent() +
             blue.toStringComponent()
             ).uppercase(Locale.getDefault())
+
+private fun String.toStringComponent() =
+    this.let { if (it.length == 1) "0${it}" else it }
 
 private fun Int.toStringComponent(): String =
     this.toString(16).let { if (it.length == 1) "0${it}" else it }

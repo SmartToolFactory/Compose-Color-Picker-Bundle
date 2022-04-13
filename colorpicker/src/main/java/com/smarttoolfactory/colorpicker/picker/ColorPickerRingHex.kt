@@ -12,7 +12,7 @@ import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.util.colorToHSV
 import com.smarttoolfactory.colorpicker.util.colorToHex
-import com.smarttoolfactory.colorpicker.widget.HexTextWithCircleDisplay
+import com.smarttoolfactory.colorpicker.widget.HexTextFieldWithCircleDisplay
 
 
 /**
@@ -41,18 +41,11 @@ fun ColorPickerRingRectHex(
     var saturation by remember { mutableStateOf(hsvArray[1]) }
     var value by remember { mutableStateOf(hsvArray[2]) }
 
-    var currentColor by remember(hue, saturation, value) {
-        mutableStateOf(
-            Color.hsv(
-                hue = hue,
-                saturation = saturation,
-                value = value
-            )
-        )
-    }
-
-    var hexString by remember(currentColor) { mutableStateOf(colorToHex(currentColor)) }
-
+    val currentColor = Color.hsv(
+        hue = hue,
+        saturation = saturation,
+        value = value
+    )
 
     onColorChange(currentColor, colorToHex(currentColor))
 
@@ -92,18 +85,14 @@ fun ColorPickerRingRectHex(
             }
         }
 
-        HexTextWithCircleDisplay(
-            modifier =Modifier.padding(8.dp),
+        HexTextFieldWithCircleDisplay(
+            modifier = Modifier.padding(8.dp),
             color = currentColor,
-            hexString = hexString,
-            onTextChange = {
-                hexString = it
-            }, onColorChange = {
+            onColorChange = {
                 val hsvArrayNew = colorToHSV(it)
                 hue = hsvArrayNew[0]
                 saturation = hsvArrayNew[1]
                 value = hsvArrayNew[2]
-                currentColor = it
             }
         )
     }

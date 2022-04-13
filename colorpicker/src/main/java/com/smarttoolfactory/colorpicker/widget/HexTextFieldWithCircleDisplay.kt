@@ -1,22 +1,23 @@
 package com.smarttoolfactory.colorpicker.widget
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.slider.CircleDisplay
+import com.smarttoolfactory.colorpicker.util.colorToHex
 
 @Composable
-fun HexTextWithCircleDisplay(
+fun HexTextFieldWithCircleDisplay(
     modifier: Modifier = Modifier,
     circleModifier: Modifier = Modifier,
     color: Color,
-    hexString: String,
-    onTextChange: (String) -> Unit,
     onColorChange: (Color) -> Unit
 ) {
+
+    var hexString by remember(color) { mutableStateOf(colorToHex(color)) }
 
     Row(
         modifier = modifier.requiredHeightIn(min = 100.dp),
@@ -30,10 +31,12 @@ fun HexTextWithCircleDisplay(
             color = color
         )
         Spacer(modifier = Modifier.width(10.dp))
-        HexAlphaTextField(
+        HexTextField(
             modifier = Modifier.weight(1f),
             hexString = hexString,
-            onTextChange = onTextChange,
+            onTextChange = {
+                hexString = it
+            },
             onColorChange = onColorChange
         )
     }

@@ -22,12 +22,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.ui.Grey400
 import com.smarttoolfactory.colorpicker.ui.Red400
+import com.smarttoolfactory.colorpicker.util.hexRegex
 import com.smarttoolfactory.colorpicker.util.hexRegexSingleChar
 import com.smarttoolfactory.colorpicker.util.hexToColor
 import com.smarttoolfactory.colorpicker.util.hexWithAlphaRegex
 
+/**
+ * [TextField] that displays color in hex representation either with #RRGGBB or ##AARRGGBB
+ * depending on [useAlpha] flag.
+ *
+ * @param hexString
+ * @param useAlpha
+ * @param onTextChange
+ * @param onColorChange
+ */
 @Composable
-fun HexAlphaTextField(
+fun HexTextField(
     modifier: Modifier = Modifier,
     hexString: String,
     textStyle: TextStyle = TextStyle(fontSize = 24.sp),
@@ -37,21 +47,23 @@ fun HexAlphaTextField(
         unfocusedIndicatorColor = Color.Transparent
     ),
     shape: Shape = RoundedCornerShape(25),
+    useAlpha: Boolean = false,
     onTextChange: (String) -> Unit,
     onColorChange: (Color) -> Unit
 ) {
+    val hex = if (useAlpha) hexWithAlphaRegex else hexRegex
     OutlinedTextField(
         modifier = modifier
             .widthIn(min = 80.dp)
             .drawBehind {
                 drawLine(
-                    if (hexWithAlphaRegex.matches(hexString)) Grey400 else Red400,
+                    if (hex.matches(hexString)) Grey400 else Red400,
                     start = Offset(0f, size.height),
                     end = Offset(size.width, size.height),
                     strokeWidth = 5f
                 )
             },
-        visualTransformation = HexVisualTransformation(),
+        visualTransformation = HexVisualTransformation(useAlpha),
         textStyle = textStyle,
         colors = colors,
         shape = shape,
@@ -60,7 +72,7 @@ fun HexAlphaTextField(
         value = hexString.removePrefix("#"),
         onValueChange = {
 
-            if (it.length <= 8) {
+            if (it.length <= if (useAlpha) 8 else 6) {
                 if (it.isNotEmpty()) {
                     val lastChar = it.last()
                     val isHexChar = hexRegexSingleChar.matches(lastChar.toString())
@@ -72,7 +84,7 @@ fun HexAlphaTextField(
                 }
 
                 // Hex String with 6 or 8 chars matches a Color
-                if (hexWithAlphaRegex.matches(it)) {
+                if (hex.matches(it)) {
                     onColorChange(hexToColor(it))
                 }
             }
@@ -125,11 +137,14 @@ private fun BasicHexTextField(
     }
 }
 
-private class HexVisualTransformation : VisualTransformation {
+private class HexVisualTransformation(private val useAlpha: Boolean) : VisualTransformation {
 
     override fun filter(text: AnnotatedString): TransformedText {
 
-        val trimmed = if (text.text.length >= 8) text.text.substring(0..7) else text.text
+        val limit = if (useAlpha) 8 else 6
+
+        val trimmed =
+            if (text.text.length >= limit) text.text.substring(0 until limit) else text.text
 
         val output = if (trimmed.isEmpty()) {
             trimmed
@@ -137,10 +152,31 @@ private class HexVisualTransformation : VisualTransformation {
             "#${trimmed.uppercase()}"
         }
 
-        return TransformedText(AnnotatedString(output), hexOffsetMapping)
+        return TransformedText(
+            AnnotatedString(output),
+            if (useAlpha) hexAlphaOffsetMapping else hexOffsetMapping
+        )
     }
 
     private val hexOffsetMapping = object : OffsetMapping {
+
+        override fun originalToTransformed(offset: Int): Int {
+
+            // when empty return only 1 char for #
+            if (offset == 0) return offset
+            if (offset <= 5) return offset + 1
+            return 7
+        }
+
+        override fun transformedToOriginal(offset: Int): Int {
+            if (offset == 0) return offset
+            // #ABCABC
+            if (offset <= 6) return offset - 1
+            return 6
+        }
+    }
+
+    private val hexAlphaOffsetMapping = object : OffsetMapping {
 
         override fun originalToTransformed(offset: Int): Int {
 

@@ -7,7 +7,6 @@ import androidx.compose.ui.graphics.Color
  */
 fun hexToColorInt(colorString: String): Int {
     val completeColorString = if (colorString.first() == '#') colorString else "#$colorString"
-    println("🌈 hexToColor: $colorString, completeColorString: $completeColorString")
     return android.graphics.Color.parseColor(completeColorString)
 }
 
