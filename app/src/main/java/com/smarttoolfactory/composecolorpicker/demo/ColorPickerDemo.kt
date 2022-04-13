@@ -3,6 +3,7 @@ package com.smarttoolfactory.composecolorpicker.demo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedButton
@@ -12,10 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.dialog.*
-import com.smarttoolfactory.colorpicker.ui.Blue400
 import com.smarttoolfactory.colorpicker.util.colorToHex
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
@@ -47,9 +48,19 @@ fun ColorPickerDemo() {
             initialColor = previousColor,
             currentColor = color
         )
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(text = hexString, fontSize = 18.sp, color = Blue400, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = hexString,
+            fontSize = 20.sp,
+            color = color,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .background(color = Color(0x66000000), shape = RoundedCornerShape(12.dp))
+                .padding(6.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
 
         val buttonModifier = Modifier
             .fillMaxWidth()

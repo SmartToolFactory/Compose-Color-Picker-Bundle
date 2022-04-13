@@ -4,18 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import com.smarttoolfactory.composecolorpicker.demo.*
 import com.smarttoolfactory.composecolorpicker.ui.theme.ComposeColorPickerTheme
 import kotlinx.coroutines.launch
@@ -84,6 +84,7 @@ private fun HomeContent() {
             4 -> GradientAngleDemo()
             5 -> HSVHSLGradientDemo()
             6 -> ColorfulSliderDemo()
+            7 -> HexConversionDemo()
             else -> ColorModeConversionDemo()
         }
     }
@@ -98,5 +99,6 @@ internal val tabList =
         "Gradient Angle",
         "HSV&HSL Gradients",
         "Colorful Sliders",
+        "Hex Conversions",
         "Color Mode Conversions"
     )
