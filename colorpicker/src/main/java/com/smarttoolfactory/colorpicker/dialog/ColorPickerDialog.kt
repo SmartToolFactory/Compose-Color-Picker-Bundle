@@ -79,6 +79,62 @@ fun ColorPickerRingDiamondHSLDialog(
 }
 
 @Composable
+fun ColorPickerRingDiamondHEXDialog(
+    initialColor: Color,
+    ringOuterRadiusFraction: Float = .9f,
+    ringInnerRadiusFraction: Float = .6f,
+    ringBackgroundColor: Color = Color.Transparent,
+    ringBorderStrokeColor: Color = Color.Black,
+    ringBorderStrokeWidth: Dp = 4.dp,
+    selectionRadius: Dp = 8.dp,
+    onDismiss: (Color, String) -> Unit
+) {
+
+    var color by remember { mutableStateOf(initialColor.copy()) }
+    var hexString by remember { mutableStateOf(colorToHex(color)) }
+
+    Dialog(
+        onDismissRequest = {
+            onDismiss(color, hexString)
+        }
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+            ColorPickerRingDiamondHEX(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(Color(0xcc212121), shape = RoundedCornerShape(5.dp))
+                    .padding(horizontal = 10.dp, vertical = 2.dp),
+                initialColor = initialColor,
+                ringOuterRadiusFraction = ringOuterRadiusFraction,
+                ringInnerRadiusFraction = ringInnerRadiusFraction,
+                ringBackgroundColor = ringBackgroundColor,
+                ringBorderStrokeColor = ringBorderStrokeColor,
+                ringBorderStrokeWidth = ringBorderStrokeWidth,
+                selectionRadius = selectionRadius
+            ) { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
+            }
+
+            FloatingActionButton(
+                onClick = {
+                    onDismiss(color, hexString)
+                },
+                backgroundColor = Color.Black
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = null,
+                    tint = Blue400
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun ColorPickerRingRectHSLDialog(
     initialColor: Color,
     ringOuterRadiusFraction: Float = .9f,

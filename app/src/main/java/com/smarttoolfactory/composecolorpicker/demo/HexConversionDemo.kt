@@ -45,7 +45,7 @@ fun HexConversionDemo() {
 
         HexTextField(
             hexString = hexString,
-
+            useAlpha = true,
             onTextChange = {
                 hexString = it
             }, onColorChange = {

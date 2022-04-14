@@ -22,13 +22,13 @@ by [mchome's flutter_colorpicker  for Flutter](https://github.com/mchome/flutter
 There are various selection of default color pickers and with selectors sliders, and hex displays
 it's possible to create new ones either.
 
-| Hue Ring-Diamond HSL | Hue- Ring-Rect HSL | Hue Ring-Rect HSV| Hue-Hex HSV|
+| Hue Ring-Diamond HSL | Hue Ring-Diamond HEX | Hue- Ring-Rect HSL | Hue Ring-Rect HSV| 
 | ----------|-----------| -----------| -----------|
-| <img src="./screenshots/colorpicker/cp_ring_diamond_hsl.png"/> | <img src="./screenshots/colorpicker/cp_ring_rect_hsl.png"/> | <img src="./screenshots/colorpicker/cp_ring_rect_hsv.png"/> |  <img src="./screenshots/colorpicker/cp_ring_rect_hex_hsv.png"/> |
+| <img src="./screenshots/colorpicker/cp_ring_diamond_hsl.png"/> | <img src="./screenshots/colorpicker/cp_ring_diamond_hex.png"/> | <img src="./screenshots/colorpicker/cp_ring_rect_hsl.png"/> |  <img src="./screenshots/colorpicker/cp_ring_rect_hsv.png"/> |
 
-| Saturation-Value HSV | Saturation-Lightness HSL | Hue-Circle HSV 
+| Saturation-Value HSV | Saturation-Lightness HSL | Hue-Circle HSV | Hue Ring-Rect Hex|
 | ----------|-----------| -----------| 
-| <img src="./screenshots/colorpicker/cp_rect_saturation_value_hsv.png"/> | <img src="./screenshots/colorpicker/cp_rect_saturation_lightness_hsl.png"/> | <img src="./screenshots/colorpicker/cp_circle_hue_saturation_hsv.png"/> 
+| <img src="./screenshots/colorpicker/cp_rect_saturation_value_hsv.png"/> | <img src="./screenshots/colorpicker/cp_rect_saturation_lightness_hsl.png"/> | <img src="./screenshots/colorpicker/cp_circle_hue_saturation_hsv.png"/>  <img src="./screenshots/colorpicker/cp_ring_rect_hex_hsv.png"/> |
 
 | Hue-Saturation HSV |  Hue-Value HSV |  Hue-Saturation HSL  | Hue-Lightness HSL  |
 | ----------|-----------| -----------| -----------|

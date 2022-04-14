@@ -28,13 +28,18 @@ import com.smarttoolfactory.colorpicker.util.hexToColor
 import com.smarttoolfactory.colorpicker.util.hexWithAlphaRegex
 
 /**
- * [TextField] that displays color in hex representation either with #RRGGBB or ##AARRGGBB
+ * [TextField] that displays color in hex representation either with #RRGGBB or #AARRGGBB
  * depending on [useAlpha] flag.
- *
- * @param hexString
- * @param useAlpha
- * @param onTextChange
- * @param onColorChange
+ * @param colors that are used by default [TextField] to set background and many other default
+ * properties.
+ * @param textStyle style for [Text] of [TextField].
+ * @param shape of this [TextField].
+ * @param hexString string in hex format.
+ * @param useAlpha when set to true returns colors in #AARRGGBB format.
+ * @param onTextChange this callback returns when the last char typed by user is an acceptable
+ * HEX char between 0-9,a-f, or A-F.
+ * @param onColorChange when user type valid 6 or 8 char hex returns a [Color] associated
+ * with the hex string.
  */
 @Composable
 fun HexTextField(
