@@ -67,14 +67,6 @@ fun ColorPickerGradientRingDiamondHSL(
     var lightness by remember { mutableStateOf(hslArray[2]) }
     var alpha by remember { mutableStateOf(gradientColorState.color.alpha) }
 
-    gradientColorState.color =
-        Color.hsl(
-            hue = hue,
-            saturation = saturation,
-            lightness = lightness,
-            alpha = alpha
-        )
-
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -111,13 +103,7 @@ fun ColorPickerGradientRingDiamondHSL(
             ) { hueChange ->
                 hue = hueChange
 
-                gradientColorState.color =
-                    Color.hsl(
-                        hue = hue,
-                        saturation = saturation,
-                        lightness = lightness,
-                        alpha = alpha
-                    )
+                setGradientColor(gradientColorState, hue, saturation, lightness, alpha)
                 onBrushColorChange(BrushColor(color = gradientColorState.color))
             }
 
@@ -132,13 +118,7 @@ fun ColorPickerGradientRingDiamondHSL(
                 saturation = s
                 lightness = l
 
-                gradientColorState.color =
-                    Color.hsl(
-                        hue = hue,
-                        saturation = saturation,
-                        lightness = lightness,
-                        alpha = alpha
-                    )
+                setGradientColor(gradientColorState, hue, saturation, lightness, alpha)
                 onBrushColorChange(BrushColor(color = gradientColorState.color))
             }
         }
@@ -199,13 +179,7 @@ fun ColorPickerGradientRingDiamondHSL(
                             lightness = color.lightness
                             alpha = color.alpha
 
-                            gradientColorState.color =
-                                Color.hsl(
-                                    hue = hue,
-                                    saturation = saturation,
-                                    lightness = lightness,
-                                    alpha = alpha
-                                )
+                            setGradientColor(gradientColorState, hue, saturation, lightness, alpha)
                             onBrushColorChange(BrushColor(color = gradientColorState.color))
                         }
                     },
@@ -215,6 +189,22 @@ fun ColorPickerGradientRingDiamondHSL(
                 )
             }
         }
-
     }
 }
+
+private fun setGradientColor(
+    gradientColorState: GradientColorState,
+    hue: Float,
+    saturation: Float,
+    lightness: Float,
+    alpha: Float
+) {
+    gradientColorState.color =
+        Color.hsl(
+            hue = hue,
+            saturation = saturation,
+            lightness = lightness,
+            alpha = alpha
+        )
+}
+

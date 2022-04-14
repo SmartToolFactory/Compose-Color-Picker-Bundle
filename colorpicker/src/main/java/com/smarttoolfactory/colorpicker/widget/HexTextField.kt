@@ -74,17 +74,12 @@ fun HexTextField(
         onValueChange = {
 
             if (it.length <= if (useAlpha) 8 else 6) {
-
-                println("😍 CurrentString: $it")
                 var validHex = true
 
                 for (index in it.indices) {
                     validHex = hexRegexSingleChar.matches(it[index].toString())
-                    println("🎃 CHART: ${it[index]}, validHex: $validHex")
                     if (!validHex) break
                 }
-
-                println("💬 TEXT: $it, validHex: $validHex")
 
                 if (validHex) {
                     onTextChange(it)

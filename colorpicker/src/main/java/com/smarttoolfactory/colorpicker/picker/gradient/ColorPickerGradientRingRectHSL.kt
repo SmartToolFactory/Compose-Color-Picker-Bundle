@@ -68,8 +68,6 @@ fun ColorPickerGradientRingRectHSL(
     var lightness by remember { mutableStateOf(hslArray[2]) }
     var alpha by remember { mutableStateOf(gradientColorState.color.alpha) }
 
-//    setGradientColor(gradientColorState, hue, saturation, lightness, alpha)
-
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -184,7 +182,7 @@ fun ColorPickerGradientRingRectHSL(
                             lightness = color.lightness
                             alpha = color.alpha
 
-                           setGradientColor(gradientColorState, hue, saturation, lightness, alpha)
+                            setGradientColor(gradientColorState, hue, saturation, lightness, alpha)
                             onBrushColorChange(BrushColor(color = gradientColorState.color))
                         }
                     },
