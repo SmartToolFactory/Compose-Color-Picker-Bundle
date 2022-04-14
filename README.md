@@ -27,8 +27,8 @@ it's possible to create new ones either.
 | <img src="./screenshots/colorpicker/cp_ring_diamond_hsl.png"/> | <img src="./screenshots/colorpicker/cp_ring_diamond_hex.png"/> | <img src="./screenshots/colorpicker/cp_ring_rect_hsl.png"/> |  <img src="./screenshots/colorpicker/cp_ring_rect_hsv.png"/> |
 
 | Saturation-Value HSV | Saturation-Lightness HSL | Hue-Circle HSV | Hue Ring-Rect Hex|
-| ----------|-----------| -----------| 
-| <img src="./screenshots/colorpicker/cp_rect_saturation_value_hsv.png"/> | <img src="./screenshots/colorpicker/cp_rect_saturation_lightness_hsl.png"/> | <img src="./screenshots/colorpicker/cp_circle_hue_saturation_hsv.png"/>  <img src="./screenshots/colorpicker/cp_ring_rect_hex_hsv.png"/> |
+| ----------|-----------| -----------| -----------|
+| <img src="./screenshots/colorpicker/cp_rect_saturation_value_hsv.png"/> | <img src="./screenshots/colorpicker/cp_rect_saturation_lightness_hsl.png"/> | <img src="./screenshots/colorpicker/cp_circle_hue_saturation_hsv.png"/> | <img src="./screenshots/colorpicker/cp_ring_rect_hex_hsv.png"/> |
 
 | Hue-Saturation HSV |  Hue-Value HSV |  Hue-Saturation HSL  | Hue-Lightness HSL  |
 | ----------|-----------| -----------| -----------|
