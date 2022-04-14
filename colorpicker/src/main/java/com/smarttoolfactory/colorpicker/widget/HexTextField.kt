@@ -1,10 +1,7 @@
 package com.smarttoolfactory.colorpicker.widget
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,7 +9,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.OffsetMapping
@@ -78,68 +74,29 @@ fun HexTextField(
         onValueChange = {
 
             if (it.length <= if (useAlpha) 8 else 6) {
-                if (it.isNotEmpty()) {
-                    val lastChar = it.last()
-                    val isHexChar = hexRegexSingleChar.matches(lastChar.toString())
-                    if (isHexChar) {
-                        onTextChange(it)
-                    }
-                } else {
-                    onTextChange(it)
+
+                println("😍 CurrentString: $it")
+                var validHex = true
+
+                for (index in it.indices) {
+                    validHex = hexRegexSingleChar.matches(it[index].toString())
+                    println("🎃 CHART: ${it[index]}, validHex: $validHex")
+                    if (!validHex) break
                 }
 
-                // Hex String with 6 or 8 chars matches a Color
-                if (hex.matches(it)) {
-                    onColorChange(hexToColor(it))
+                println("💬 TEXT: $it, validHex: $validHex")
+
+                if (validHex) {
+                    onTextChange(it)
+
+                    // Hex String with 6 or 8 chars matches a Color
+                    if (hex.matches(it)) {
+                        onColorChange(hexToColor(it))
+                    }
                 }
             }
         }
     )
-}
-
-@Composable
-private fun BasicHexTextField(
-    modifier: Modifier = Modifier,
-    value: String,
-    textStyle: TextStyle = TextStyle(
-        fontSize = 20.sp,
-    ),
-    textColor: Color = Color.Black,
-    backgroundColor: Color = Color.LightGray,
-    cursorColor: Color = MaterialTheme.colors.primary,
-    visualTransformation: VisualTransformation,
-    hint: String,
-    shape: Shape = RoundedCornerShape(25),
-    onValueChange: (String) -> Unit,
-) {
-
-    Surface(
-        modifier = modifier
-            .wrapContentHeight()
-            .widthIn(min = 60.dp),
-        shape = shape,
-        color = backgroundColor,
-        contentColor = textColor
-    ) {
-        BasicTextField(
-            textStyle = textStyle,
-            value = value,
-            singleLine = true,
-            visualTransformation = visualTransformation,
-            cursorBrush = SolidColor(cursorColor),
-            onValueChange = onValueChange
-        ) {
-            if (value.isEmpty()) {
-                Text(
-                    modifier = Modifier.padding(4.dp),
-                    text = hint,
-                    style = textStyle.copy(textStyle.color.copy(.7f))
-                )
-            } else {
-                it()
-            }
-        }
-    }
 }
 
 private class HexVisualTransformation(private val useAlpha: Boolean) : VisualTransformation {
