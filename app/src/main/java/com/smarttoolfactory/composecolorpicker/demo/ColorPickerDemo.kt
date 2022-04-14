@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.dialog.*
-import com.smarttoolfactory.colorpicker.util.colorToHex
+import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 
@@ -40,7 +40,7 @@ fun ColorPickerDemo() {
             mutableStateOf(previousColor.copy())
         }
 
-        var hexString by remember { mutableStateOf(colorToHex(color)) }
+        var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
 
         Spacer(modifier = Modifier.height(30.dp))
         ColorDisplayRoundedRect(

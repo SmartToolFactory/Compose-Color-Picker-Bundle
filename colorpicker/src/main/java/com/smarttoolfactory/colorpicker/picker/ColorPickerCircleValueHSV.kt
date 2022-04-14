@@ -12,7 +12,7 @@ import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.selector.SelectorCircleHueSaturationHSV
 import com.smarttoolfactory.colorpicker.slider.SliderCircleColorDisplayValueHSV
 import com.smarttoolfactory.colorpicker.util.colorToHSV
-import com.smarttoolfactory.colorpicker.util.colorToHex
+import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayExposedSelectionMenu
 
 /**
@@ -23,7 +23,7 @@ fun ColorPickerCircleValueHSV(
     modifier: Modifier = Modifier,
     selectionRadius: Dp = 8.dp,
     initialColor: Color,
-    onColorChange: (Color,String) -> Unit
+    onColorChange: (Color, String) -> Unit
 ) {
 
     val hsvArray = colorToHSV(initialColor)
@@ -38,7 +38,7 @@ fun ColorPickerCircleValueHSV(
 
     var colorModel by remember { mutableStateOf(ColorModel.HSV) }
 
-    onColorChange(currentColor, colorToHex(currentColor))
+    onColorChange(currentColor, colorToHexAlpha(currentColor))
 
     Column(
         modifier = modifier,
@@ -55,7 +55,7 @@ fun ColorPickerCircleValueHSV(
 
         }
 
-        Column(modifier=Modifier.padding(8.dp)) {
+        Column(modifier = Modifier.padding(8.dp)) {
             SliderCircleColorDisplayValueHSV(
                 hue = hue,
                 saturation = saturation,

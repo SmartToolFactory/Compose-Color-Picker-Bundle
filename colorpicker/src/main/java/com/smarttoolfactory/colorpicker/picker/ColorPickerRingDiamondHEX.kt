@@ -16,7 +16,6 @@ import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.ui.Grey400
 import com.smarttoolfactory.colorpicker.ui.Grey600
 import com.smarttoolfactory.colorpicker.util.colorToHSL
-import com.smarttoolfactory.colorpicker.util.colorToHex
 import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
 import com.smarttoolfactory.colorpicker.widget.ColorModelChangeTabRow
@@ -74,7 +73,7 @@ fun ColorPickerRingDiamondHEX(
         )
     }
 
-    onColorChange(currentColor, colorToHex(currentColor))
+    onColorChange(currentColor, colorToHexAlpha(currentColor))
 
     Column(
         modifier = modifier,

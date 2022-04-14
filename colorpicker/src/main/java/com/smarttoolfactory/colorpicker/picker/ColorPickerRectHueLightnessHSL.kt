@@ -14,7 +14,7 @@ import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.selector.SelectorRectHueLightnessHSL
 import com.smarttoolfactory.colorpicker.slider.SliderCircleColorDisplaySaturationHSL
 import com.smarttoolfactory.colorpicker.util.colorToHSL
-import com.smarttoolfactory.colorpicker.util.colorToHex
+import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayExposedSelectionMenu
 
 @Composable
@@ -38,7 +38,7 @@ fun ColorPickerRectHueLightnessHSL(
     val currentColor =
         Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
 
-    onColorChange(currentColor, colorToHex(currentColor))
+    onColorChange(currentColor, colorToHexAlpha(currentColor))
 
     Column(
         modifier = modifier,

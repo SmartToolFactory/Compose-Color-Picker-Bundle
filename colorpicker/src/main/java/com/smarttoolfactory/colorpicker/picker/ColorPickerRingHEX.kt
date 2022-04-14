@@ -11,7 +11,7 @@ import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationValueHSV
 import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.util.colorToHSV
-import com.smarttoolfactory.colorpicker.util.colorToHex
+import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
 import com.smarttoolfactory.colorpicker.widget.HexTextFieldWithCircleDisplay
 
 
@@ -47,7 +47,7 @@ fun ColorPickerRingRectHex(
         value = value
     )
 
-    onColorChange(currentColor, colorToHex(currentColor))
+    onColorChange(currentColor, colorToHexAlpha(currentColor))
 
     Column(
         modifier = modifier,
