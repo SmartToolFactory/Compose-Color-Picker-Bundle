@@ -1,23 +1,19 @@
-### Jetpack Compose Color Picker Bundle
+# Jetpack Compose Color Picker Bundle
 
 Bundle of Stylish customizable Color pickers, selectors, colorful sliders written with Jetpack
 Compose enables users to choose from HSL, HSV or RGB color models to pick Solid colors or gradients.
 With colorful Sliders, panels, hex and color displays and various elements to create customized
 pickers based on preference.
 
-There are 10(for now) different color pickers and 3 different color+gradient pickers available to
-choose from to use as Composables or inside dialogs that are available in demos.
-
-
+There are 12, as of current version, different color pickers and 3 different color+gradient pickers
+available to choose from to use as Composables or inside dialogs that are available in demos.
 
 https://user-images.githubusercontent.com/35650605/161702454-34b0cf00-8496-4060-bfe1-bea9d1bf754d.mp4
-
-
 
 Inspired
 by [mchome's flutter_colorpicker  for Flutter](https://github.com/mchome/flutter_colorpicker)
 
-### Color Pickers
+## Color Pickers
 
 There are various selection of default color pickers and with selectors sliders, and hex displays
 it's possible to create new ones either.
@@ -30,12 +26,11 @@ it's possible to create new ones either.
 | ----------|-----------| -----------| -----------|
 | <img src="./screenshots/colorpicker/cp_rect_saturation_value_hsv.png"/> | <img src="./screenshots/colorpicker/cp_rect_saturation_lightness_hsl.png"/> | <img src="./screenshots/colorpicker/cp_circle_hue_saturation_hsv.png"/> | <img src="./screenshots/colorpicker/cp_ring_rect_hex_hsv.png"/> |
 
-| Hue-Saturation HSV |  Hue-Value HSV |  Hue-Saturation HSL  | Hue-Lightness HSL  |
+| HS HSV |  HL HSV |  HS HSL  | HL HSL  |
 | ----------|-----------| -----------| -----------|
 | <img src="./screenshots/colorpicker/cp_rect_hue_saturation_hsv.png"/> | <img src="./screenshots/colorpicker/cp_rect_hue_value_hsv.png"/> | <img src="./screenshots/colorpicker/cp_rect_hue_saturation_hsl.png"/> |  <img src="./screenshots/colorpicker/cp_rect_hue_lightness_hsl.png"/> |
 
-
-#### Implementation Hue Ring-Diamond HSL, Hue- Ring-Rect HSL,Hue Ring-Rect HSV
+### Implementation Hue Ring-Diamond HSL and ones with Ring Selectors
 
 ```
 ColorPickerRingRectHSL(
@@ -66,7 +61,7 @@ color can be set using `CompositeSliderPanel` which contains sliders for each co
 * **onColorChange** callback that is triggered when `Color` is changed
   using `SelectorRingHue` `SelectorDiamondSaturationLightnessHSL` or `CompositeSliderPanel`
 
-#### Implementation for other Color Pickers
+### Implementation for other Color Pickers
 
 ```
 ColorPickerCircleValueHSV(
@@ -81,7 +76,7 @@ ColorPickerCircleValueHSV(
 * **initialColor** color that is passed to this picker initially.
 * **onColorChange** callback that is triggered when `Color` is changed
 
-### Gradient Color Pickers
+## Gradient Color Pickers
 
 | Hue Ring-Diamond HSL | Hue Ring-Diamond HSL2 | Hue- Ring-Rect HSL | Hue Ring-Rect HSV|
 | ----------|-----------| -----------| -----------|
@@ -175,7 +170,7 @@ data class BrushColor(
 }
 ```
 
-### Demos
+## Demos
 
 * `SaturationSelectorDemo`  different type of Hue/Saturation/Value/Lightness Selectors
 * `GradientSelection`  select gradient with varying properties such as tile mode, angle, size, or
@@ -189,7 +184,7 @@ data class BrushColor(
 | ----------|-----------|-----------| -----------| -----------|
 | <img src="./screenshots/saturation.gif"/> | <img src="./screenshots/gradient_selection.gif"/> | <img src="./screenshots/gradient_angle.gif"/> |  <img src="./screenshots/hsv_hsl_gradient.gif"/> | <img src="./screenshots/colorful_sliders.gif"/> |
 
-### Completed:
+## Completed:
 
 - [x] Add Hue Picker Wheel for selecting Hue
 - [x] Add Saturation Rectangle for selecting Saturation and Lightness

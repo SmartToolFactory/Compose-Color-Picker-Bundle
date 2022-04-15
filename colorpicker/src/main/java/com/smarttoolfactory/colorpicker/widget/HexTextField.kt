@@ -26,9 +26,17 @@ import com.smarttoolfactory.colorpicker.util.hexWithAlphaRegex
 /**
  * [TextField] that displays color in hex representation either with #RRGGBB or #AARRGGBB
  * depending on [useAlpha] flag.
- * @param colors that are used by default [TextField] to set background and many other default
- * properties.
- * @param textStyle style for [Text] of [TextField].
+ *
+ * @param colors [TextFieldColors] that will be used to resolve color of the text and content
+ * (including label, placeholder, leading and trailing icons, border) for this text field in
+ * different states. See [TextFieldDefaults.outlinedTextFieldColors]
+ * @param textStyle the style to be applied to the input text. The default [textStyle] uses the
+ * [LocalTextStyle] defined by the theme
+ * @param label the optional label to be displayed inside the text field container. The default
+ * text style for internal [Text] is [Typography.caption] when the text field is in focus and
+ * [Typography.subtitle1] when the text field is not in focus
+ * @param placeholder the optional placeholder to be displayed when the text field is in focus and
+ * the input text is empty. The default text style for internal [Text] is [Typography.subtitle1]
  * @param shape of this [TextField].
  * @param hexString string in hex format.
  * @param useAlpha when set to true returns colors in #AARRGGBB format.
@@ -47,6 +55,12 @@ fun HexTextField(
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent
     ),
+    label: @Composable () -> Unit = {
+        Text("Hex", color = Grey400)
+    },
+    placeholder: @Composable () -> Unit = {
+        Text("Enter a color", fontSize = textStyle.fontSize)
+    },
     shape: Shape = RoundedCornerShape(25),
     useAlpha: Boolean = false,
     onTextChange: (String) -> Unit,
@@ -68,8 +82,8 @@ fun HexTextField(
         textStyle = textStyle,
         colors = colors,
         shape = shape,
-        label = { Text("Hex", color = Grey400) },
-        placeholder = { Text("Enter a color", fontSize = textStyle.fontSize) },
+        label = label,
+        placeholder = placeholder,
         value = hexString.removePrefix("#"),
         onValueChange = {
 
@@ -82,8 +96,7 @@ fun HexTextField(
                 }
 
                 if (validHex) {
-                    onTextChange(it)
-
+                    onTextChange("#$it")
                     // Hex String with 6 or 8 chars matches a Color
                     if (hex.matches(it)) {
                         onColorChange(hexToColor(it))
