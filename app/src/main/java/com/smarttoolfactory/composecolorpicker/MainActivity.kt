@@ -46,6 +46,7 @@ class MainActivity : ComponentActivity() {
 private fun HomeContent() {
 
     val pagerState: PagerState = rememberPagerState(initialPage = 0)
+
     val coroutineScope = rememberCoroutineScope()
 
     ScrollableTabRow(
@@ -66,7 +67,7 @@ private fun HomeContent() {
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(index)
                     }
-                },
+                }
             )
         }
     }
@@ -79,12 +80,13 @@ private fun HomeContent() {
         when (page) {
             0 -> ColorPickerDemo()
             1 -> ColorAndGradientPickerDemo()
-            2 -> SaturationSelectorDemo()
-            3 -> GradientSelectionDemo()
-            4 -> GradientAngleDemo()
-            5 -> HSVHSLGradientDemo()
-            6 -> ColorfulSliderDemo()
-            7 -> HexConversionDemo()
+            2 -> GradientSelectionDemo()
+            3 -> ColorDetectionFromScreenDemo()
+            4 -> HexConversionDemo()
+            5 -> GradientAngleDemo()
+            6 -> SaturationSelectorDemo()
+            7 -> HSVHSLGradientDemo()
+            8 -> ColorfulSliderDemo()
             else -> ColorModeConversionDemo()
         }
     }
@@ -94,11 +96,12 @@ internal val tabList =
     listOf(
         "Color Picker",
         "Gradient Color Picker",
-        "Saturation Selector",
         "Gradient Selection",
+        "Detect Screen Color",
+        "Hex Conversions",
         "Gradient Angle",
+        "Saturation Selector",
         "HSV&HSL Gradients",
         "Colorful Sliders",
-        "Hex Conversions",
         "Color Mode Conversions"
     )
