@@ -203,5 +203,6 @@ data class BrushColor(
 - [x] Add option to display colors in a dialog
 - [x] Add gradient color selection with percentage stops, linear, radial and sweep options
 - [x] Add gradient selection demo
+- [x] Add color detection from screen demo
 
   
