@@ -1,20 +1,19 @@
 package com.smarttoolfactory.colorpicker.widget
 
-import androidx.compose.foundation.border
+import android.graphics.Bitmap
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.*
 import com.smarttoolfactory.colorpicker.util.calculateColorInPixel
 import com.smarttoolfactory.gesture.pointerMotionEvents
 import com.smarttoolfactory.screenshot.ScreenshotBox
@@ -22,6 +21,13 @@ import com.smarttoolfactory.screenshot.ScreenshotState
 import com.smarttoolfactory.screenshot.rememberScreenshotState
 import kotlin.math.roundToInt
 
+/**
+ * A Composable that detect color at pixel that user touches when [enabled].
+ * @param enabled when enabled detect color at user's point of touch
+ * @param content is screen/Composable is displayed to user to get color from. [ScreenshotBox]
+ * gets [Bitmap] from screen when users first down and stores it.
+ * @param onColorChange callback to notify that user moved and picked a color
+ */
 @Composable
 fun ScreenColorDetector(
     modifier: Modifier = Modifier,
@@ -29,7 +35,7 @@ fun ScreenColorDetector(
     content: @Composable () -> Unit,
     onColorChange: (Color) -> Unit
 ) {
-    BoxWithConstraints(modifier = modifier.border(3.dp, Color.Green)) {
+    BoxWithConstraints(modifier = modifier) {
 
         val screenshotState = rememberScreenshotState()
         var containerSize by remember { mutableStateOf(IntSize.Zero) }
@@ -108,9 +114,6 @@ fun ScreenColorDetector(
 
             .onSizeChanged {
                 containerSize = it
-                val maxWidth = constraints.maxWidth
-                val maxHeight = constraints.maxHeight
-                println("🔥 onSizeChanged() maxWidth: $maxWidth, maxHeight: $maxHeight, containerSize: $containerSize")
                 offset =
                     Offset(
                         (containerSize.width / 2).toFloat(),
@@ -148,11 +151,15 @@ private fun ScreenColorDetectorImpl(
             content()
         }
 
+        val size = with(LocalDensity.current) {
+            DpSize(containerSize.width.toDp(), containerSize.height.toDp())
+        }
+
         if (enabled) {
             screenshotState.imageBitmap?.let {
                 ImageThumbWithColor(
+                    modifier = Modifier.size(size),
                     bitmap = it,
-                    containerSize = containerSize,
                     offset = offset,
                     color = color
                 )
@@ -162,87 +169,85 @@ private fun ScreenColorDetectorImpl(
 }
 
 @Composable
-fun ImageThumbWithColor(
+private fun ImageThumbWithColor(
+    modifier: Modifier,
     bitmap: ImageBitmap,
-    containerSize: IntSize,
+    thumbSize: Dp = 80.dp,
     offset: Offset,
     color: Color
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .border(3.dp, Color.Cyan)
-            .drawWithContent {
-                if (color != Color.Unspecified) {
+    Canvas(modifier = modifier) {
 
-                    drawCircle(Color.Black, radius = 36f, center = offset, style = Stroke(10f))
-                    drawCircle(Color.White, radius = 24f, center = offset, style = Stroke(10f))
+        val canvasWidth = size.width
+        val canvasHeight = size.height
 
-                    val imageThumbSize: Int
-                    val radius: Float
+        if (color != Color.Unspecified) {
 
-                    with(density) {
-                        imageThumbSize = 80.dp
-                            .toPx()
-                            .roundToInt()
-                        radius = 8.dp.toPx()
-                    }
+            drawCircle(Color.Black, radius = 36f, center = offset, style = Stroke(10f))
+            drawCircle(Color.White, radius = 24f, center = offset, style = Stroke(10f))
 
+            val imageThumbSize: Int
+            val radius: Float
 
-                    // If we are close by 25% of dimension of display on left side
-                    // move to right side to display image on top lef
-                    val isTouchOnLeftSide = (offset.x < imageThumbSize * 5 / 4 &&
-                            offset.y < imageThumbSize * 5 / 4)
-
-                    // top left x coordinate of image thumb which can be either left or
-                    // right side based on user touch position
-                    val topLeftImageThumbX: Int = if (isTouchOnLeftSide)
-                        containerSize.width - imageThumbSize else 0
-
-                    // Center of image thumb
-                    val centerImageThumbX: Float = topLeftImageThumbX + imageThumbSize / 2f
-                    val centerImageThumbY: Float = imageThumbSize / 2f
-
-
-                    drawImage(
-                        image = bitmap,
-                        srcOffset = IntOffset(
-                            (offset.x.toInt() - imageThumbSize / 2).coerceIn(
-                                0,
-                                containerSize.width - imageThumbSize
-                            ),
-                            (offset.y.toInt() - imageThumbSize / 2).coerceIn(
-                                0,
-                                containerSize.height - imageThumbSize
-                            )
-                        ),
-                        srcSize = IntSize(imageThumbSize, imageThumbSize),
-                        dstOffset = IntOffset(
-                            x = topLeftImageThumbX,
-                            y = 0
-                        ),
-                        dstSize = IntSize(imageThumbSize, imageThumbSize)
-                    )
-
-                    drawCircle(
-                        color = Color.Black,
-                        radius = radius,
-                        center = Offset(centerImageThumbX, centerImageThumbY),
-                        style = Stroke(radius * .5f)
-                    )
-                    drawCircle(
-                        color = Color.White,
-                        radius = radius,
-                        center = Offset(centerImageThumbX, centerImageThumbY),
-                        style = Stroke(radius * .2f)
-                    )
-
-                    drawCircle(
-                        color = color,
-                        radius = imageThumbSize / 10f,
-                        center = Offset(centerImageThumbX, centerImageThumbY)
-                    )
-                }
+            with(density) {
+                imageThumbSize = thumbSize.toPx().roundToInt()
+                radius = 8.dp.toPx()
             }
-    )
+
+
+            // If we are close by 25% of dimension of display on left side
+            // move to right side to display image on top lef
+            val isTouchOnLeftSide = (offset.x < imageThumbSize * 5 / 4 &&
+                    offset.y < imageThumbSize * 5 / 4)
+
+            // top left x coordinate of image thumb which can be either left or
+            // right side based on user touch position
+            val topLeftImageThumbX: Int = if (isTouchOnLeftSide)
+                (canvasWidth - imageThumbSize).toInt() else 0
+
+            // Center of image thumb
+            val centerImageThumbX: Float = topLeftImageThumbX + imageThumbSize / 2f
+            val centerImageThumbY: Float = imageThumbSize / 2f
+
+
+            drawImage(
+                image = bitmap,
+                srcOffset = IntOffset(
+                    (offset.x.toInt() - imageThumbSize / 2).coerceIn(
+                        0,
+                        (canvasWidth - imageThumbSize).toInt()
+                    ),
+                    (offset.y.toInt() - imageThumbSize / 2).coerceIn(
+                        0,
+                        (canvasHeight - imageThumbSize).toInt()
+                    )
+                ),
+                srcSize = IntSize(imageThumbSize, imageThumbSize),
+                dstOffset = IntOffset(
+                    x = topLeftImageThumbX,
+                    y = 0
+                ),
+                dstSize = IntSize(imageThumbSize, imageThumbSize)
+            )
+
+            drawCircle(
+                color = Color.Black,
+                radius = radius,
+                center = Offset(centerImageThumbX, centerImageThumbY),
+                style = Stroke(radius * .5f)
+            )
+            drawCircle(
+                color = Color.White,
+                radius = radius,
+                center = Offset(centerImageThumbX, centerImageThumbY),
+                style = Stroke(radius * .2f)
+            )
+
+            drawCircle(
+                color = color,
+                radius = imageThumbSize / 10f,
+                center = Offset(centerImageThumbX, centerImageThumbY)
+            )
+        }
+    }
 }
