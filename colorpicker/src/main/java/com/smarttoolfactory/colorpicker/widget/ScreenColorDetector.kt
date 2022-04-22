@@ -1,18 +1,26 @@
 package com.smarttoolfactory.colorpicker.widget
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.util.calculateColorInPixel
 import com.smarttoolfactory.gesture.pointerMotionEvents
 import com.smarttoolfactory.screenshot.ScreenshotBox
+import com.smarttoolfactory.screenshot.ScreenshotState
 import com.smarttoolfactory.screenshot.rememberScreenshotState
+import kotlin.math.roundToInt
 
 @Composable
 fun ScreenColorDetector(
@@ -21,148 +29,220 @@ fun ScreenColorDetector(
     content: @Composable () -> Unit,
     onColorChange: (Color) -> Unit
 ) {
-//    BoxWithConstraints {
+    BoxWithConstraints(modifier = modifier.border(3.dp, Color.Green)) {
 
-    val screenshotState = rememberScreenshotState()
+        val screenshotState = rememberScreenshotState()
+        var containerSize by remember { mutableStateOf(IntSize.Zero) }
 
-    var size by remember { mutableStateOf(IntSize.Zero) }
-//        var size by remember {
-//            mutableStateOf(
-//                IntSize(
-//                    constraints.maxWidth,
-//                    constraints.maxHeight
-//                )
-//            )
-//        }
-    var offset by remember() {
-        mutableStateOf(
-            Offset(
-                (size.width / 2).toFloat(),
-                (size.height / 2).toFloat()
-            )
-        )
-    }
-    var color by remember { mutableStateOf(Color.Unspecified) }
-
-    val colorDetectionModifier = modifier
-        .pointerMotionEvents(Unit,
-            onDown = { pointerInputChange ->
-                if (screenshotState.bitmap == null) screenshotState.capture()
-
-                screenshotState.bitmap?.let { bitmap ->
-
-                    if (bitmap.width == 0 || bitmap.height == 0 || size == IntSize.Zero)
-                        return@pointerMotionEvents
-
-
-                    val offsetX = pointerInputChange.position.x.coerceIn(
-                        0f,
-                        size.width.toFloat()
-                    )
-                    val offsetY = pointerInputChange.position.y.coerceIn(
-                        0f,
-                        size.height.toFloat()
-                    )
-
-                    offset = Offset(offsetX, offsetY)
-
-                    color = calculateColorInPixel(
-                        offsetX = offsetX,
-                        offsetY = offsetY,
-                        width = size.width,
-                        height = size.height,
-                        bitmap = bitmap
-                    )
-                    onColorChange(color)
-                }
-            },
-            onMove = { pointerInputChange ->
-
-                screenshotState.bitmap?.let { bitmap ->
-                    if (bitmap.width == 0 || bitmap.height == 0) return@pointerMotionEvents
-
-                    val offsetX = pointerInputChange.position.x.coerceIn(
-                        0f,
-                        size.width.toFloat()
-                    )
-                    val offsetY = pointerInputChange.position.y.coerceIn(
-                        0f,
-                        size.height.toFloat()
-                    )
-
-                    offset = Offset(offsetX, offsetY)
-
-                    color = calculateColorInPixel(
-                        offsetX = offsetX,
-                        offsetY = offsetY,
-                        width = size.width,
-                        height = size.height,
-                        bitmap = bitmap
-                    )
-
-                    onColorChange(color)
-                }
-            }
-        )
-        .drawWithContent {
-            drawContent()
-
-            drawCircle(Color.Black, radius = 36f, center = offset, style = Stroke(10f))
-            drawCircle(Color.White, radius = 24f, center = offset, style = Stroke(10f))
-
-            if (color != Color.Unspecified) {
-
-                val colorDisplaySize = 150f
-                val isTouchOnLeftSide =
-                    (offset.x < colorDisplaySize + 50f && offset.y < colorDisplaySize + 50f)
-
-                val colorOffset = Offset(
-                    if (isTouchOnLeftSide) size.width - (colorDisplaySize + 20) else 20f,
-                    20f
+        var offset by remember {
+            mutableStateOf(
+                Offset(
+                    (containerSize.width / 2).toFloat(),
+                    (containerSize.height / 2).toFloat()
                 )
+            )
+        }
 
-                screenshotState.imageBitmap?.let { imageBitmap ->
-//                    drawImage(
-//                        image = imageBitmap,
-//                        srcOffset = IntOffset((offset.x.toInt() - 100), offset.y.toInt()-100),
-//                        srcSize = IntSize(200, 200),
-//                        dstOffset = IntOffset(20, 20),
-//                        dstSize = IntSize(200, 200)
-//                    )
+        var color by remember { mutableStateOf(Color.Unspecified) }
 
-                    drawImage(
-                        image = imageBitmap,
-                        srcOffset = IntOffset(
-                            (offset.x.toInt() - 100).coerceIn(0, size.width - 200),
-                            (offset.y.toInt() - 100).coerceIn(0, size.height - 200)
-                        ),
-                        srcSize = IntSize(200, 200),
-                        dstOffset = IntOffset(20, 20),
-                        dstSize = IntSize(200, 200)
-                    )
+        val colorDetectionModifier = Modifier
+            .pointerMotionEvents(Unit,
+                onDown = { pointerInputChange ->
+                    if (screenshotState.bitmap == null) screenshotState.capture()
+
+                    screenshotState.bitmap?.let { bitmap ->
+
+                        if (bitmap.width == 0 || bitmap.height == 0 || containerSize == IntSize.Zero)
+                            return@pointerMotionEvents
+
+
+                        val offsetX = pointerInputChange.position.x.coerceIn(
+                            0f,
+                            containerSize.width.toFloat()
+                        )
+                        val offsetY = pointerInputChange.position.y.coerceIn(
+                            0f,
+                            containerSize.height.toFloat()
+                        )
+
+                        offset = Offset(offsetX, offsetY)
+
+                        color = calculateColorInPixel(
+                            offsetX = offsetX,
+                            offsetY = offsetY,
+                            width = containerSize.width,
+                            height = containerSize.height,
+                            bitmap = bitmap
+                        )
+                        onColorChange(color)
+                    }
+                },
+                onMove = { pointerInputChange ->
+
+                    screenshotState.bitmap?.let { bitmap ->
+                        if (bitmap.width == 0 || bitmap.height == 0) return@pointerMotionEvents
+
+                        val offsetX = pointerInputChange.position.x.coerceIn(
+                            0f,
+                            containerSize.width.toFloat()
+                        )
+                        val offsetY = pointerInputChange.position.y.coerceIn(
+                            0f,
+                            containerSize.height.toFloat()
+                        )
+
+                        offset = Offset(offsetX, offsetY)
+
+                        color = calculateColorInPixel(
+                            offsetX = offsetX,
+                            offsetY = offsetY,
+                            width = containerSize.width,
+                            height = containerSize.height,
+                            bitmap = bitmap
+                        )
+
+                        onColorChange(color)
+                    }
                 }
+            )
 
-//                drawRoundRect(
-//                    color = color,
-//                    topLeft = colorOffset,
-//                    size = Size(colorDisplaySize, colorDisplaySize),
-//                    cornerRadius = CornerRadius(colorDisplaySize / 4, colorDisplaySize / 4)
-//                )
+            .onSizeChanged {
+                containerSize = it
+                val maxWidth = constraints.maxWidth
+                val maxHeight = constraints.maxHeight
+                println("🔥 onSizeChanged() maxWidth: $maxWidth, maxHeight: $maxHeight, containerSize: $containerSize")
+                offset =
+                    Offset(
+                        (containerSize.width / 2).toFloat(),
+                        (containerSize.height / 2).toFloat()
+                    )
             }
-        }
-        .onSizeChanged {
-            size = it
-            offset = Offset((size.width / 2).toFloat(), (size.height / 2).toFloat())
-        }
 
-    ScreenshotBox(
-        modifier = if (enabled) colorDetectionModifier else modifier,
-        screenshotState = screenshotState
-    ) {
-        content()
+        ScreenColorDetectorImpl(
+            modifier = colorDetectionModifier,
+            offset = offset,
+            enabled = enabled,
+            color = color,
+            containerSize = containerSize,
+            screenshotState = screenshotState,
+            content = content
+        )
     }
-//    }
 }
 
+@Composable
+private fun ScreenColorDetectorImpl(
+    modifier: Modifier,
+    offset: Offset,
+    enabled: Boolean,
+    color: Color,
+    containerSize: IntSize,
+    screenshotState: ScreenshotState,
+    content: @Composable () -> Unit
+) {
+    Box(modifier = Modifier) {
+        ScreenshotBox(
+            modifier = modifier,
+            screenshotState = screenshotState
+        ) {
+            content()
+        }
+
+        if (enabled) {
+            screenshotState.imageBitmap?.let {
+                ImageThumbWithColor(
+                    bitmap = it,
+                    containerSize = containerSize,
+                    offset = offset,
+                    color = color
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ImageThumbWithColor(
+    bitmap: ImageBitmap,
+    containerSize: IntSize,
+    offset: Offset,
+    color: Color
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .border(3.dp, Color.Cyan)
+            .drawWithContent {
+                if (color != Color.Unspecified) {
+
+                    drawCircle(Color.Black, radius = 36f, center = offset, style = Stroke(10f))
+                    drawCircle(Color.White, radius = 24f, center = offset, style = Stroke(10f))
+
+                    val imageThumbSize: Int
+                    val radius: Float
+
+                    with(density) {
+                        imageThumbSize = 80.dp
+                            .toPx()
+                            .roundToInt()
+                        radius = 8.dp.toPx()
+                    }
 
 
+                    // If we are close by 25% of dimension of display on left side
+                    // move to right side to display image on top lef
+                    val isTouchOnLeftSide = (offset.x < imageThumbSize * 5 / 4 &&
+                            offset.y < imageThumbSize * 5 / 4)
+
+                    // top left x coordinate of image thumb which can be either left or
+                    // right side based on user touch position
+                    val topLeftImageThumbX: Int = if (isTouchOnLeftSide)
+                        containerSize.width - imageThumbSize else 0
+
+                    // Center of image thumb
+                    val centerImageThumbX: Float = topLeftImageThumbX + imageThumbSize / 2f
+                    val centerImageThumbY: Float = imageThumbSize / 2f
+
+
+                    drawImage(
+                        image = bitmap,
+                        srcOffset = IntOffset(
+                            (offset.x.toInt() - imageThumbSize / 2).coerceIn(
+                                0,
+                                containerSize.width - imageThumbSize
+                            ),
+                            (offset.y.toInt() - imageThumbSize / 2).coerceIn(
+                                0,
+                                containerSize.height - imageThumbSize
+                            )
+                        ),
+                        srcSize = IntSize(imageThumbSize, imageThumbSize),
+                        dstOffset = IntOffset(
+                            x = topLeftImageThumbX,
+                            y = 0
+                        ),
+                        dstSize = IntSize(imageThumbSize, imageThumbSize)
+                    )
+
+                    drawCircle(
+                        color = Color.Black,
+                        radius = radius,
+                        center = Offset(centerImageThumbX, centerImageThumbY),
+                        style = Stroke(radius * .5f)
+                    )
+                    drawCircle(
+                        color = Color.White,
+                        radius = radius,
+                        center = Offset(centerImageThumbX, centerImageThumbY),
+                        style = Stroke(radius * .2f)
+                    )
+
+                    drawCircle(
+                        color = color,
+                        radius = imageThumbSize / 10f,
+                        center = Offset(centerImageThumbX, centerImageThumbY)
+                    )
+                }
+            }
+    )
+}

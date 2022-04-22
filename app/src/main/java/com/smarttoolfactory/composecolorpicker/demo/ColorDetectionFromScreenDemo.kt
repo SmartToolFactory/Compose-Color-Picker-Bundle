@@ -48,18 +48,16 @@ fun ColorDetectionFromScreenDemo() {
         )
 
         ScreenColorDetector(
-            modifier = Modifier.wrapContentSize().padding(10.dp),
+            modifier = Modifier.border(2.dp, Color.Cyan).padding(25.dp),
             content = {
                 Column(
-                    modifier = Modifier
-                        .border(2.dp, Color.Green)
-                        .padding(5.dp)
+                    modifier = Modifier.border(1.dp, Color.Magenta)
                 ) {
 
                     Image(
                         bitmap = ImageBitmap.imageResource(
                             LocalContext.current.resources,
-                            R.drawable.landscape
+                            R.drawable.landscape10
                         ),
                         contentDescription = null,
                         modifier = Modifier
