@@ -213,20 +213,13 @@ private fun ImageThumbWithColor(
             drawImage(
                 image = bitmap,
                 srcOffset = IntOffset(
-                    (offset.x.toInt() - imageThumbSize / 2).coerceIn(
-                        0,
-                        (canvasWidth - imageThumbSize).toInt()
-                    ),
-                    (offset.y.toInt() - imageThumbSize / 2).coerceIn(
-                        0,
-                        (canvasHeight - imageThumbSize).toInt()
-                    )
+                    (offset.x.toInt() - imageThumbSize / 4)
+                        .coerceIn(0, (canvasWidth - imageThumbSize).toInt()),
+                    (offset.y.toInt() - imageThumbSize / 4)
+                        .coerceIn(0, (canvasHeight - imageThumbSize).toInt())
                 ),
-                srcSize = IntSize(imageThumbSize, imageThumbSize),
-                dstOffset = IntOffset(
-                    x = topLeftImageThumbX,
-                    y = 0
-                ),
+                srcSize = IntSize(imageThumbSize / 2, imageThumbSize / 2),
+                dstOffset = IntOffset(x = topLeftImageThumbX, y = 0),
                 dstSize = IntSize(imageThumbSize, imageThumbSize)
             )
 
