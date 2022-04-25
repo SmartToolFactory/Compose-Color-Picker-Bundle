@@ -11,6 +11,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.consumeDownChange
+import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.*
@@ -81,6 +83,7 @@ fun ScreenColorDetector(
                             bitmap = bitmap
                         )
                         onColorChange(color)
+                        pointerInputChange.consumeDownChange()
                     }
                 },
                 onMove = { pointerInputChange ->
@@ -108,6 +111,7 @@ fun ScreenColorDetector(
                         )
 
                         onColorChange(color)
+                        pointerInputChange.consumePositionChange()
                     }
                 }
             )
@@ -122,7 +126,7 @@ fun ScreenColorDetector(
             }
 
         ScreenColorDetectorImpl(
-            modifier = colorDetectionModifier,
+            modifier = if(enabled) colorDetectionModifier else Modifier,
             offset = offset,
             enabled = enabled,
             color = color,

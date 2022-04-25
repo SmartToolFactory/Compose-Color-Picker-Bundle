@@ -22,11 +22,10 @@ import com.smarttoolfactory.composecolorpicker.R
 
 @Composable
 fun ColorDetectionFromScreenDemo() {
-    // These are for debugging
-    var text by remember { mutableStateOf("") }
+
     var colorAtTouchPosition by remember { mutableStateOf(Color.Unspecified) }
 
-
+    var enableColorDetection by remember {mutableStateOf(true)}
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -48,6 +47,7 @@ fun ColorDetectionFromScreenDemo() {
         )
 
         ScreenColorDetector(
+            enabled = enableColorDetection,
             modifier = Modifier.border(2.dp, Color.Cyan).padding(25.dp),
             content = {
                 Column(
@@ -57,7 +57,7 @@ fun ColorDetectionFromScreenDemo() {
                     Image(
                         bitmap = ImageBitmap.imageResource(
                             LocalContext.current.resources,
-                            R.drawable.landscape10
+                            R.drawable.landscape
                         ),
                         contentDescription = null,
                         modifier = Modifier
@@ -68,8 +68,8 @@ fun ColorDetectionFromScreenDemo() {
                         contentScale = ContentScale.Crop
                     )
 
-                    Button(onClick = { /*TODO*/ }) {
-                        Text("Sample Button")
+                    Button(onClick = { enableColorDetection=!enableColorDetection }) {
+                        Text(text =if (enableColorDetection) "Disable" else "Enable")
                     }
                 }
             }
