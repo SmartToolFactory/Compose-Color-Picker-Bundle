@@ -13,9 +13,8 @@ import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.selector.SelectorRectHueValueHSV
 import com.smarttoolfactory.colorpicker.slider.SliderCircleColorDisplaySaturationHSV
-import com.smarttoolfactory.colorpicker.util.colorToHSV
-import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayExposedSelectionMenu
+import com.smarttoolfactory.extendedcolors.util.ColorUtil
 
 @Composable
 fun ColorPickerRectHueValueHSV(
@@ -25,7 +24,7 @@ fun ColorPickerRectHueValueHSV(
     onColorChange: (Color, String) -> Unit
 ) {
 
-    val hsvArray = colorToHSV(initialColor)
+    val hsvArray = ColorUtil.colorToHSV(initialColor)
 
     var hue by remember { mutableStateOf(hsvArray[0]) }
     var saturation by remember { mutableStateOf(hsvArray[1]) }
@@ -37,7 +36,7 @@ fun ColorPickerRectHueValueHSV(
 
     var colorModel by remember { mutableStateOf(ColorModel.HSV) }
 
-    onColorChange(currentColor, colorToHexAlpha(currentColor))
+    onColorChange(currentColor, ColorUtil.colorToHexAlpha(currentColor))
 
     Column(
         modifier = modifier,

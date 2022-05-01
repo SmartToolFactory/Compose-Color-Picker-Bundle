@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
             ComposeColorPickerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-
                     Column(
                         modifier = Modifier.fillMaxSize()
                     ) {
@@ -81,13 +80,10 @@ private fun HomeContent() {
             0 -> ColorPickerDemo()
             1 -> ColorAndGradientPickerDemo()
             2 -> GradientSelectionDemo()
-            3 -> ColorDetectionFromScreenDemo()
-            4 -> HexConversionDemo()
-            5 -> GradientAngleDemo()
-            6 -> SaturationSelectorDemo()
-            7 -> HSVHSLGradientDemo()
-            8 -> ColorfulSliderDemo()
-            else -> ColorModeConversionDemo()
+            3 -> HexConversionDemo()
+            4 -> SaturationSelectorDemo()
+           5 -> HSVHSLGradientDemo()
+            else -> ColorfulSliderDemo()
         }
     }
 }
@@ -97,11 +93,8 @@ internal val tabList =
         "Color Picker",
         "Gradient Color Picker",
         "Gradient Selection",
-        "Detect Screen Color",
         "Hex Conversions",
-        "Gradient Angle",
         "Saturation Selector",
         "HSV&HSL Gradients",
-        "Colorful Sliders",
-        "Color Mode Conversions"
+        "Colorful Sliders"
     )

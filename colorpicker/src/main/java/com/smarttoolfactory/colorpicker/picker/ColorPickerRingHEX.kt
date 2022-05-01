@@ -10,9 +10,8 @@ import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationValueHSV
 import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
-import com.smarttoolfactory.colorpicker.util.colorToHSV
-import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
 import com.smarttoolfactory.colorpicker.widget.HexTextFieldWithCircleDisplay
+import com.smarttoolfactory.extendedcolors.util.ColorUtil
 
 
 /**
@@ -35,7 +34,7 @@ fun ColorPickerRingRectHex(
     initialColor: Color,
     onColorChange: (Color, String) -> Unit
 ) {
-    val hsvArray = colorToHSV(initialColor)
+    val hsvArray = ColorUtil.colorToHSV(initialColor)
 
     var hue by remember { mutableStateOf(hsvArray[0]) }
     var saturation by remember { mutableStateOf(hsvArray[1]) }
@@ -47,7 +46,7 @@ fun ColorPickerRingRectHex(
         value = value
     )
 
-    onColorChange(currentColor, colorToHexAlpha(currentColor))
+    onColorChange(currentColor, ColorUtil.colorToHexAlpha(currentColor))
 
     Column(
         modifier = modifier,
@@ -89,7 +88,7 @@ fun ColorPickerRingRectHex(
             modifier = Modifier.padding(8.dp),
             color = currentColor,
             onColorChange = {
-                val hsvArrayNew = colorToHSV(it)
+                val hsvArrayNew = ColorUtil.colorToHSV(it)
                 hue = hsvArrayNew[0]
                 saturation = hsvArrayNew[1]
                 value = hsvArrayNew[2]

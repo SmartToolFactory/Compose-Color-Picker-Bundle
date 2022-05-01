@@ -18,10 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.ui.Grey400
 import com.smarttoolfactory.colorpicker.ui.Red400
-import com.smarttoolfactory.colorpicker.util.hexRegex
-import com.smarttoolfactory.colorpicker.util.hexRegexSingleChar
-import com.smarttoolfactory.colorpicker.util.hexToColor
-import com.smarttoolfactory.colorpicker.util.hexWithAlphaRegex
+import com.smarttoolfactory.extendedcolors.util.HexUtil
+
 
 /**
  * [TextField] that displays color in hex representation either with #RRGGBB or #AARRGGBB
@@ -99,7 +97,7 @@ fun HexTextField(
                     onTextChange("#$it")
                     // Hex String with 6 or 8 chars matches a Color
                     if (hex.matches(it)) {
-                        onColorChange(hexToColor(it))
+                        onColorChange(HexUtil.hexToColor(it))
                     }
                 }
             }
@@ -164,3 +162,9 @@ private class HexVisualTransformation(private val useAlpha: Boolean) : VisualTra
         }
     }
 }
+
+// Regex for checking if this string is a 6 char hex or 8 char hex
+val hexWithAlphaRegex = "^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})\$".toRegex()
+val hexRegex = "^#?([0-9a-fA-F]{6})\$".toRegex()
+// Check only on char if it's in range of 0-9, a-f, A-F
+val hexRegexSingleChar = "[a-fA-F0-9]".toRegex()

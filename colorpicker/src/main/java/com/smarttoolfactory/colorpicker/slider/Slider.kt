@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.ui.brush.*
-import com.smarttoolfactory.colorpicker.util.roundToTwoDigits
+import com.smarttoolfactory.extendedcolors.util.roundToTwoDigits
 import com.smarttoolfactory.colorpicker.widget.drawChecker
 import com.smarttoolfactory.slider.SliderBrushColor
 import com.smarttoolfactory.slider.ColorfulSlider

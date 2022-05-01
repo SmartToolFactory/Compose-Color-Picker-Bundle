@@ -15,9 +15,9 @@ import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
 import com.smarttoolfactory.colorpicker.selector.gradient.BrushDisplay
 import com.smarttoolfactory.colorpicker.selector.gradient.GradientSelector
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
-import com.smarttoolfactory.colorpicker.util.colorToHSL
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
 import com.smarttoolfactory.colorpicker.widget.ColorGradientModeChangeTabRow
+import com.smarttoolfactory.extendedcolors.util.ColorUtil
 
 /**
  * ColorPicker with [SelectorRingHue] hue selector and [SelectorDiamondSaturationLightnessHSL]
@@ -61,7 +61,7 @@ fun ColorPickerGradientRingDiamondHSL(
     }
 
     // Hue, Saturation, Lightness and Alpha properties
-    val hslArray = remember { colorToHSL(gradientColorState.color) }
+    val hslArray = remember { ColorUtil.colorToHSL(gradientColorState.color) }
     var hue by remember { mutableStateOf(hslArray[0]) }
     var saturation by remember { mutableStateOf(hslArray[1]) }
     var lightness by remember { mutableStateOf(hslArray[2]) }

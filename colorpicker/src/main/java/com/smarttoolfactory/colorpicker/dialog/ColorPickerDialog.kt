@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.smarttoolfactory.colorpicker.picker.*
 import com.smarttoolfactory.colorpicker.ui.Blue400
-import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
+import com.smarttoolfactory.extendedcolors.util.ColorUtil
 
 @Composable
 fun ColorPickerRingDiamondHSLDialog(
@@ -35,7 +35,7 @@ fun ColorPickerRingDiamondHSLDialog(
 ) {
 
     var color by remember { mutableStateOf(initialColor.copy()) }
-    var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
 
     Dialog(
         onDismissRequest = {
@@ -91,7 +91,7 @@ fun ColorPickerRingDiamondHEXDialog(
 ) {
 
     var color by remember { mutableStateOf(initialColor.copy()) }
-    var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
 
     Dialog(
         onDismissRequest = {
@@ -147,7 +147,7 @@ fun ColorPickerRingRectHSLDialog(
 ) {
 
     var color by remember { mutableStateOf(initialColor.copy()) }
-    var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
 
     Dialog(
         onDismissRequest = {
@@ -202,7 +202,7 @@ fun ColorPickerRingRectHSVDialog(
 ) {
 
     var color by remember { mutableStateOf(initialColor.copy()) }
-    var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
 
     Dialog(
         onDismissRequest = {
@@ -255,7 +255,7 @@ fun ColorPickerRingHexHSVDialog(
 ) {
 
     var color by remember { mutableStateOf(initialColor.copy()) }
-    var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
 
     Dialog(
         onDismissRequest = {
@@ -293,7 +293,7 @@ fun ColorPickerCircleHSVDialog(
 ) {
 
     var color by remember { mutableStateOf(initialColor.copy()) }
-    var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
 
     Dialog(
         onDismissRequest = {
@@ -331,7 +331,7 @@ fun ColorPickerSVRectHSVDialog(
 ) {
 
     var color by remember { mutableStateOf(initialColor.copy()) }
-    var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
 
     Dialog(
         onDismissRequest = {
@@ -367,7 +367,7 @@ fun ColorPickerSLRectHSLDialog(
 ) {
 
     var color by remember { mutableStateOf(initialColor.copy()) }
-    var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
 
     Dialog(
         onDismissRequest = {
@@ -403,7 +403,7 @@ fun ColorPickerHSRectHSVDialog(
 ) {
 
     var color by remember { mutableStateOf(initialColor.copy()) }
-    var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
 
     Dialog(
         onDismissRequest = {
@@ -439,7 +439,7 @@ fun ColorPickerHVRectHSVDialog(
 ) {
 
     var color by remember { mutableStateOf(initialColor.copy()) }
-    var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
 
     Dialog(
         onDismissRequest = {
@@ -475,7 +475,7 @@ fun ColorPickerHSRectHSLDialog(
 ) {
 
     var color by remember { mutableStateOf(initialColor.copy()) }
-    var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
 
     Dialog(
         onDismissRequest = {
@@ -511,7 +511,7 @@ fun ColorPickerHLRectHSLDialog(
 ) {
 
     var color by remember { mutableStateOf(initialColor.copy()) }
-    var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
 
     Dialog(
         onDismissRequest = {

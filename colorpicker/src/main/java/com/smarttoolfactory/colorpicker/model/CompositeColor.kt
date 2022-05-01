@@ -2,8 +2,7 @@ package com.smarttoolfactory.colorpicker.model
 
 import androidx.annotation.FloatRange
 import androidx.compose.ui.graphics.Color
-import com.smarttoolfactory.colorpicker.util.argbToHex
-import com.smarttoolfactory.colorpicker.util.rgbToHex
+import com.smarttoolfactory.extendedcolors.util.RGBUtil
 
 /**
  * Color in HSV color model
@@ -19,10 +18,10 @@ class ColorHSV(
         get() = Color.hsv(hue, saturation, value, alpha)
 
     override val argbHexString: String
-        get() = argbToHex(color.alpha, color.red, color.green, color.blue)
+        get() = RGBUtil.argbToHex(color.alpha, color.red, color.green, color.blue)
 
     override val rgbHexString: String
-        get() = rgbToHex(color.red, color.green, color.blue)
+        get() = RGBUtil.rgbToHex(color.red, color.green, color.blue)
 
     companion object {
         val Unspecified = ColorHSV(0f, 0f, 0f, 0f)
@@ -48,10 +47,10 @@ class ColorHSL(
         get() = Color.hsl(hue, saturation, lightness, alpha)
 
     override val argbHexString: String
-        get() = argbToHex(color.alpha, color.red, color.green, color.blue)
+        get() = RGBUtil.argbToHex(color.alpha, color.red, color.green, color.blue)
 
     override val rgbHexString: String
-        get() = rgbToHex(color.red, color.green, color.blue)
+        get() = RGBUtil.rgbToHex(color.red, color.green, color.blue)
 
     companion object {
         val Unspecified: ColorHSL = ColorHSL(0f, 0f, 0f, 0f)
@@ -77,10 +76,10 @@ class ColorRGB(
         get() = Color(red, green, blue, alpha)
 
     override val argbHexString: String
-        get() = argbToHex(color.alpha, color.red, color.green, color.blue)
+        get() = RGBUtil.argbToHex(color.alpha, color.red, color.green, color.blue)
 
     override val rgbHexString: String
-        get() = rgbToHex(color.red, color.green, color.blue)
+        get() = RGBUtil.rgbToHex(color.red, color.green, color.blue)
 
     companion object {
         val Unspecified = ColorRGB(0f, 0f, 0f, 0f)

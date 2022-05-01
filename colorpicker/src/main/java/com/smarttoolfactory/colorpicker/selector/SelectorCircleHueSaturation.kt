@@ -12,10 +12,10 @@ import androidx.compose.ui.input.pointer.consumeDownChange
 import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSVReversed
 import com.smarttoolfactory.colorpicker.util.calculateAngleFomLocalCoordinates
 import com.smarttoolfactory.colorpicker.util.calculateDistanceFromCenter
 import com.smarttoolfactory.colorpicker.util.calculatePositionFromAngleAndDistance
-import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSVReversed
 import com.smarttoolfactory.gesture.pointerMotionEvents
 
 /**

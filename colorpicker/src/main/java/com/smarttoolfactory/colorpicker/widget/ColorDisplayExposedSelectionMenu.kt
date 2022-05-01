@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.model.CompositeColor
-import com.smarttoolfactory.colorpicker.util.*
+import com.smarttoolfactory.extendedcolors.util.*
 
 @Composable
 fun ColorDisplayExposedSelectionMenu(compositeColor: CompositeColor, colorModel: ColorModel) {
@@ -115,7 +115,7 @@ fun ColorDisplayExposedSelectionMenu(
                     )
                 }
                 ColorModel.HSV -> {
-                    val hsvArray = colorToHSV(color)
+                    val hsvArray = ColorUtil.colorToHSV(color)
                     ColorText(
                         title = "H", value = "${hsvArray[0].round()}°",
                         modifier = Modifier.weight(1f)
@@ -135,7 +135,7 @@ fun ColorDisplayExposedSelectionMenu(
                 }
 
                 ColorModel.HSL -> {
-                    val hslArray = colorToHSL(color)
+                    val hslArray = ColorUtil.colorToHSL(color)
                     ColorText(
                         title = "H", value = "${hslArray[0].round()}°",
                         modifier = Modifier.weight(1f)

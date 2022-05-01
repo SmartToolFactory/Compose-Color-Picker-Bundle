@@ -3,7 +3,9 @@ package com.smarttoolfactory.colorpicker.slider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.smarttoolfactory.colorpicker.model.*
-import com.smarttoolfactory.colorpicker.util.*
+import com.smarttoolfactory.extendedcolors.util.HSLUtil
+import com.smarttoolfactory.extendedcolors.util.HSVUtil
+import com.smarttoolfactory.extendedcolors.util.RGBUtil
 
 /**
  *
@@ -27,11 +29,11 @@ import com.smarttoolfactory.colorpicker.util.*
  */
 @Composable
 fun CompositeSliderPanel(
-    modifier: Modifier=Modifier,
+    modifier: Modifier = Modifier,
     compositeColor: CompositeColor,
     onColorChange: (CompositeColor) -> Unit,
     inputColorModel: ColorModel,
-    outputColorModel:ColorModel,
+    outputColorModel: ColorModel,
     showAlphaSlider: Boolean = true
 ) {
 
@@ -88,7 +90,7 @@ fun convertColor(colorModel: ColorModel, compositeColor: CompositeColor): Compos
                     val saturation = compositeColor.saturation
                     val value = compositeColor.value
                     val alpha = compositeColor.alpha
-                    val hslArray = hsvToHSL(hue, saturation = saturation, value = value)
+                    val hslArray = HSVUtil.hsvToHSL(hue, saturation = saturation, value = value)
                     ColorHSL(
                         hslArray[0],
                         hslArray[1],
@@ -102,7 +104,7 @@ fun convertColor(colorModel: ColorModel, compositeColor: CompositeColor): Compos
                     val blue = compositeColor.blue
                     val alpha = compositeColor.alpha
 
-                    val rgbArray = rgbFloatToHSL(red, green, blue)
+                    val rgbArray = RGBUtil.rgbFloatToHSL(red, green, blue)
                     ColorHSL(
                         rgbArray[0],
                         rgbArray[1],
@@ -125,7 +127,7 @@ fun convertColor(colorModel: ColorModel, compositeColor: CompositeColor): Compos
                     val lightness = compositeColor.lightness
                     val alpha = compositeColor.alpha
                     val hsvArray =
-                        hslToHSV(hue = hue, saturation = saturation, lightness = lightness)
+                        HSLUtil.hslToHSV(hue = hue, saturation = saturation, lightness = lightness)
                     ColorHSV(
                         hsvArray[0],
                         hsvArray[1],
@@ -144,7 +146,7 @@ fun convertColor(colorModel: ColorModel, compositeColor: CompositeColor): Compos
                     val blue = compositeColor.blue
                     val alpha = compositeColor.alpha
 
-                    val rgbArray = rgbFloatToHSV(red, green, blue)
+                    val rgbArray = RGBUtil.rgbFloatToHSV(red, green, blue)
                     ColorHSV(
                         rgbArray[0],
                         rgbArray[1],
@@ -169,15 +171,14 @@ fun convertColor(colorModel: ColorModel, compositeColor: CompositeColor): Compos
                     val lightness = compositeColor.lightness
                     val alpha = compositeColor.alpha
 
-                    val rgbArray = hslToRGBFloat(hue = hue, saturation = saturation, lightness)
+                    val rgbArray =
+                        HSLUtil.hslToRGBFloat(hue = hue, saturation = saturation, lightness)
                     ColorRGB(
                         rgbArray[0],
                         rgbArray[1],
                         rgbArray[2],
                         alpha
                     )
-
-
                 }
                 is ColorHSV -> {
 
@@ -186,7 +187,7 @@ fun convertColor(colorModel: ColorModel, compositeColor: CompositeColor): Compos
                     val value = compositeColor.value
                     val alpha = compositeColor.alpha
 
-                    val rgbArray = hsvToRGBFloat(hue, saturation, value)
+                    val rgbArray = HSVUtil.hsvToRGBFloat(hue, saturation, value)
                     ColorRGB(
                         rgbArray[0],
                         rgbArray[1],

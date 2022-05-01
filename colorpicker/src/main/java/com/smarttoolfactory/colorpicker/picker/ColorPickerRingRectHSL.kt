@@ -13,10 +13,10 @@ import com.smarttoolfactory.colorpicker.selector.SelectorDiamondSaturationLightn
 import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationLightnessHSL
 import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
-import com.smarttoolfactory.colorpicker.util.colorToHSL
-import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
 import com.smarttoolfactory.colorpicker.widget.ColorModelChangeTabRow
+import com.smarttoolfactory.extendedcolors.util.ColorUtil
+import com.smarttoolfactory.extendedcolors.util.ColorUtil.colorToHSL
 
 /**
  * ColorPicker with [SelectorRingHue] hue selector and [SelectorRectSaturationLightnessHSL]
@@ -61,7 +61,7 @@ fun ColorPickerRingRectHSL(
     val currentColor =
         Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
 
-    onColorChange(currentColor, colorToHexAlpha(currentColor))
+    onColorChange(currentColor, ColorUtil.colorToHexAlpha(currentColor))
 
     Column(
         modifier = modifier,

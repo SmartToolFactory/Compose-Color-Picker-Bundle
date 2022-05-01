@@ -15,11 +15,11 @@ import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.ui.Grey400
 import com.smarttoolfactory.colorpicker.ui.Grey600
-import com.smarttoolfactory.colorpicker.util.colorToHSL
-import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
+import com.smarttoolfactory.extendedcolors.util.ColorUtil.colorToHexAlpha
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
 import com.smarttoolfactory.colorpicker.widget.ColorModelChangeTabRow
 import com.smarttoolfactory.colorpicker.widget.HexTextField
+import com.smarttoolfactory.extendedcolors.util.ColorUtil
 
 /**
  * ColorPicker with [SelectorRingHue] hue selector and [SelectorDiamondSaturationLightnessHSL]
@@ -55,7 +55,7 @@ fun ColorPickerRingDiamondHEX(
 
     var inputColorModel by remember { mutableStateOf(ColorModel.HSL) }
 
-    val hslArray = colorToHSL(initialColor)
+    val hslArray = ColorUtil.colorToHSL(initialColor)
 
     var hue by remember { mutableStateOf(hslArray[0]) }
     var saturation by remember { mutableStateOf(hslArray[1]) }
@@ -67,13 +67,13 @@ fun ColorPickerRingDiamondHEX(
 
     var hexString by remember {
         mutableStateOf(
-            colorToHexAlpha(
+            ColorUtil.colorToHexAlpha(
                 currentColor
             )
         )
     }
 
-    onColorChange(currentColor, colorToHexAlpha(currentColor))
+    onColorChange(currentColor, ColorUtil.colorToHexAlpha(currentColor))
 
     Column(
         modifier = modifier,
@@ -105,7 +105,7 @@ fun ColorPickerRingDiamondHEX(
                 selectionRadius = selectionRadius
             ) { hueChange ->
                 hue = hueChange
-                hexString = colorToHexAlpha(
+                hexString = ColorUtil.colorToHexAlpha(
                     Color.hsl(
                         hue = hue,
                         saturation = saturation,
@@ -125,7 +125,7 @@ fun ColorPickerRingDiamondHEX(
             ) { s, l ->
                 saturation = s
                 lightness = l
-                hexString = colorToHexAlpha(
+                hexString = ColorUtil.colorToHexAlpha(
                     Color.hsl(
                         hue = hue,
                         saturation = saturation,
@@ -160,7 +160,7 @@ fun ColorPickerRingDiamondHEX(
                     lightness = color.lightness
                     alpha = color.alpha
 
-                    hexString = colorToHexAlpha(
+                    hexString = ColorUtil.colorToHexAlpha(
                         Color.hsl(
                             hue = hue,
                             saturation = saturation,
@@ -192,7 +192,7 @@ fun ColorPickerRingDiamondHEX(
                 hexString = it
             },
             onColorChange = {
-                val hslArrayNew = colorToHSL(it)
+                val hslArrayNew = ColorUtil.colorToHSL(it)
                 hue = hslArrayNew[0]
                 saturation = hslArrayNew[1]
                 lightness = hslArrayNew[2]

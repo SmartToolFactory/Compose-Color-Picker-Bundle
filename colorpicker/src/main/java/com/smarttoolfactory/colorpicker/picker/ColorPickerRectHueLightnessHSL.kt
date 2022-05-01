@@ -13,9 +13,8 @@ import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.selector.SelectorRectHueLightnessHSL
 import com.smarttoolfactory.colorpicker.slider.SliderCircleColorDisplaySaturationHSL
-import com.smarttoolfactory.colorpicker.util.colorToHSL
-import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayExposedSelectionMenu
+import com.smarttoolfactory.extendedcolors.util.ColorUtil
 
 @Composable
 fun ColorPickerRectHueLightnessHSL(
@@ -27,7 +26,7 @@ fun ColorPickerRectHueLightnessHSL(
 
     var colorModel by remember { mutableStateOf(ColorModel.HSL) }
 
-    val hslArray = colorToHSL(initialColor)
+    val hslArray = ColorUtil.colorToHSL(initialColor)
 
     var hue by remember { mutableStateOf(hslArray[0]) }
     var saturation by remember { mutableStateOf(hslArray[1]) }
@@ -38,7 +37,7 @@ fun ColorPickerRectHueLightnessHSL(
     val currentColor =
         Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = alpha)
 
-    onColorChange(currentColor, colorToHexAlpha(currentColor))
+    onColorChange(currentColor, ColorUtil.colorToHexAlpha(currentColor))
 
     Column(
         modifier = modifier,

@@ -12,10 +12,11 @@ import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationValueHSV
 import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
-import com.smarttoolfactory.colorpicker.util.colorToHSV
-import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
+
 import com.smarttoolfactory.colorpicker.widget.ColorDisplayRoundedRect
 import com.smarttoolfactory.colorpicker.widget.ColorModelChangeTabRow
+import com.smarttoolfactory.extendedcolors.util.ColorUtil
+import com.smarttoolfactory.extendedcolors.util.ColorUtil.colorToHSV
 
 /**
  * ColorPicker with [SelectorRingHue] hue selector and [SelectorRectSaturationValueHSV]
@@ -60,7 +61,7 @@ fun ColorPickerRingRectHSV(
     val currentColor =
         Color.hsv(hue = hue, saturation = saturation, value = value, alpha = alpha)
 
-    onColorChange(currentColor, colorToHexAlpha(currentColor))
+    onColorChange(currentColor, ColorUtil.colorToHexAlpha(currentColor))
 
     Column(
         modifier = modifier,

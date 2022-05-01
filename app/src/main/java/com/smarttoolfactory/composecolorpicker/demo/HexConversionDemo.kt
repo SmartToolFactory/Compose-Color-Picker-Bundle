@@ -12,9 +12,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.colorpicker.util.colorToHexAlpha
 import com.smarttoolfactory.colorpicker.widget.HexTextField
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
+import com.smarttoolfactory.extendedcolors.util.ColorUtil
 
 @Composable
 fun HexConversionDemo() {
@@ -33,7 +33,7 @@ fun HexConversionDemo() {
             )
         }
 
-        var hexString by remember { mutableStateOf(colorToHexAlpha(color)) }
+        var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
 
         Text(
             "HEX: $hexString",
