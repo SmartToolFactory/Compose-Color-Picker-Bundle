@@ -10,8 +10,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
-import androidx.compose.ui.input.pointer.consumeDownChange
-import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -74,7 +72,7 @@ fun SelectorRingHue(
         val coerced = hue.coerceIn(0f, 360f)
 
         /**
-         * Circle selector radius for setting [angle] which sets hue
+         * Circle selector radius for setting **angle** which sets hue
          */
         val selectorRadius =
             if (selectionRadius == Dp.Unspecified)
@@ -93,7 +91,7 @@ fun SelectorRingHue(
                     if (isTouched) {
                         angle = calculateAngleFomLocalCoordinates(center, position)
                         onChange(angle)
-                        it.consumeDownChange()
+                        it.consume()
                     }
 
                 },
@@ -102,13 +100,13 @@ fun SelectorRingHue(
                         val position = it.position
                         angle = calculateAngleFomLocalCoordinates(center, position)
                         onChange(angle)
-                        it.consumePositionChange()
+                        it.consume()
                     }
 
                 },
                 onUp = {
                     if (isTouched) {
-                        it.consumeDownChange()
+                        it.consume()
                     }
                     isTouched = false
 

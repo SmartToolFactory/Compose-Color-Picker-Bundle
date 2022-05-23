@@ -11,7 +11,7 @@ import kotlin.math.*
  * @param amount e closed unit interval [0, 1]
  */
 fun lerp(start: Float, end: Float, amount: Float): Float {
-    return (1 - amount) * start + amount * (end - start)
+    return (1 - amount) * start + amount * end
 }
 
 /**

@@ -7,8 +7,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.input.pointer.consumeDownChange
-import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import com.smarttoolfactory.colorpicker.ui.brush.transparentToBlackVerticalGradient
@@ -256,7 +254,7 @@ private fun SelectorRect(
                         (1 - (position.y / height)).coerceIn(0f, 1f)
                     }
                     onChange(hueChange, propertyChange)
-                    it.consumeDownChange()
+                    it.consume()
 
                 },
                 onMove = {
@@ -268,7 +266,7 @@ private fun SelectorRect(
                         (1 - (position.y / height)).coerceIn(0f, 1f)
                     }
                     onChange(hueChange, propertyChange)
-                    it.consumePositionChange()
+                    it.consume()
                 },
                 delayAfterDownInMillis = 20
             )

@@ -43,14 +43,15 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    namespace 'com.smarttoolfactory.composecolorpicker'
 }
 
 dependencies {
 
     implementation project(':colorpicker')
 
-    implementation 'com.github.SmartToolFactory:Compose-Colorful-Sliders:1.0.1'
-    implementation 'com.github.SmartToolFactory:Compose-Extended-Gestures:1.0.0'
+    implementation 'com.github.SmartToolFactory:Compose-Colorful-Sliders:1.0.2'
+    implementation 'com.github.SmartToolFactory:Compose-Extended-Gestures:1.2.0'
     implementation 'com.github.SmartToolFactory:Compose-Extended-Colors:1.0.0-alpha07'
 
     // Jetpack Compose

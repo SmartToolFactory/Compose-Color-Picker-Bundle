@@ -40,7 +40,6 @@ class MainActivity : ComponentActivity() {
 }
 
 @ExperimentalPagerApi
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun HomeContent() {
 
@@ -82,7 +81,7 @@ private fun HomeContent() {
             2 -> GradientSelectionDemo()
             3 -> HexConversionDemo()
             4 -> SaturationSelectorDemo()
-           5 -> HSVHSLGradientDemo()
+            5 -> HSVHSLGradientDemo()
             else -> ColorfulSliderDemo()
         }
     }

@@ -8,8 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.consumeDownChange
-import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSVReversed
@@ -80,7 +78,7 @@ fun SelectorCircleHueSaturationHSV(
                         val hueChange = calculateAngleFomLocalCoordinates(center, position)
                         val saturationChange = (distance / radius).coerceIn(0f, 1f)
                         onChange(hueChange, saturationChange)
-                        it.consumeDownChange()
+                        it.consume()
                     }
 
                 },
@@ -94,13 +92,13 @@ fun SelectorCircleHueSaturationHSV(
 
                         val saturationChange = (distance / radius).coerceIn(0f, 1f)
                         onChange(hueChange, saturationChange)
-                        it.consumePositionChange()
+                        it.consume()
                     }
 
                 },
                 onUp = {
                     if (isTouched) {
-                        it.consumeDownChange()
+                        it.consume()
                     }
                     isTouched = false
 

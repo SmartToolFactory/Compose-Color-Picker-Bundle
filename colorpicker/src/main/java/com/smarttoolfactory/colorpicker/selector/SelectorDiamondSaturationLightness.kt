@@ -15,8 +15,6 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.input.pointer.consumeDownChange
-import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
@@ -249,7 +247,7 @@ private fun SelectorDiamond(
                         // lightness increases while going up but android drawing system is opposite
                         onChange(posXInPercent, 1 - posYInPercent)
                     }
-                    it.consumeDownChange()
+                    it.consume()
 
                 },
                 onMove = {
@@ -266,11 +264,11 @@ private fun SelectorDiamond(
                         // lightness increases while going up but android drawing system is opposite
                         onChange(posXInPercent, 1 - posYInPercent)
                     }
-                    it.consumePositionChange()
+                    it.consume()
                 },
                 onUp = {
                     isTouched = false
-                    it.consumeDownChange()
+                    it.consume()
                 }
             )
 

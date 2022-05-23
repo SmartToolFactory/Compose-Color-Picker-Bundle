@@ -8,8 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.input.pointer.consumeDownChange
-import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import com.smarttoolfactory.colorpicker.model.ColorModel
@@ -139,7 +137,7 @@ private fun SelectorRect(
                     val saturationChange = (position.x / width).coerceIn(0f, 1f)
                     val valueChange = (1 - (position.y / height)).coerceIn(0f, 1f)
                     onChange(saturationChange, valueChange)
-                    it.consumeDownChange()
+                    it.consume()
 
                 },
                 onMove = {
@@ -147,7 +145,7 @@ private fun SelectorRect(
                     val saturationChange = (position.x / width).coerceIn(0f, 1f)
                     val valueChange = (1 - (position.y / height)).coerceIn(0f, 1f)
                     onChange(saturationChange, valueChange)
-                    it.consumePositionChange()
+                    it.consume()
                 },
                 delayAfterDownInMillis = 20
             )
