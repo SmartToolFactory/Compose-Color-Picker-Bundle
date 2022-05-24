@@ -535,3 +535,65 @@ fun ColorPickerHLRectHSLDialog(
         }
     }
 }
+
+@Composable
+fun ColorPickerM2Dialog(
+    modifier: Modifier = Modifier,
+    initialColor: Color,
+    dialogBackgroundColor: Color = Color.White,
+    dialogShape: Shape = RoundedCornerShape(5.dp),
+    onDismiss: (Color, String) -> Unit
+) {
+
+    var color by remember { mutableStateOf(initialColor.copy()) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
+
+    Dialog(
+        onDismissRequest = {
+            onDismiss(color, hexString)
+        }
+    ) {
+        Surface(
+            modifier = modifier,
+            color = dialogBackgroundColor,
+            shape = dialogShape,
+            elevation = 2.dp
+        ) {
+            M2ColorPicker { colorChange ->
+                color = colorChange
+                hexString = ColorUtil.colorToHex(color)
+            }
+        }
+    }
+}
+
+@Composable
+fun ColorPickerM3Dialog(
+    modifier: Modifier = Modifier,
+    initialColor: Color,
+    dialogBackgroundColor: Color = Color.White,
+    dialogShape: Shape = RoundedCornerShape(5.dp),
+    onDismiss: (Color, String) -> Unit
+) {
+
+    var color by remember { mutableStateOf(initialColor.copy()) }
+    var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
+
+    Dialog(
+        onDismissRequest = {
+            onDismiss(color, hexString)
+        }
+    ) {
+        Surface(
+            modifier = modifier,
+            color = dialogBackgroundColor,
+            shape = dialogShape,
+            elevation = 2.dp
+        ) {
+            M3ColorPicker { colorChange ->
+                color = colorChange
+                hexString = ColorUtil.colorToHex(color)
+            }
+        }
+    }
+}

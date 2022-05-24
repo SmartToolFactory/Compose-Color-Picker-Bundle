@@ -216,6 +216,30 @@ fun ColorPickerDemo() {
                 hexString = hexChange
             }
         )
+
+        DialogMaterial2(
+            modifier = buttonModifier,
+            color = color,
+            onPreviousColorChange = {
+                previousColor = it
+            },
+            onCurrentColorChange = { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
+            }
+        )
+
+        DialogMaterial3(
+            modifier = buttonModifier,
+            color = color,
+            onPreviousColorChange = {
+                previousColor = it
+            },
+            onCurrentColorChange = { colorChange, hexChange ->
+                color = colorChange
+                hexString = hexChange
+            }
+        )
     }
 }
 
@@ -584,6 +608,68 @@ private fun DialogRectHueLightnessHSL(
         onPreviousColorChange(color.copy())
 
         ColorPickerHLRectHSLDialog(
+            initialColor = color
+        ) { colorChange, hexChange ->
+            showDialog = !showDialog
+            onCurrentColorChange(colorChange, hexChange)
+        }
+    }
+}
+
+@Composable
+private fun DialogMaterial2(
+    modifier: Modifier,
+    color: Color,
+    onPreviousColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color, String) -> Unit
+) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+    ) {
+        Text(text = "Material Design2 Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(color.copy())
+
+        ColorPickerM2Dialog(
+            initialColor = color
+        ) { colorChange, hexChange ->
+            showDialog = !showDialog
+            onCurrentColorChange(colorChange, hexChange)
+        }
+    }
+}
+
+@Composable
+private fun DialogMaterial3(
+    modifier: Modifier,
+    color: Color,
+    onPreviousColorChange: (Color) -> Unit,
+    onCurrentColorChange: (Color, String) -> Unit
+) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    OutlinedButton(
+        modifier = modifier,
+        onClick = { showDialog = !showDialog },
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.Transparent
+        )
+    ) {
+        Text(text = "Material Design2 Dialog")
+    }
+
+    if (showDialog) {
+        onPreviousColorChange(color.copy())
+
+        ColorPickerM3Dialog(
             initialColor = color
         ) { colorChange, hexChange ->
             showDialog = !showDialog
