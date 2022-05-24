@@ -663,7 +663,7 @@ private fun DialogMaterial3(
             backgroundColor = Color.Transparent
         )
     ) {
-        Text(text = "Material Design2 Dialog")
+        Text(text = "Material Design3 Dialog")
     }
 
     if (showDialog) {

@@ -13,6 +13,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.widget.HexTextField
+import com.smarttoolfactory.colorpicker.widget.HexTextFieldWithClipboard
+import com.smarttoolfactory.colorpicker.widget.HexTextFieldWithLabelClipboard
 import com.smarttoolfactory.composecolorpicker.ui.theme.backgroundColor
 import com.smarttoolfactory.extendedcolors.util.ColorUtil
 
@@ -27,29 +29,75 @@ fun HexConversionDemo() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        var color by remember {
-            mutableStateOf(
-                Color.hsl(0f, 0.5f, 0.5f)
-            )
-        }
+        var color1 by remember { mutableStateOf(Color.hsl(0f, 0.5f, 0.5f)) }
+        var hexString1 by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color1)) }
 
-        var hexString by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color)) }
+        var color2 by remember { mutableStateOf(Color.hsl(0f, 0.5f, 0.5f)) }
+        var hexString2 by remember { mutableStateOf(ColorUtil.colorToHexAlpha(color2)) }
+
+        var color3 by remember { mutableStateOf(Color.hsl(0f, 0.5f, 0.5f)) }
+        var hexString3 by remember { mutableStateOf(ColorUtil.colorToHex(color3)) }
+
+        Spacer(modifier = Modifier.height(50.dp))
 
         Text(
-            "HEX: $hexString",
-            color = color,
+            "HEX: $hexString1",
+            color = color1,
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp
         )
-        Spacer(modifier = Modifier.height(16.dp))
+
+        Spacer(modifier = Modifier.height(10.dp))
 
         HexTextField(
-            hexString = hexString,
+            hexString = hexString1,
             useAlpha = true,
             onTextChange = {
-                hexString = it
-            }, onColorChange = {
-                color = it
+                hexString1 = it
+            },
+            onColorChange = {
+                color1 = it
+            }
+        )
+
+        Spacer(modifier = Modifier.height(30.dp))
+        Text(
+            "HEX: $hexString2",
+            color = color2,
+            fontWeight = FontWeight.Bold,
+            fontSize = 30.sp
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        HexTextFieldWithClipboard(
+            hexString = hexString2,
+            useAlpha = true,
+            onTextChange = {
+                hexString2 = it
+            },
+            onColorChange = {
+                color2 = it
+            }
+        )
+
+        Spacer(modifier = Modifier.height(30.dp))
+        Text(
+            "HEX: $hexString3",
+            color = color3,
+            fontWeight = FontWeight.Bold,
+            fontSize = 30.sp
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        HexTextFieldWithLabelClipboard(
+            hexString = hexString3,
+            onTextChange = {
+                hexString3 = it
+            },
+            onColorChange = {
+                color3 = it
             }
         )
     }

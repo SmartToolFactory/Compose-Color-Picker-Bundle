@@ -9,15 +9,15 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.ui.Grey400
 import com.smarttoolfactory.colorpicker.ui.Red400
+import com.smarttoolfactory.colorpicker.util.HexVisualTransformation
+import com.smarttoolfactory.colorpicker.util.hexRegex
+import com.smarttoolfactory.colorpicker.util.hexRegexSingleChar
+import com.smarttoolfactory.colorpicker.util.hexWithAlphaRegex
 import com.smarttoolfactory.extendedcolors.util.HexUtil
 
 
@@ -64,13 +64,13 @@ fun HexTextField(
     onTextChange: (String) -> Unit,
     onColorChange: (Color) -> Unit
 ) {
-    val hex = if (useAlpha) hexWithAlphaRegex else hexRegex
+    val currentRegex = if (useAlpha) hexWithAlphaRegex else hexRegex
     OutlinedTextField(
         modifier = modifier
             .widthIn(min = 80.dp)
             .drawBehind {
                 drawLine(
-                    if (hex.matches(hexString)) Grey400 else Red400,
+                    if (currentRegex.matches(hexString)) Grey400 else Red400,
                     start = Offset(0f, size.height),
                     end = Offset(size.width, size.height),
                     strokeWidth = 5f
@@ -96,7 +96,7 @@ fun HexTextField(
                 if (validHex) {
                     onTextChange("#$it")
                     // Hex String with 6 or 8 chars matches a Color
-                    if (hex.matches(it)) {
+                    if (currentRegex.matches(it)) {
                         onColorChange(HexUtil.hexToColor(it))
                     }
                 }
@@ -104,67 +104,3 @@ fun HexTextField(
         }
     )
 }
-
-private class HexVisualTransformation(private val useAlpha: Boolean) : VisualTransformation {
-
-    override fun filter(text: AnnotatedString): TransformedText {
-
-        val limit = if (useAlpha) 8 else 6
-
-        val trimmed =
-            if (text.text.length >= limit) text.text.substring(0 until limit) else text.text
-
-        val output = if (trimmed.isEmpty()) {
-            trimmed
-        } else {
-            "#${trimmed.uppercase()}"
-        }
-
-        return TransformedText(
-            AnnotatedString(output),
-            if (useAlpha) hexAlphaOffsetMapping else hexOffsetMapping
-        )
-    }
-
-    private val hexOffsetMapping = object : OffsetMapping {
-
-        override fun originalToTransformed(offset: Int): Int {
-
-            // when empty return only 1 char for #
-            if (offset == 0) return offset
-            if (offset <= 5) return offset + 1
-            return 7
-        }
-
-        override fun transformedToOriginal(offset: Int): Int {
-            if (offset == 0) return offset
-            // #ABCABC
-            if (offset <= 6) return offset - 1
-            return 6
-        }
-    }
-
-    private val hexAlphaOffsetMapping = object : OffsetMapping {
-
-        override fun originalToTransformed(offset: Int): Int {
-
-            // when empty return only 1 char for #
-            if (offset == 0) return offset
-            if (offset <= 7) return offset + 1
-            return 9
-        }
-
-        override fun transformedToOriginal(offset: Int): Int {
-            if (offset == 0) return offset
-            // #ffABCABC
-            if (offset <= 8) return offset - 1
-            return 8
-        }
-    }
-}
-
-// Regex for checking if this string is a 6 char hex or 8 char hex
-val hexWithAlphaRegex = "^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})\$".toRegex()
-val hexRegex = "^#?([0-9a-fA-F]{6})\$".toRegex()
-// Check only on char if it's in range of 0-9, a-f, A-F
-val hexRegexSingleChar = "[a-fA-F0-9]".toRegex()
