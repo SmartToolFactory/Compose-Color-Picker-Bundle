@@ -33,7 +33,7 @@ allprojects {
 
 ```
 dependencies {
-    implementation 'com.github.SmartToolFactory:Compose-Image:<version>'
+    implementation 'com.github.SmartToolFactory:Compose-Color-Picker-Bundle:<version>'
 }
 ```
 
