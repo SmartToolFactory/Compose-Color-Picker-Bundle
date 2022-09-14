@@ -13,11 +13,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.ui.brush.*
-import com.smarttoolfactory.extendedcolors.util.roundToTwoDigits
 import com.smarttoolfactory.colorpicker.widget.drawChecker
-import com.smarttoolfactory.slider.SliderBrushColor
+import com.smarttoolfactory.extendedcolors.util.roundToTwoDigits
 import com.smarttoolfactory.slider.ColorfulSlider
 import com.smarttoolfactory.slider.MaterialSliderDefaults
+import com.smarttoolfactory.slider.SliderBrushColor
 
 /*
     HSV Sliders
@@ -49,7 +49,8 @@ fun SliderHueHSV(
         value = hue,
         valueRange = 0f..360f,
         onValueChange = onValueChange,
-        brush = sliderHueSelectionHSLGradient
+        brush = sliderHueSelectionHSLGradient,
+        drawChecker = true
     )
 }
 
@@ -77,7 +78,8 @@ fun SliderSaturationHSV(
         modifier = modifier,
         value = saturation,
         onValueChange = onValueChange,
-        brush = sliderHueSelectionHSLGradient
+        brush = sliderHueSelectionHSLGradient,
+        drawChecker = true
     )
 }
 
@@ -102,7 +104,8 @@ fun SliderValueHSV(
         modifier = modifier,
         value = value,
         onValueChange = onValueChange,
-        brush = sliderValueGradient
+        brush = sliderValueGradient,
+        drawChecker = true
     )
 }
 
@@ -160,7 +163,8 @@ fun SliderHueHSL(
         value = hue,
         valueRange = 0f..360f,
         onValueChange = onValueChange,
-        brush = sliderHueSelectionHSLGradient
+        brush = sliderHueSelectionHSLGradient,
+        drawChecker = true
     )
 }
 
@@ -189,7 +193,8 @@ fun SliderSaturationHSL(
         modifier = modifier,
         value = saturation,
         onValueChange = onValueChange,
-        brush = sliderHueSelectionHSLGradient
+        brush = sliderHueSelectionHSLGradient,
+        drawChecker = true
     )
 }
 
@@ -216,7 +221,8 @@ fun SliderLightnessHSL(
         modifier = modifier,
         value = lightness,
         onValueChange = onValueChange,
-        brush = sliderLightnessGradient
+        brush = sliderLightnessGradient,
+        drawChecker = true
     )
 }
 
@@ -359,12 +365,16 @@ fun CheckeredColorfulSlider(
     brush: Brush,
     drawChecker: Boolean = false
 ) {
-    BoxWithConstraints(modifier = modifier, contentAlignment = Alignment.CenterStart) {
+    BoxWithConstraints(
+        modifier = modifier,
+        contentAlignment = Alignment.CenterStart
+    ) {
+
         if (drawChecker) {
             Box(
                 modifier = Modifier
                     .width(maxWidth)
-                    .height(12.dp)
+                    .height(11.dp)
                     .drawChecker(shape = RoundedCornerShape(6.dp))
             )
         }
