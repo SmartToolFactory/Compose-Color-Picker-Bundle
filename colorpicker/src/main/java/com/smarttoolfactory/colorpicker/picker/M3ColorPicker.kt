@@ -112,7 +112,7 @@ fun M3ColorPicker(onColorChange: (Color) -> Unit) {
 
         // Color Swatch Selection
         ColorSelectionGrid(
-            columns = GridCells.Fixed(8),
+            columns = GridCells.Fixed(7),
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -150,7 +150,7 @@ fun M3ColorPicker(onColorChange: (Color) -> Unit) {
         // Primary/Accent Color Selection
         ColorSelectionGrid(
             modifier = Modifier.fillMaxWidth(if (primaryAccentSelection == 0) 1f else .5f),
-            columns = GridCells.Fixed(if (primaryAccentSelection == 0) 8 else 4),
+            columns = GridCells.Fixed(if (primaryAccentSelection == 0) 6 else 4),
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -187,7 +187,7 @@ fun M3ColorPicker(onColorChange: (Color) -> Unit) {
 
         // M3 Tone Selection
         ColorSelectionGrid(
-            columns = GridCells.Fixed(8),
+            columns = GridCells.Fixed(7),
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -327,34 +327,6 @@ fun ColorDisplayWithTitle(
             Icon(
                 modifier = modifier
                     .background(tint.copy(alpha = .5f))
-                    .padding(4.dp),
-                imageVector = Icons.Default.Check,
-                contentDescription = "check",
-                tint = Color.Green
-            )
-        }
-    }
-}
-
-@Composable
-fun ColorDisplayWithIcon(
-    modifier: Modifier,
-    selected: Boolean,
-    contentColor: Color = Color.Unspecified,
-    backgroundColor: Color
-) {
-    Box(
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = modifier
-                .background(backgroundColor)
-        )
-
-        if (selected) {
-            Icon(
-                modifier = modifier
-                    .background(contentColor.copy(alpha = .5f))
                     .padding(4.dp),
                 imageVector = Icons.Default.Check,
                 contentDescription = "check",
