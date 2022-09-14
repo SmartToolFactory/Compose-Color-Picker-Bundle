@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import com.smarttoolfactory.colorpicker.model.ColorModel
@@ -16,7 +17,7 @@ import com.smarttoolfactory.colorpicker.ui.brush.saturationHSLGradient
 import com.smarttoolfactory.colorpicker.ui.brush.saturationHSVGradient
 import com.smarttoolfactory.colorpicker.ui.brush.valueGradient
 import com.smarttoolfactory.colorpicker.util.drawBlendingRectGradient
-import com.smarttoolfactory.gesture.pointerMotionEvents
+import com.smarttoolfactory.gesture.detectMotionEvents
 
 /**
  * Rectangle Saturation and Lightness selector for
@@ -131,24 +132,26 @@ private fun SelectorRect(
 
         val canvasModifier = Modifier
             .fillMaxSize()
-            .pointerMotionEvents(
-                onDown = {
-                    val position = it.position
-                    val saturationChange = (position.x / width).coerceIn(0f, 1f)
-                    val valueChange = (1 - (position.y / height)).coerceIn(0f, 1f)
-                    onChange(saturationChange, valueChange)
-                    it.consume()
+            .pointerInput(Unit) {
+                detectMotionEvents(
+                    onDown = {
+                        val position = it.position
+                        val saturationChange = (position.x / width).coerceIn(0f, 1f)
+                        val valueChange = (1 - (position.y / height)).coerceIn(0f, 1f)
+                        onChange(saturationChange, valueChange)
+                        it.consume()
 
-                },
-                onMove = {
-                    val position = it.position
-                    val saturationChange = (position.x / width).coerceIn(0f, 1f)
-                    val valueChange = (1 - (position.y / height)).coerceIn(0f, 1f)
-                    onChange(saturationChange, valueChange)
-                    it.consume()
-                },
-                delayAfterDownInMillis = 20
-            )
+                    },
+                    onMove = {
+                        val position = it.position
+                        val saturationChange = (position.x / width).coerceIn(0f, 1f)
+                        val valueChange = (1 - (position.y / height)).coerceIn(0f, 1f)
+                        onChange(saturationChange, valueChange)
+                        it.consume()
+                    },
+                    delayAfterDownInMillis = 20
+                )
+            }
 
         SelectorRectImpl(
             modifier = canvasModifier,

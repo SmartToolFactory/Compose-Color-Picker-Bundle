@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import com.smarttoolfactory.colorpicker.ui.brush.transparentToBlackVerticalGradient
@@ -15,7 +16,7 @@ import com.smarttoolfactory.colorpicker.ui.brush.transparentToWhiteVerticalGradi
 import com.smarttoolfactory.colorpicker.ui.brush.whiteToTransparentToBlackVerticalGradient
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSL
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSV
-import com.smarttoolfactory.gesture.pointerMotionEvents
+import com.smarttoolfactory.gesture.detectMotionEvents
 
 /**
  * Rectangle Hue and Value selector for
@@ -244,32 +245,34 @@ private fun SelectorRect(
             else width.coerceAtMost(height) * .04f
 
         val canvasModifier = Modifier
-            .pointerMotionEvents(
-                onDown = {
-                    val position = it.position
-                    val hueChange = (position.x / width).coerceIn(0f, 1f) * 360f
-                    val propertyChange = if (selectorType == SelectorType.HSWithHSV) {
-                        (position.y / height).coerceIn(0f, 1f)
-                    } else {
-                        (1 - (position.y / height)).coerceIn(0f, 1f)
-                    }
-                    onChange(hueChange, propertyChange)
-                    it.consume()
+            .pointerInput(Unit){
+                detectMotionEvents(
+                    onDown = {
+                        val position = it.position
+                        val hueChange = (position.x / width).coerceIn(0f, 1f) * 360f
+                        val propertyChange = if (selectorType == SelectorType.HSWithHSV) {
+                            (position.y / height).coerceIn(0f, 1f)
+                        } else {
+                            (1 - (position.y / height)).coerceIn(0f, 1f)
+                        }
+                        onChange(hueChange, propertyChange)
+                        it.consume()
 
-                },
-                onMove = {
-                    val position = it.position
-                    val hueChange = (position.x / width).coerceIn(0f, 1f) * 360f
-                    val propertyChange = if (selectorType == SelectorType.HSWithHSV) {
-                        (position.y / height).coerceIn(0f, 1f)
-                    } else {
-                        (1 - (position.y / height)).coerceIn(0f, 1f)
-                    }
-                    onChange(hueChange, propertyChange)
-                    it.consume()
-                },
-                delayAfterDownInMillis = 20
-            )
+                    },
+                    onMove = {
+                        val position = it.position
+                        val hueChange = (position.x / width).coerceIn(0f, 1f) * 360f
+                        val propertyChange = if (selectorType == SelectorType.HSWithHSV) {
+                            (position.y / height).coerceIn(0f, 1f)
+                        } else {
+                            (1 - (position.y / height)).coerceIn(0f, 1f)
+                        }
+                        onChange(hueChange, propertyChange)
+                        it.consume()
+                    },
+                    delayAfterDownInMillis = 20
+                )
+            }
 
         SelectorRectImpl(
             modifier = canvasModifier,

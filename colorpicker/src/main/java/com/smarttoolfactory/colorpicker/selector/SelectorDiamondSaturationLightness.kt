@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
@@ -22,7 +23,7 @@ import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.ui.GradientAngle
 import com.smarttoolfactory.colorpicker.ui.GradientOffset
 import com.smarttoolfactory.colorpicker.util.drawIntoLayer
-import com.smarttoolfactory.gesture.pointerMotionEvents
+import com.smarttoolfactory.gesture.detectMotionEvents
 
 
 /**
@@ -226,51 +227,53 @@ private fun SelectorDiamond(
         var isTouched by remember { mutableStateOf(false) }
 
         val canvasModifier = Modifier
-            .pointerMotionEvents(
-                onDown = {
-                    val position = it.position
-                    val posX = position.x
-                    val posY = position.y
-
-                    // Horizontal range for keeping x position in diamond bounds
-                    val range = getRangeForPositionInDiamond(length, posY)
-                    val start = range.start - selectionRadius
-                    val end = range.endInclusive + selectionRadius
-
-                    isTouched = posX in start..end
-                    if (isTouched) {
-
-                        val posXInPercent = (posX / length).coerceIn(0f, 1f)
-                        val posYInPercent = (posY / length).coerceIn(0f, 1f)
-
-                        // Send x position as saturation and reverse of y position as lightness
-                        // lightness increases while going up but android drawing system is opposite
-                        onChange(posXInPercent, 1 - posYInPercent)
-                    }
-                    it.consume()
-
-                },
-                onMove = {
-                    if (isTouched) {
-
+            .pointerInput(Unit) {
+                detectMotionEvents(
+                    onDown = {
                         val position = it.position
-                        val posX = position.x.coerceIn(0f, length)
-                        val posY = position.y.coerceIn(0f, length)
+                        val posX = position.x
+                        val posY = position.y
 
-                        val posXInPercent = (posX / length).coerceIn(0f, 1f)
-                        val posYInPercent = (posY / length).coerceIn(0f, 1f)
+                        // Horizontal range for keeping x position in diamond bounds
+                        val range = getRangeForPositionInDiamond(length, posY)
+                        val start = range.start - selectionRadius
+                        val end = range.endInclusive + selectionRadius
 
-                        // Send x position as saturation and reverse of y position as lightness
-                        // lightness increases while going up but android drawing system is opposite
-                        onChange(posXInPercent, 1 - posYInPercent)
+                        isTouched = posX in start..end
+                        if (isTouched) {
+
+                            val posXInPercent = (posX / length).coerceIn(0f, 1f)
+                            val posYInPercent = (posY / length).coerceIn(0f, 1f)
+
+                            // Send x position as saturation and reverse of y position as lightness
+                            // lightness increases while going up but android drawing system is opposite
+                            onChange(posXInPercent, 1 - posYInPercent)
+                        }
+                        it.consume()
+
+                    },
+                    onMove = {
+                        if (isTouched) {
+
+                            val position = it.position
+                            val posX = position.x.coerceIn(0f, length)
+                            val posY = position.y.coerceIn(0f, length)
+
+                            val posXInPercent = (posX / length).coerceIn(0f, 1f)
+                            val posYInPercent = (posY / length).coerceIn(0f, 1f)
+
+                            // Send x position as saturation and reverse of y position as lightness
+                            // lightness increases while going up but android drawing system is opposite
+                            onChange(posXInPercent, 1 - posYInPercent)
+                        }
+                        it.consume()
+                    },
+                    onUp = {
+                        isTouched = false
+                        it.consume()
                     }
-                    it.consume()
-                },
-                onUp = {
-                    isTouched = false
-                    it.consume()
-                }
-            )
+                )
+            }
 
         SelectorDiamondImpl(
             modifier = canvasModifier,

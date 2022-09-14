@@ -2,7 +2,8 @@ package com.smarttoolfactory.colorpicker.selector
 
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -10,14 +11,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
-import androidx.compose.ui.layout.*
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSVReversed
 import com.smarttoolfactory.colorpicker.util.calculateAngleFomLocalCoordinates
 import com.smarttoolfactory.colorpicker.util.calculateDistanceFromCenter
-import com.smarttoolfactory.gesture.pointerMotionEvents
+import com.smarttoolfactory.gesture.detectMotionEvents
 
 /**
  * Hue selector Ring that selects hue based on rotation of circle selector.
@@ -80,39 +81,41 @@ fun SelectorRingHue(
             else selectionRadius.value * density
 
         val canvasModifier = Modifier
-            .pointerMotionEvents(
-                onDown = {
-                    val position = it.position
-                    // Distance from center to touch point
-                    val distance = calculateDistanceFromCenter(center, position)
-
-                    // if distance is between inner and outer radius then we touched valid area
-                    isTouched = (distance in radiusInner..radiusOuter)
-                    if (isTouched) {
-                        angle = calculateAngleFomLocalCoordinates(center, position)
-                        onChange(angle)
-                        it.consume()
-                    }
-
-                },
-                onMove = {
-                    if (isTouched) {
+            .pointerInput(Unit) {
+                detectMotionEvents(
+                    onDown = {
                         val position = it.position
-                        angle = calculateAngleFomLocalCoordinates(center, position)
-                        onChange(angle)
-                        it.consume()
-                    }
+                        // Distance from center to touch point
+                        val distance = calculateDistanceFromCenter(center, position)
 
-                },
-                onUp = {
-                    if (isTouched) {
-                        it.consume()
-                    }
-                    isTouched = false
+                        // if distance is between inner and outer radius then we touched valid area
+                        isTouched = (distance in radiusInner..radiusOuter)
+                        if (isTouched) {
+                            angle = calculateAngleFomLocalCoordinates(center, position)
+                            onChange(angle)
+                            it.consume()
+                        }
 
-                },
-                delayAfterDownInMillis = 20
-            )
+                    },
+                    onMove = {
+                        if (isTouched) {
+                            val position = it.position
+                            angle = calculateAngleFomLocalCoordinates(center, position)
+                            onChange(angle)
+                            it.consume()
+                        }
+
+                    },
+                    onUp = {
+                        if (isTouched) {
+                            it.consume()
+                        }
+                        isTouched = false
+
+                    },
+                    delayAfterDownInMillis = 20
+                )
+            }
 
         HueSelectorRingImpl(
             modifier = canvasModifier,

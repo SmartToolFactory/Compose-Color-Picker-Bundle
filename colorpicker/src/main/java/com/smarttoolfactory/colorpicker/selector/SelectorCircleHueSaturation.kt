@@ -8,13 +8,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSVReversed
 import com.smarttoolfactory.colorpicker.util.calculateAngleFomLocalCoordinates
 import com.smarttoolfactory.colorpicker.util.calculateDistanceFromCenter
 import com.smarttoolfactory.colorpicker.util.calculatePositionFromAngleAndDistance
-import com.smarttoolfactory.gesture.pointerMotionEvents
+import com.smarttoolfactory.gesture.detectMotionEvents
 
 /**
  * Circle Hue and Saturation picker for
@@ -63,48 +64,50 @@ fun SelectorCircleHueSaturationHSV(
 
 
         val canvasModifier = Modifier
-            .pointerMotionEvents(
-                onDown = {
-                    val position = it.position
-
-                    // Distance from center to touch point
-                    val distance =
-                        calculateDistanceFromCenter(center, position).coerceAtMost(radius)
-
-                    // if distance is between inner and outer radius then we touched valid area
-                    isTouched = (distance < radius)
-
-                    if (isTouched) {
-                        val hueChange = calculateAngleFomLocalCoordinates(center, position)
-                        val saturationChange = (distance / radius).coerceIn(0f, 1f)
-                        onChange(hueChange, saturationChange)
-                        it.consume()
-                    }
-
-                },
-                onMove = {
-                    if (isTouched) {
-
+            .pointerInput(Unit) {
+                detectMotionEvents(
+                    onDown = {
                         val position = it.position
-                        val hueChange = calculateAngleFomLocalCoordinates(center, position)
+
+                        // Distance from center to touch point
                         val distance =
                             calculateDistanceFromCenter(center, position).coerceAtMost(radius)
 
-                        val saturationChange = (distance / radius).coerceIn(0f, 1f)
-                        onChange(hueChange, saturationChange)
-                        it.consume()
-                    }
+                        // if distance is between inner and outer radius then we touched valid area
+                        isTouched = (distance < radius)
 
-                },
-                onUp = {
-                    if (isTouched) {
-                        it.consume()
-                    }
-                    isTouched = false
+                        if (isTouched) {
+                            val hueChange = calculateAngleFomLocalCoordinates(center, position)
+                            val saturationChange = (distance / radius).coerceIn(0f, 1f)
+                            onChange(hueChange, saturationChange)
+                            it.consume()
+                        }
 
-                },
-                delayAfterDownInMillis = 20
-            )
+                    },
+                    onMove = {
+                        if (isTouched) {
+
+                            val position = it.position
+                            val hueChange = calculateAngleFomLocalCoordinates(center, position)
+                            val distance =
+                                calculateDistanceFromCenter(center, position).coerceAtMost(radius)
+
+                            val saturationChange = (distance / radius).coerceIn(0f, 1f)
+                            onChange(hueChange, saturationChange)
+                            it.consume()
+                        }
+
+                    },
+                    onUp = {
+                        if (isTouched) {
+                            it.consume()
+                        }
+                        isTouched = false
+
+                    },
+                    delayAfterDownInMillis = 20
+                )
+            }
 
         SelectorCircleImpl(
             modifier = canvasModifier,

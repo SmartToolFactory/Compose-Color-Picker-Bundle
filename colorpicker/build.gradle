@@ -46,7 +46,7 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.9.0'
 
-    implementation 'com.github.SmartToolFactory:Compose-Extended-Gestures:2.0.0'
+    implementation 'com.github.SmartToolFactory:Compose-Extended-Gestures:2.1.0'
     implementation 'com.github.SmartToolFactory:Compose-Extended-Colors:1.0.0-alpha07'
     implementation 'com.github.SmartToolFactory:Compose-Screenshot:1.0.3'
     implementation 'com.github.SmartToolFactory:Compose-Color-Detector:1.0.0'
