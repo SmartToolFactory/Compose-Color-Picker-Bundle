@@ -1,5 +1,8 @@
 # Jetpack Compose Color Picker Bundle
 
+[![](https://jitpack.io/v/SmartToolFactory/Compose-Color-Picker-Bundle.svg)](https://jitpack.io/#SmartToolFactory/Compose-Color-Picker-Bundle)
+
+
 Bundle of Stylish customizable Color pickers, selectors, colorful sliders written with Jetpack
 Compose enables users to choose from HSL, HSV or RGB color models to pick Solid colors or gradients.
 With colorful Sliders, panels, hex and color displays and various elements to create customized
@@ -10,8 +13,29 @@ available to choose from to use as Composables or inside dialogs that are availa
 
 https://user-images.githubusercontent.com/35650605/161702454-34b0cf00-8496-4060-bfe1-bea9d1bf754d.mp4
 
-Inspired
-by [mchome's flutter_colorpicker  for Flutter](https://github.com/mchome/flutter_colorpicker)
+## Gradle Setup
+
+To get a Git project into your build:
+
+* Step 1. Add the JitPack repository to your build file Add it in your root build.gradle at the end
+  of repositories:
+
+```
+allprojects {
+  repositories {
+      ...
+      maven { url 'https://jitpack.io' }
+  }
+}
+```
+
+* Step 2. Add the dependency
+
+```
+dependencies {
+    implementation 'com.github.SmartToolFactory:Compose-Color-Picker-Bundle:<version>'
+}
+```
 
 ## Color Pickers
 
