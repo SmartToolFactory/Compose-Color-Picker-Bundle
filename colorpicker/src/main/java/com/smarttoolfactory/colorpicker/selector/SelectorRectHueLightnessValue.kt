@@ -3,7 +3,11 @@ package com.smarttoolfactory.colorpicker.selector
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -13,6 +17,7 @@ import androidx.compose.ui.unit.Dp
 import com.smarttoolfactory.colorpicker.ui.brush.transparentToBlackVerticalGradient
 import com.smarttoolfactory.colorpicker.ui.brush.transparentToGrayVerticalGradient
 import com.smarttoolfactory.colorpicker.ui.brush.transparentToWhiteVerticalGradient
+import com.smarttoolfactory.colorpicker.ui.brush.whiteToTransparentToBlackHorizontalGradient
 import com.smarttoolfactory.colorpicker.ui.brush.whiteToTransparentToBlackVerticalGradient
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSL
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSV
@@ -196,6 +201,40 @@ fun SelectorRectHueLightnessHSL(
     )
 }
 
+@Composable
+fun SelectorRectHueLightnessHSLHorizontal(
+    modifier: Modifier = Modifier,
+    hue: Float,
+    lightness: Float,
+    selectionRadius: Dp = Dp.Unspecified,
+    onChange: (Float, Float) -> Unit
+) {
+
+    val selectorType = SelectorType.HLWithHSL
+    //  Red, Magenta, Blue, Cyan, Green, Yellow, Red
+    val colorScaleHSLGradient = remember {
+        Brush.linearGradient(
+            colors = gradientColorScaleHSL,
+            start = Offset.Zero,
+            end = Offset(0f, Float.POSITIVE_INFINITY),
+        )
+    }
+    val transitionGradient = remember {
+        whiteToTransparentToBlackHorizontalGradient()
+    }
+
+    SelectorRectHorizontal(
+        modifier = modifier,
+        hue = hue,
+        property = lightness,
+        selectionRadius = selectionRadius,
+        brushHue = colorScaleHSLGradient,
+        brushProperty = transitionGradient,
+        selectorType = selectorType,
+        onChange = onChange
+    )
+}
+
 /**
  * Base Selector rectangle for Hue and another property such as Saturation or Value in HSV or
  * Saturation or Lightness in HSL color mode.
@@ -245,7 +284,7 @@ private fun SelectorRect(
             else width.coerceAtMost(height) * .04f
 
         val canvasModifier = Modifier
-            .pointerInput(Unit){
+            .pointerInput(Unit) {
                 detectMotionEvents(
                     onDown = {
                         val position = it.position
@@ -284,6 +323,81 @@ private fun SelectorRect(
 
     }
 }
+
+@Composable
+private fun SelectorRectHorizontal(
+    modifier: Modifier = Modifier,
+    hue: Float,
+    property: Float,
+    selectionRadius: Dp = Dp.Unspecified,
+    brushHue: Brush,
+    brushProperty: Brush,
+    selectorType: SelectorType,
+    onChange: (Float, Float) -> Unit
+) {
+    BoxWithConstraints(modifier) {
+
+        val density = LocalDensity.current.density
+
+        val width = constraints.maxWidth.toFloat()
+        val height = constraints.maxHeight.toFloat()
+
+        // Center position of color picker
+        val center = Offset(width / 2, height / 2)
+
+        var currentPosition by remember {
+            mutableStateOf(center)
+        }
+
+        val posX = (1 - property) * width
+        val posY = hue / 360 * height
+        currentPosition = Offset(posX, posY)
+
+        val selectorRadius =
+            if (selectionRadius != Dp.Unspecified) selectionRadius.value * density
+            else width.coerceAtMost(height) * .04f
+
+        val canvasModifier = Modifier
+            .pointerInput(Unit) {
+                detectMotionEvents(
+                    onDown = {
+                        val position = it.position
+                        val hueChange = (position.y / width).coerceIn(0f, 1f) * 360f
+                        val propertyChange = if (selectorType == SelectorType.HSWithHSV) {
+                            (position.x / height).coerceIn(0f, 1f)
+                        } else {
+                            (1 - (position.x / height)).coerceIn(0f, 1f)
+                        }
+                        onChange(hueChange, propertyChange)
+                        it.consume()
+
+                    },
+                    onMove = {
+                        val position = it.position
+                        val hueChange = (position.y / width).coerceIn(0f, 1f) * 360f
+                        val propertyChange = if (selectorType == SelectorType.HSWithHSV) {
+                            (position.x / height).coerceIn(0f, 1f)
+                        } else {
+                            (1 - (position.x / height)).coerceIn(0f, 1f)
+                        }
+                        onChange(hueChange, propertyChange)
+                        it.consume()
+                    },
+                    delayAfterDownInMillis = 20
+                )
+            }
+
+        SelectorRectImpl(
+            modifier = canvasModifier,
+            selectorPosition = currentPosition,
+            brushHue = brushHue,
+            brushProperty = brushProperty,
+            selectorRadius = selectorRadius
+        )
+
+    }
+}
+
 
 @Composable
 private fun SelectorRectImpl(

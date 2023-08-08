@@ -56,6 +56,20 @@ fun whiteToTransparentToBlackVerticalGradient(
     )
 }
 
+fun whiteToTransparentToBlackHorizontalGradient(
+    startX: Float = 0.0f,
+    endX: Float = Float.POSITIVE_INFINITY
+): Brush {
+    return Brush.horizontalGradient(
+        0.0f to Color.White,
+        0.5f to WhiteTransparent,
+        0.5f to Color.Transparent,
+        1f to Color.Black,
+        startX = startX,
+        endX = endX
+    )
+}
+
 fun whiteToBlackGradient(
     startY: Float = 0.0f,
     endY: Float = Float.POSITIVE_INFINITY
