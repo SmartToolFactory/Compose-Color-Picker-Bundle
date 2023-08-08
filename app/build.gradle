@@ -53,6 +53,7 @@ dependencies {
     implementation 'com.github.SmartToolFactory:Compose-Colorful-Sliders:1.2.0'
     implementation 'com.github.SmartToolFactory:Compose-Extended-Gestures:3.0.0'
     implementation 'com.github.SmartToolFactory:Compose-Extended-Colors:1.0.0-alpha07'
+    implementation "androidx.compose.material3:material3:1.1.1"
 
     // Jetpack Compose
     implementation 'androidx.core:core-ktx:1.10.1'
